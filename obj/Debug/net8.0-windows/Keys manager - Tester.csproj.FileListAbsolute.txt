@@ -1,0 +1,45 @@
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.exe
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.deps.json
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.runtimeconfig.json
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.pdb
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\LiveCharts.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\LiveCharts.Wpf.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\MaterialDesignColors.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\MaterialDesignThemes.Wpf.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Xaml.Behaviors.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.csproj.AssemblyReference.cache
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\App.baml
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester_Content.g.cs
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester_MarkupCompile.cache
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester_MarkupCompile.lref
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.g.resources
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.AssemblyInfoInputs.cache
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.AssemblyInfo.cs
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.csproj.CoreCompileInputs.cache
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys man.6AD0C72E.Up2Date
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\refint\Keys manager - Tester.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.pdb
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Keys manager - Tester.genruntimeconfig.cache
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\ref\Keys manager - Tester.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Keys manager - Tester.dll.config
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.UserSecrets.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\System.Data.SqlClient.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
