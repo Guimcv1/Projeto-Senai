@@ -43,3 +43,5 @@ C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debu
 C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win-x86\native\sni.dll
 C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
 C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\LoginPage.g.cs
+C:\Users\guimc\source\repos\Keys manager - Tester\Keys manager - Tester\obj\Debug\net8.0-windows\Dashboard.g.cs

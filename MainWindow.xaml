@@ -7,40 +7,7 @@
         xmlns:materialDesing="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="White">
-    <Grid MouseDown="Border_MouseDown">
-        <Border Height="440" VerticalAlignment="Top" CornerRadius="0 0 0 250" Background="#1B4B9F" MouseDown="Border_MouseDown"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <StackPanel Width="380" >
-                <StackPanel Margin="20 40">
-                    <TextBlock Text="User Login" Margin="20" Foreground="White" TextAlignment="Center" FontSize="38" FontFamily="/Resources/Roboto/RobotoCondensed-BoldItalic.ttf#Roboto Condensed"/>
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <materialDesing:PackIcon Kind="User" Width="40" Height="40" Foreground="White"/>
-                        <TextBox x:Name="txtUsername" Margin="10 0" materialDesing:HintAssist.Hint="Enter Username / Email" Foreground="White" Width="350" FontSize="24" BorderBrush="White" CaretBrush="#EF5E31" SelectionBrush="#EF5E31"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <materialDesing:PackIcon Kind="Lock" Width="40" Height="40" Foreground="White"/>
-                        <PasswordBox x:Name="txtPassword" Margin="10 0" materialDesing:HintAssist.Hint="Enter Password" Foreground="White" Width="350" FontSize="24" BorderBrush="White" CaretBrush="#EF5E31" SelectionBrush="#EF5E31"/>
-                    </StackPanel>
-                    <StackPanel Margin="10" HorizontalAlignment="Center">
-                        <Button Width="100" Height="40" Style="{StaticResource MaterialDesignRaisedButton}"
-                                materialDesing:ButtonAssist.CornerRadius="10" BorderThickness="2" BorderBrush="#EF5E31"
-                                Background="#EF5E31" Foreground="White" ToolTip="Login" x:Name="btnLogin" Click="btnLogin_Click"
-                                Content="Login"/>
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Width="380">
-                <Border Height="110" CornerRadius="40 40 40 40" Background="white" Margin="15">
-                    <Image Source="./Images/SENAI_Port_com_assinatura_cor.png" Width="350"/>
-                </Border>
-            </StackPanel>
-            <StackPanel Width="100">
-                <Button Margin="10 20" Style="{StaticResource MaterialDesignFloatingActionButton}" Background="{x:Null}"
-                        ToolTip="Close" x:Name="btnExit" Click="btnExit_Click">
-                    <materialDesing:PackIcon Kind="Close" Foreground="White" Width="30" Height="30"/>
-                </Button>
-
-            </StackPanel>
-        </StackPanel>
+    <Grid>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>
