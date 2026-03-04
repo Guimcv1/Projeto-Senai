@@ -9,7 +9,7 @@
         Title="LoginPage"
         Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="White">
     <Grid MouseDown="Border_MouseDown">
-        <Border Height="370" VerticalAlignment="Top" CornerRadius="0 0 0 250" Background="#1B4B9F" MouseDown="Border_MouseDown"/>
+        <Border Height="450" VerticalAlignment="Top" CornerRadius="0 0 0 250" Background="#1B4B9F" MouseDown="Border_MouseDown"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <StackPanel Width="380" >
                 <StackPanel Margin="20 40">
