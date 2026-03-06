@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace gerenciador_cahves.Back.Data
+namespace gerenciador_chaves.Back.Data
 {
     //Declaração o nome da tabela do banco de dados
     [Table("usuarios")]

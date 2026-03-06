@@ -1,10 +1,10 @@
-using gerenciador_cahves.Back.Data;
+using gerenciador_chaves.Back.Data;
 using Microsoft.EntityFrameworkCore;
 
 //Isso seria a mesma coisa de "import bibliotecas as outronome" do Python
 using Has = BCrypt.Net.BCrypt;
 
-namespace gerenciador_cahves.Back.Services
+namespace gerenciador_chaves.Back.Services
 {
     public class UsuarioService
     {
@@ -16,7 +16,7 @@ namespace gerenciador_cahves.Back.Services
                 //Declarando um objeto para acessar a db
                 using var context = new BancoContext();
 
-                //Verifica se o login já existe
+                //  Verifica se o login já existe
                 if (context.Usuarios.Any(u => u.Login == login))
                 {
                     Console.WriteLine($"Erro: Login '{login}' já existe.");
@@ -206,21 +206,6 @@ namespace gerenciador_cahves.Back.Services
             }
         }
 
-        //Testar conexão com o banco
-        public static bool TestarConexao()
-        {
-            try
-            {
-                using var context = new BancoContext();
-                context.Database.CanConnect();
-                Console.WriteLine("Conexão com o banco estabelecida!");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro ao conectar ao banco: {ex.Message}");
-                return false;
-            }
-        }
+    
     }
 }
