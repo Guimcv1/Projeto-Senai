@@ -2,10 +2,18 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <SelfContained>false</SelfContained>
     <UseAppHost>true</UseAppHost>
+    <RollForward>LatestMinor</RollForward>
+    <StartupObject></StartupObject>
+    <AssemblyTitle>Gerebciador de Chaves Senai</AssemblyTitle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +31,16 @@
     <None Update=".env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="runtimeconfig.template.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
+	<Target Name="OrganizeDLLs" AfterTargets="Build">
+		<ItemGroup>
+			<MyDlls Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll" />
+		</ItemGroup>
+		<MakeDir Directories="$(TargetDir)dll" Condition="!Exists('$(TargetDir)dll')" />
+		<Move SourceFiles="@(MyDlls)" DestinationFolder="$(TargetDir)dll" />
+	</Target>
+	
 </Project>

@@ -54,6 +54,7 @@ namespace gerenciador_chaves.Back.Services
             try
             {
                 using var context = new BancoContext();
+                Console.WriteLine($"user bancos= {context.Usuarios.ToList()}");
                 return context.Usuarios.ToList();
             }
             catch (Exception ex)
@@ -63,8 +64,8 @@ namespace gerenciador_chaves.Back.Services
             }
         }
 
-        //BuscarPorId - Buscar usuário por ID
-        public static Usuario? BuscarPorId(int id)
+        //BuscarPorIdUser - Buscar usuário por ID
+        public static Usuario? BuscarPorIdUser(int id)
         {
             try
             {

@@ -6,8 +6,9 @@ namespace gerenciador_chaves.Back.Data
     //Classe que vai gerenciar a conexão do banco
     public class BancoContext : DbContext
     {
-        //Termina de mapear as tabelas para o projeto
-        public DbSet<Usuario> Usuarios { get; set; }
+        //Mapeia as tabelas para o projeto
+        public DbSet<Usuario> Usuarios { get; set; } 
+        public DbSet<Itens> Intens { get; set; }
 
         //Configuração da conexão com o banco de dados
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

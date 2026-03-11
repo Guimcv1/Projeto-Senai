@@ -39,27 +39,64 @@ namespace gerenciador_chaves.Back.Services
             {
                 using var context = new BancoContext();
 
-                //Verifica se há migrations pendentes
-                var migrationsPendentes = context.Database.GetPendingMigrations();
+                //Verifica se o banco de dados existe, se não, cria
+                Console.WriteLine("Verificando banco de dados...");
+
+                //Tenta aplicar todas as migrations pendentes (cria o banco e tabelas se não existirem)
+                var migrationsPendentes = context.Database.GetPendingMigrations().ToList();
 
                 if (migrationsPendentes.Any())
                 {
-                    Console.WriteLine("Aplicando migrations pendentes ao banco de dados...");
+                    Console.WriteLine($"Encontradas {migrationsPendentes.Count} migrations pendentes.");
+                    Console.WriteLine("Aplicando migrations ao banco de dados...");
+
+                    foreach (var migration in migrationsPendentes)
+                    {
+                        Console.WriteLine($"  - {migration}");
+                    }
+
                     context.Database.Migrate();
-                    Console.WriteLine("Migrations aplicadas com sucesso!");
+                    Console.WriteLine(" Migrations aplicadas com sucesso!");
+                    Console.WriteLine(" Tabelas criadas: usuarios, itens");
                 }
                 else
                 {
-                    Console.WriteLine("Banco de dados já está atualizado.");
+                    Console.WriteLine(" Banco de dados já está atualizado.");
+                    Console.WriteLine(" Tabelas disponíveis: usuarios, itens");
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao criar/atualizar banco: {ex.Message}");
+                Console.WriteLine($"\n Erro ao aplicar migrations: {ex.Message}");
                 Console.WriteLine($"Detalhes: {ex.InnerException?.Message}");
-                return false;
+
+                //Tenta criar o banco usando EnsureCreated como fallback
+                try
+                {
+                    Console.WriteLine("\n→ Tentando criar banco e tabelas diretamente...");
+                    using var context = new BancoContext();
+                    bool criado = context.Database.EnsureCreated();
+
+                    if (criado)
+                    {
+                        Console.WriteLine(" Banco de dados e tabelas criadas com sucesso!");
+                        Console.WriteLine("Tabelas criadas: usuarios, itens");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine(" Banco de dados e tabelas já existiam.");
+                        return true;
+                    }
+                }
+                catch (Exception ex2)
+                {
+                    Console.WriteLine($"\n Erro ao criar banco: {ex2.Message}");
+                    Console.WriteLine($"Detalhes: {ex2.InnerException?.Message}");
+                    return false;
+                }
             }
         }
     } 
