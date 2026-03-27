@@ -1,0 +1,74 @@
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Projeto Senai.exe
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Projeto Senai.deps.json
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Projeto Senai.runtimeconfig.json
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Projeto Senai.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Projeto Senai.pdb
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\LiveCharts.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\LiveCharts.Wpf.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\MaterialDesignColors.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\MaterialDesignThemes.Wpf.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Bcl.Cryptography.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Data.SqlClient.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.Caching.Abstractions.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.Caching.Memory.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.Options.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Abstractions.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Logging.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Protocols.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Tokens.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.SqlServer.Server.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\Microsoft.Xaml.Behaviors.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\System.Configuration.ConfigurationManager.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\System.Diagnostics.EventLog.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\System.IdentityModel.Tokens.Jwt.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\System.Security.Cryptography.Pkcs.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\de\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\es\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\it\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\Microsoft.Data.SqlClient.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\Microsoft.Data.SqlClient.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
+D:\Visual Studio\Senai\Projeto Senai\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.csproj.AssemblyReference.cache
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Dashboard.baml
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\LoginPage.baml
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\MainWindow.baml
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Dashboard.g.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\LoginPage.g.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\MainWindow.g.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\App.g.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai_Content.g.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai_MarkupCompile.cache
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.g.resources
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.GeneratedMSBuildEditorConfig.editorconfig
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.AssemblyInfoInputs.cache
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.AssemblyInfo.cs
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.csproj.CoreCompileInputs.cache
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto .F284E340.Up2Date
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.dll
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\refint\Projeto Senai.dll
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.pdb
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai.genruntimeconfig.cache
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\ref\Projeto Senai.dll
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\Projeto Senai_MarkupCompile.lref
+D:\Visual Studio\Senai\Projeto Senai\obj\Debug\net8.0-windows\App.baml
