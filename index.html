@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlo de Ambientes | SENAI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://www.senai.portaldaindustria.com.br/documents/613033/732390/favicon.ico/1f90c419-1686-a8ef-7107-39cf9a1245ac" rel="icon">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/pt.js"></script>
+    
+    <style>
+        :root {
+            --senai-red: #E84910;
+            --senai-blue: #002776;
+            
+            --bg-dark: #1e293b; 
+            --bg-app: #f1f5f9;
+            --text-light: #ffffff;
+            --text-dark: #334155;
+            --text-muted: #64748b;
+            
+            --status-green: #16a34a; 
+            --status-red: #dc2626; 
+            --status-orange: #ea580c; 
+            --status-grey: #94a3b8;
+        }
+
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-app); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: #ffffff; color: var(--senai-blue); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--senai-red); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); z-index: 10; }
+        .logo-container img { height: 40px; object-fit: contain; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        .user-badge { background: #f1f5f9; color: var(--senai-blue); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; display: none; border: 1px solid #e2e8f0; }
+
+        .btn { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: 'Inter'; color: var(--text-light); transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;}
+        .btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.1); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background-color: var(--senai-blue); }
+        .btn-danger { background-color: var(--senai-red); }
+        .btn-success { background-color: var(--status-green); }
+        .btn-warning { background-color: var(--status-orange); }
+        .btn-outline { background: transparent; border: 2px solid var(--senai-blue); color: var(--senai-blue); }
+        .btn-outline:hover { background: var(--senai-blue); color: white; }
+
+        .container { display: flex; flex: 1; overflow: hidden; }
+
+        .sidebar { width: 250px; background-color: var(--senai-blue); padding: 20px 0; display: flex; flex-direction: column; }
+        .sidebar button { background: transparent; color: #cbd5e1; border: none; padding: 16px 24px; text-align: left; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; border-left: 4px solid transparent; display: flex; align-items: center; gap: 10px; }
+        .sidebar button:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar button.active { background-color: rgba(255,255,255,0.15); color: white; border-left-color: var(--senai-red); font-weight: 600; }
+
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { margin-top: 0; color: var(--senai-blue); font-weight: 700; margin-bottom: 20px; }
+
+        .search-bar, .form-group input { width: 100%; padding: 12px 16px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; font-family: 'Inter'; box-sizing: border-box; outline: none; background: #fff; }
+        .search-bar:focus, .form-group input:focus { border-color: var(--senai-blue); box-shadow: 0 0 0 3px rgba(0, 39, 118, 0.15); }
+
+        .legend-container { background: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 20px; border: 1px solid #e2e8f0; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .color-box { width: 12px; height: 12px; border-radius: 50%; } 
+
+        .dashboard-layout { display: flex; gap: 20px; flex-direction: column; }
+        .rooms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .room-card { padding: 24px 15px; text-align: center; color: white; font-weight: 700; font-size: 1.1rem; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
+        .room-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        
+        .room-card.bg-grey { opacity: 0.8; }
+        .room-card.bg-grey:hover { transform: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+        .admin-panel { background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .admin-panel h3 { margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; color: var(--senai-blue); font-weight: 600;}
+        
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; }
+        
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 700; text-transform: uppercase; }
+        .bg-green { background-color: var(--status-green); }
+        .bg-red { background-color: var(--status-red); }
+        .bg-orange { background-color: var(--status-orange); }
+        .bg-grey { background-color: var(--status-grey); }
+
+        .item-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: var(--senai-blue); }
+        .item-checkbox:disabled, .admin-checkbox:disabled { cursor: not-allowed !important; opacity: 0.5; }
+
+        .form-row { display: flex; gap: 20px; margin-bottom: 15px; align-items: flex-end;}
+        .form-group { flex: 1; display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); }
+
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { width: 100%; padding-right: 40px; margin-bottom: 0; }
+        .toggle-password-btn { position: absolute; right: 10px; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s; opacity: 0.6; }
+        .toggle-password-btn:hover { opacity: 1; }
+
+        .filters-bar { display: flex; gap: 15px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 30px; flex-wrap: wrap; align-items: flex-end; }
+        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; border-left: 4px solid var(--senai-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stat-title { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--senai-blue); }
+
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .chart-container { background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .chart-row { display: flex; align-items: center; margin-bottom: 15px; }
+        .chart-row:last-child { margin-bottom: 0; }
+        .chart-label { width: 150px; font-weight: 600; font-size: 0.9rem; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chart-bar-bg { flex: 1; height: 16px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin: 0 15px; }
+        .chart-bar-fill { height: 100%; background: var(--senai-blue); border-radius: 8px; transition: width 0.5s ease-in-out; }
+        .chart-value { width: 40px; text-align: right; font-weight: 700; font-size: 0.9rem; color: var(--text-muted); }
+
+        .export-options { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .export-checkboxes { display: flex; gap: 25px; flex-wrap: wrap; margin-top: 15px; }
+        .export-checkboxes label { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 500; cursor: pointer; color: var(--text-dark); }
+        .export-checkboxes input { width: 18px; height: 18px; accent-color: var(--senai-blue); cursor: pointer; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content { background: #fff; padding: 24px; border-radius: 12px; width: 600px; max-width: 90%; transform: scale(0.95); transition: transform 0.3s; }
+        .modal.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 20px;}
+        .modal-header h3 { margin: 0; color: var(--senai-blue); }
+        .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+
+        /* Estilização Customizada Select2 para combinar com a interface */
+        .select2-container .select2-selection--single {
+            height: 42px !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.95rem !important;
+            background-color: #fff !important;
+            outline: none !important;
+            margin-bottom: 10px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--text-dark) !important;
+            line-height: normal !important;
+            padding-left: 16px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px !important;
+            right: 10px !important;
+        }
+        .select2-container--open .select2-dropdown {
+            border: 1px solid var(--senai-blue) !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+            z-index: 999999 !important; 
+        }
+        .select2-search__field {
+            font-family: 'Inter', sans-serif !important;
+            border-radius: 4px !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 6px 12px !important;
+        }
+        .select2-search__field:focus {
+            border-color: var(--senai-blue) !important;
+            outline: none !important;
+        }
+        .select2-results__option--highlighted[aria-selected] {
+            background-color: var(--senai-blue) !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="https://static.portaldaindustria.com.br/media/filer_public/1a/ae/1aae26bb-a198-4c67-84ca-0ae47ecb778f/tit-senai-original.png" alt="Logótipo SENAI">
+    </div>
+    <div class="header-controls">
+        <div class="user-badge" id="userNameDisplay">Sessão: Admin</div>
+        <button id="btnToggleAuth" class="btn btn-outline" onclick="toggleAuth()">Acesso Administrativo</button>
+    </div>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <button class="active" onclick="switchTab('dashboard', this)">Visão Geral</button>
+        <button id="menuAprovacoes" onclick="switchTab('aprovacoes', this)" style="display:none;">Aprovações</button>
+        <button id="menuLocais" onclick="switchTab('crudLocais', this)" style="display:none;">Gerir Locais</button>
+        <button id="menuItens" onclick="switchTab('crudItens', this)" style="display:none;">Gerir Itens</button>
+        <button id="menuUsuarios" onclick="switchTab('crudUsuarios', this)" style="display:none;">Gerir Utilizadores</button>
+        <button id="menuLogs" onclick="switchTab('exportarLogs', this)" style="display:none;">Relatórios e Logs</button>
+    </aside>
+
+    <main class="main-content">
+        <section id="dashboard" class="section active">
+            <h2>Gestão de Ambientes</h2>
+            
+            <div style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Pesquisar / Filtrar por Ambiente</label>
+                <select id="searchSala" style="width: 100%;" onchange="filterDashboard()">
+                    </select>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item"><div class="color-box bg-green"></div> Todos disponíveis</div>
+                <div class="legend-item"><div class="color-box bg-orange"></div> Parcialmente ocupado</div>
+                <div class="legend-item"><div class="color-box bg-red"></div> Todos emprestados</div>
+                <div class="legend-item"><div class="color-box bg-grey"></div> Indisponível / Aguardando</div>
+            </div>
+
+            <div class="dashboard-layout">
+                <div class="rooms-grid" id="roomsContainer"></div>
+            </div>
+        </section>
+
+        <section id="aprovacoes" class="section">
+            <h2>Solicitações Pendentes</h2>
+            <div class="admin-panel">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Selecione os itens desejados na tabela e aplique uma ação em lote.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;">Sel.</th>
+                                <th>Item</th>
+                                <th>Ambiente</th>
+                                <th>Solicitante</th>
+                                <th>Ação do Utilizador</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvalsTableBody"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+                    <button class="btn btn-outline" onclick="prepareAdminBatchAction('reject')" style="color: var(--senai-red); border-color: var(--senai-red);">Recusar Selecionados</button>
+                    <button class="btn btn-success" onclick="prepareAdminBatchAction('approve')">Aprovar Selecionados</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="crudLocais" class="section">
+            <h2>Gerenciamento de Locais (Ambientes)</h2>
+            <div class="admin-panel">
+                <h3>Adicionar Novo Local</h3>
+                <form onsubmit="addLocal(event)">
+                    <div class="form-row">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Nome do Local (Ex: Sala B01)</label>
+                            <input type="text" id="newLocalName" style="margin-bottom: 0;" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px;">Guardar Local</button>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-panel">
+                <h3>Locais Registados</h3>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Nome do Local</th><th>Status</th><th>Ações</th></tr></thead>
+                        <tbody id="locaisTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="crudItens" class="section">
+            <h2>Gerenciamento de Itens</h2>
+            <div class="admin-panel">
+                <h3>Adicionar Novo Item ao Acervo</h3>
+                <form onsubmit="addItem(event)">
+                    <div class="form-row">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Descrição do Item</label>
+                            <input type="text" id="newItemName" style="margin-bottom: 0;" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Vincular ao Local</label>
+                            <select id="newItemLocal" style="width: 100%;"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px;">Guardar Item</button>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-panel">
+                <h3>Itens Registados</h3>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Descrição</th><th>Local Vinculado</th><th>Situação</th><th>Ações</th></tr></thead>
+                        <tbody id="itensCrudTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="crudUsuarios" class="section">
+            <h2>Gerenciamento de Utilizadores</h2>
+            <div class="admin-panel">
+                <h3>Criar Novo Utilizador</h3>
+                <form onsubmit="addUser(event)">
+                    <div class="form-row" style="flex-wrap: wrap;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Nome Completo</label>
+                            <input type="text" id="newUserName" style="margin-bottom: 0;" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Login</label>
+                            <input type="text" id="newUserLogin" style="margin-bottom: 0;" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Palavra-passe</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="newUserPass" style="margin-bottom: 0;" required>
+                                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('newUserPass', this)">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Perfil</label>
+                            <select id="newUserRole" style="width: 100%;">
+                                <option value="Usuário">Utilizador Comum</option>
+                                <option value="Admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px;">Criar Conta</button>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-panel">
+                <h3>Utilizadores Registados</h3>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
+                        <tbody id="usuariosTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="exportarLogs" class="section">
+            <h2>Relatórios e Desempenho</h2>
+
+            <div class="filters-bar">
+                <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
+                    <label>Período de Análise</label>
+                    <select id="filterTempo" style="width: 100%;" onchange="toggleFiltros(); updateRelatorios();">
+                        <option value="sempre">Desde sempre</option>
+                        <option value="1">Hoje (Diário)</option>
+                        <option value="7">Últimos 7 Dias</option>
+                        <option value="30">Últimos 30 Dias</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="divFiltroTurno" style="display: none; margin-bottom: 0; min-width: 180px;">
+                    <label>Filtrar por Turno</label>
+                    <select id="filterTurno" style="width: 100%;" onchange="updateRelatorios()">
+                        <option value="todos">Todos os Turnos</option>
+                        <option value="matutino">Matutino</option>
+                        <option value="vespertino">Vespertino</option>
+                        <option value="noturno">Noturno</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="divDataInicial" style="display: none; margin-bottom: 0;">
+                    <label>Data Inicial</label>
+                    <input type="date" id="dataInicial" style="margin-bottom: 0; height: 42px;" onchange="updateRelatorios()">
+                </div>
+                <div class="form-group" id="divDataFinal" style="display: none; margin-bottom: 0;">
+                    <label>Data Final</label>
+                    <input type="date" id="dataFinal" style="margin-bottom: 0; height: 42px;" onchange="updateRelatorios()">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0; min-width: 250px; flex: 1;">
+                    <label>Filtrar por Ambiente (Sala)</label>
+                    <select id="filterSalaRelatorio" style="width: 100%;" onchange="updateRelatorios()">
+                        </select>
+                </div>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-title">Empréstimos no Período</div>
+                    <div class="stat-value" id="statEmprestimos">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Itens em Uso Atualmente</div>
+                    <div class="stat-value" id="statAtivos">8</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Utilizadores Envolvidos</div>
+                    <div class="stat-value" id="statUsuarios">--</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container" id="chartSalasContainer">
+                    <h3 style="margin-top: 0; margin-bottom: 25px; color: var(--senai-blue); font-size: 1.1rem;">Salas Mais Utilizadas</h3>
+                    <div id="chartSalasContent">
+                        <div class="chart-row">
+                            <div class="chart-label">B01 SALA DE AULA</div>
+                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 85%;"></div></div>
+                            <div class="chart-value">85%</div>
+                        </div>
+                        <div class="chart-row">
+                            <div class="chart-label">C02 AUDITÓRIO</div>
+                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 60%; background: var(--status-orange);"></div></div>
+                            <div class="chart-value">60%</div>
+                        </div>
+                        <div class="chart-row">
+                            <div class="chart-label">A01 PORTARIA</div>
+                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 35%; background: var(--senai-red);"></div></div>
+                            <div class="chart-value">35%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container" id="chartItensContainer">
+                    <h3 style="margin-top: 0; margin-bottom: 25px; color: var(--senai-blue); font-size: 1.1rem;">Itens Mais Solicitados</h3>
+                    <div id="chartItensContent">
+                        </div>
+                </div>
+            </div>
+
+            <div class="admin-panel">
+                <h3 style="margin-top: 0; color: var(--senai-blue);">Exportar Base de Dados</h3>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0;">O relatório exportado obedecerá aos filtros de Período e Ambiente definidos acima.</p>
+                
+                <div class="export-options">
+                    <div class="export-checkboxes">
+                        <label><input type="checkbox" id="expLogs" checked> Histórico de Empréstimos</label>
+                        <label><input type="checkbox" id="expUsers" checked> Cadastro de Utilizadores</label>
+                        <label><input type="checkbox" id="expItems" checked> Inventário de Itens</label>
+                        <label><input type="checkbox" id="expRooms" checked> Relação de Ambientes</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="font-size: 1rem; padding: 12px 24px;" onclick="exportarLog()">Baixar Relatório Filtrado</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div id="modalSala" class="modal">
+    <div class="modal-content" style="width: 700px;">
+        <div class="modal-header">
+            <h3 id="modalRoomTitle">Detalhes do Ambiente</h3>
+            <button class="close-btn" onclick="closeModal('modalSala')">X</button>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Selecione os itens que deseja solicitar ou devolver.</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">Sel.</th>
+                        <th>Ativo / Item</th>
+                        <th>Situação Atual</th>
+                    </tr>
+                </thead>
+                <tbody id="modalItemsBody"></tbody>
+            </table>
+        </div>
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn btn-outline" onclick="closeModal('modalSala')">Cancelar Operação</button>
+            <button class="btn btn-success" onclick="prepareUserRequest()">Processar Selecionados</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalLoginAdmin" class="modal">
+    <div class="modal-content" style="width: 380px;">
+        <div class="modal-header">
+            <h3>Acesso Restrito</h3>
+            <button class="close-btn" onclick="closeModal('modalLoginAdmin')">X</button>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Insira credenciais corporativas.</p>
+        <div class="form-group"><label>Login</label><input type="text" id="loginSystemUser" placeholder="Ex: admin"></div>
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label>Palavra-passe</label>
+            <div class="password-wrapper">
+                <input type="password" id="loginSystemPass" placeholder="Ex: admin">
+                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginSystemPass', this)">
+                    <img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; height: 45px;" onclick="executeAdminLogin()">Entrar no Painel</button>
+    </div>
+</div>
+
+<div id="modalCredenciaisUser" class="modal">
+    <div class="modal-content" style="width: 380px;">
+        <div class="modal-header">
+            <h3>Confirmar Operação</h3>
+            <button class="close-btn" onclick="closeModal('modalCredenciaisUser')">X</button>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Insira as suas credenciais corporativas para registar as solicitações em seu nome.</p>
+        <div class="form-group"><label>Seu Login</label><input type="text" id="userAuthLogin"></div>
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label>Sua Palavra-passe</label>
+            <div class="password-wrapper">
+                <input type="password" id="userAuthPass">
+                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('userAuthPass', this)">
+                    <img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-success" style="width: 100%; height: 45px;" onclick="confirmUserRequest()">Autenticar e Enviar</button>
+    </div>
+</div>
+
+<div id="modalCredenciaisAdmin" class="modal">
+    <div class="modal-content" style="width: 380px;">
+        <div class="modal-header">
+            <h3>Validação de Aprovação</h3>
+            <button class="close-btn" onclick="closeModal('modalCredenciaisAdmin')">X</button>
+        </div>
+        <div class="form-group"><label>Login Admin</label><input type="text" id="adminAuthLogin"></div>
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label>Palavra-passe Admin</label>
+            <div class="password-wrapper">
+                <input type="password" id="adminAuthPass">
+                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('adminAuthPass', this)">
+                    <img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; height: 45px;" onclick="confirmAdminAction()">Confirmar Operação</button>
+    </div>
+</div>
+
+<div id="modalEditGenerico" class="modal">
+    <div class="modal-content" style="width: 400px;">
+        <div class="modal-header">
+            <h3 id="editModalTitle">Editar Registo</h3>
+            <button class="close-btn" onclick="closeModal('modalEditGenerico')">X</button>
+        </div>
+        <input type="hidden" id="editEntityId">
+        <input type="hidden" id="editEntityType">
+        <div id="editFormFields"></div>
+        <button class="btn btn-success" style="width: 100%; height: 45px; margin-top: 20px;" onclick="saveEdit()">Guardar Alterações</button>
+    </div>
+</div>
+
+<script>
+    // --- ESTADO DA APLICAÇÃO ---
+    let currentUserRole = 'user'; 
+    let currentLoggedUserLogin = '';
+
+    let locais = [
+        { id: 1, name: 'A01 PORTARIA', status: 'Ativo' },
+        { id: 2, name: 'B01 SALA DE AULA', status: 'Ativo' },
+        { id: 3, name: 'C02 AUDITÓRIO', status: 'Ativo' },
+        { id: 4, name: 'D04 LABORATÓRIO (Em Manutenção)', status: 'Inativo' }
+    ];
+
+    let itens = [
+        { id: 1, name: 'Chave Principal', localId: 1, status: 'Disponível', requester: null },
+        { id: 2, name: 'Controle Projetor', localId: 2, status: 'Disponível', requester: null },
+        { id: 3, name: 'Controle Ar', localId: 2, status: 'Emprestado', requester: 'karython.o' },
+        { id: 4, name: 'Microfone', localId: 3, status: 'Pendente Devolução', requester: 'karython.o' }
+    ];
+
+    // Array de Utilizadores com a propriedade "pass" adicionada para validação real
+    let usuarios = [
+        { id: 1, name: 'Karython Oliveira', login: 'karython.o', pass: '1234', role: 'Usuário', status: 'Ativo' },
+        { id: 2, name: 'Administrador Chefe', login: 'admin', pass: 'admin', role: 'Admin', status: 'Ativo' }
+    ];
+
+    let tempSelectedRequests = [];
+    let tempAdminSelectedIds = [];
+    let tempAdminAction = null; 
+
+    // --- FUNÇÕES DE NAVEGAÇÃO E AUTENTICAÇÃO ---
+    function switchTab(tabId, btnElement) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        
+        if(tabId === 'dashboard') { renderDashboard(); }
+        if(tabId === 'crudLocais') { renderLocais(); }
+        if(tabId === 'crudItens') { renderItensAdmin(); }
+        if(tabId === 'crudUsuarios') { renderUsuarios(); }
+        if(tabId === 'exportarLogs') { toggleFiltros(); updateRelatorios(); }
+        if(tabId === 'aprovacoes') { renderApprovals(); }
+    }
+
+    function toggleAuth() {
+        if (currentUserRole === 'admin') {
+            currentUserRole = 'user';
+            currentLoggedUserLogin = '';
+            updateUIRole();
+        } else {
+            document.getElementById('loginSystemUser').value = '';
+            document.getElementById('loginSystemPass').value = '';
+            document.getElementById('loginSystemPass').type = 'password';
+            document.querySelector('#modalLoginAdmin .toggle-password-btn').innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">';
+            openModal('modalLoginAdmin');
+        }
+    }
+
+    function executeAdminLogin() {
+        const u = document.getElementById('loginSystemUser').value;
+        const p = document.getElementById('loginSystemPass').value;
+        
+        // Verifica na base de dados se o admin existe
+        const validAdmin = usuarios.find(user => user.login === u && user.pass === p && user.role === 'Admin' && user.status === 'Ativo');
+
+        if (validAdmin) {
+            currentUserRole = 'admin';
+            currentLoggedUserLogin = validAdmin.login;
+            closeModal('modalLoginAdmin');
+            updateUIRole();
+        } else { 
+            alert('Credenciais inválidas ou utilizador sem permissão.'); 
+        }
+    }
+
+    function updateUIRole() {
+        const menusAdmin = ['menuAprovacoes', 'menuLocais', 'menuItens', 'menuUsuarios', 'menuLogs'];
+        const badge = document.getElementById('userNameDisplay');
+        const btnAuth = document.getElementById('btnToggleAuth');
+        
+        if (currentUserRole === 'user') {
+            badge.style.display = 'none';
+            btnAuth.innerText = 'Acesso Administrativo';
+            btnAuth.className = 'btn btn-outline';
+            menusAdmin.forEach(id => document.getElementById(id).style.display = 'none');
+            document.querySelector('.sidebar button').click(); 
+        } else {
+            badge.style.display = 'block';
+            badge.innerText = `Admin (${currentLoggedUserLogin})`;
+            btnAuth.innerText = 'Sair do Sistema';
+            btnAuth.className = 'btn btn-danger';
+            menusAdmin.forEach(id => document.getElementById(id).style.display = 'flex');
+        }
+        updateLocalSelects();
+        renderDashboard();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function getLocalName(id) { const l = locais.find(x => x.id == id); return l ? l.name : 'Desconhecido'; }
+
+    // --- POPULAR DROPDOWNS COM SELECT2 ---
+    function updateLocalSelects() {
+        let optionsFiltro = '<option value="todos">Todos os Ambientes</option>';
+        let optionsNewItem = '';
+        
+        locais.filter(l => l.status === 'Ativo').forEach(l => { 
+            optionsNewItem += `<option value="${l.id}">${l.name}</option>`; 
+        });
+
+        // Inclui inativos no filtro para poderem ser pesquisados
+        locais.forEach(l => {
+            optionsFiltro += `<option value="${l.id}">${l.name} ${l.status === 'Inativo' ? '(Indisponível)' : ''}</option>`;
+        });
+
+        if($('#searchSala').length) {
+            const val = $('#searchSala').val();
+            $('#searchSala').html(optionsFiltro).val(val || 'todos');
+        }
+
+        if($('#newItemLocal').length) $('#newItemLocal').html(optionsNewItem);
+
+        if($('#filterSalaRelatorio').length) {
+            const val = $('#filterSalaRelatorio').val();
+            $('#filterSalaRelatorio').html(optionsFiltro).val(val || 'todos');
+        }
+
+        // Refrescar o visual do Select2
+        $('select').select2({ width: '100%', language: "pt-BR" });
+    }
+
+    // --- DASHBOARD GERAL ---
+    function getRoomColorClass(localId) {
+        const roomItems = itens.filter(i => i.localId == localId);
+        if (roomItems.length === 0) return 'bg-grey'; 
+
+        const total = roomItems.length;
+        const available = roomItems.filter(i => i.status === 'Disponível').length;
+        const borrowed = roomItems.filter(i => i.status === 'Emprestado').length;
+        const pending = roomItems.filter(i => i.status.includes('Pendente')).length;
+
+        if (pending === total) return 'bg-grey'; 
+        if (available === total) return 'bg-green'; 
+        if (borrowed === total) return 'bg-red'; 
+        if (available > 0) return 'bg-orange'; 
+        return 'bg-red'; 
+    }
+
+    function filterDashboard() {
+        renderDashboard();
+    }
+
+    function renderDashboard() {
+        const searchSalaId = $('#searchSala').val() || 'todos';
+        const container = document.getElementById('roomsContainer');
+        if(!container) return;
+        container.innerHTML = '';
+        
+        const filtered = locais.filter(local => {
+            return searchSalaId === 'todos' || local.id == searchSalaId;
+        });
+
+        filtered.forEach(local => {
+            const colorClass = local.status === 'Inativo' ? 'bg-grey' : getRoomColorClass(local.id);
+            const div = document.createElement('div');
+            div.className = `room-card ${colorClass}`;
+            div.innerText = local.name + (local.status === 'Inativo' ? ' (Inativo)' : '');
+            
+            div.onclick = () => {
+                if(local.status === 'Inativo') {
+                    alert('Este ambiente encontra-se indisponível ou inativo no momento.');
+                    return;
+                }
+                openRoomDetails(local.id);
+            };
+            container.appendChild(div);
+        });
+    }
+
+    function openRoomDetails(localId) {
+        const local = locais.find(l => l.id == localId);
+        document.getElementById('modalRoomTitle').innerText = `Itens em: ${local.name}`;
+        const tbody = document.getElementById('modalItemsBody');
+        tbody.innerHTML = '';
+        
+        const roomItems = itens.filter(i => i.localId == localId);
+        
+        if(roomItems.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color: var(--text-muted);">Ambiente vazio.</td></tr>';
+        } else {
+            roomItems.forEach(item => {
+                const tr = document.createElement('tr');
+                let badge = '';
+                let checkbox = '';
+                
+                if (item.status === 'Disponível') {
+                    badge = `<span class="status-badge bg-green">Disponível</span>`;
+                    checkbox = `<input type="checkbox" class="item-checkbox" value="${item.id}" data-action="emprestimo">`;
+                } else if (item.status === 'Pendente' || item.status === 'Pendente Devolução') {
+                    badge = `<span class="status-badge bg-grey">Em Análise</span>`;
+                    checkbox = `<input type="checkbox" class="item-checkbox" disabled title="Este item encontra-se em análise.">`;
+                } else if (item.status === 'Emprestado') {
+                    badge = `<span class="status-badge bg-red">Emprestado para ${item.requester}</span>`;
+                    checkbox = `<input type="checkbox" class="item-checkbox" value="${item.id}" data-action="devolucao">`;
+                }
+
+                tr.innerHTML = `<td style="text-align:center;">${checkbox}</td><td style="font-weight: 500;">${item.name}</td><td>${badge}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        openModal('modalSala');
+    }
+
+    // --- SOLICITAÇÃO E APROVAÇÃO ---
+    function prepareUserRequest() {
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        if(checkboxes.length === 0) {
+            alert('Atenção: Selecione ao menos um item marcando as caixas de seleção.');
+            return;
+        }
+        
+        tempSelectedRequests = Array.from(checkboxes).map(cb => ({
+            id: parseInt(cb.value),
+            action: cb.getAttribute('data-action') 
+        }));
+
+        document.getElementById('userAuthLogin').value = ''; 
+        document.getElementById('userAuthPass').value = '';
+        document.getElementById('userAuthPass').type = 'password';
+        document.querySelector('#modalCredenciaisUser .toggle-password-btn').innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">';
+        
+        closeModal('modalSala');
+        openModal('modalCredenciaisUser');
+    }
+
+    function confirmUserRequest() {
+        const login = document.getElementById('userAuthLogin').value;
+        const pass = document.getElementById('userAuthPass').value;
+        
+        // Verifica na base de dados de utilizadores
+        const validUser = usuarios.find(u => u.login === login && u.pass === pass && u.status === 'Ativo');
+        
+        if (validUser) { 
+            tempSelectedRequests.forEach(req => {
+                const item = itens.find(i => i.id === req.id);
+                if(item) {
+                    item.status = req.action === 'emprestimo' ? 'Pendente' : 'Pendente Devolução';
+                    item.requester = validUser.login; 
+                }
+            });
+            alert('Operação registada! As suas solicitações foram enviadas para aprovação.');
+            closeModal('modalCredenciaisUser');
+            renderDashboard(); // Atualiza painel mantendo o filtro atual
+            renderApprovals();
+        } else { 
+            alert('Erro: Credenciais inválidas ou utilizador inativo.'); 
+        }
+    }
+
+    function renderApprovals() {
+        const tbody = document.getElementById('approvalsTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        const pendingItems = itens.filter(i => i.status === 'Pendente' || i.status === 'Pendente Devolução');
+
+        if(pendingItems.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">A sua caixa de entrada de aprovações está vazia.</td></tr>';
+            return;
+        }
+
+        pendingItems.forEach(item => {
+            const tr = document.createElement('tr');
+            const isEmprestimo = item.status === 'Pendente';
+            const actionType = isEmprestimo ? 'Solicita Empréstimo' : 'Solicita Devolução';
+            const badgeColor = isEmprestimo ? 'bg-orange' : 'bg-grey';
+
+            tr.innerHTML = `
+                <td style="text-align:center;">
+                    <input type="checkbox" class="admin-checkbox" value="${item.id}" style="width: 18px; height: 18px; cursor: pointer;">
+                </td>
+                <td style="font-weight: 600;">${item.name}</td>
+                <td>${getLocalName(item.localId)}</td>
+                <td><span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${item.requester}</span></td>
+                <td><span class="status-badge ${badgeColor}">${actionType}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function prepareAdminBatchAction(action) {
+        const checkboxes = document.querySelectorAll('.admin-checkbox:checked');
+        if(checkboxes.length === 0) {
+            alert('Atenção: Selecione ao menos uma solicitação na tabela para processar.');
+            return;
+        }
+        
+        tempAdminSelectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+        tempAdminAction = action;
+
+        document.getElementById('adminAuthLogin').value = '';
+        document.getElementById('adminAuthPass').value = '';
+        document.getElementById('adminAuthPass').type = 'password';
+        document.querySelector('#modalCredenciaisAdmin .toggle-password-btn').innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">';
+        
+        openModal('modalCredenciaisAdmin');
+    }
+
+    function confirmAdminAction() {
+        const login = document.getElementById('adminAuthLogin').value;
+        const pass = document.getElementById('adminAuthPass').value;
+
+        // Validação realista com a lista de utilizadores
+        const validAdmin = usuarios.find(u => u.login === login && u.pass === pass && u.role === 'Admin' && u.status === 'Ativo');
+
+        if(validAdmin) {
+            tempAdminSelectedIds.forEach(id => {
+                const item = itens.find(i => i.id === id);
+                if(!item) return;
+
+                if(tempAdminAction === 'approve') {
+                    if(item.status === 'Pendente') { item.status = 'Emprestado'; } 
+                    else if (item.status === 'Pendente Devolução') { item.status = 'Disponível'; item.requester = null; }
+                } else { 
+                    if(item.status === 'Pendente') { item.status = 'Disponível'; item.requester = null; } 
+                    else if (item.status === 'Pendente Devolução') { item.status = 'Emprestado'; }
+                }
+            });
+
+            alert(`Operação concluída: O lote de solicitações foi processado com sucesso.`);
+            closeModal('modalCredenciaisAdmin');
+            renderApprovals();
+            renderDashboard(); // Atualiza a tela mantendo os filtros de Select
+        } else { 
+            alert('Acesso Negado: Credenciais inválidas.'); 
+        }
+    }
+
+    // --- CRUDS GERAIS ---
+    function renderLocais() {
+        const tbody = document.getElementById('locaisTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        locais.forEach(l => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="${l.status === 'Inativo' ? 'text-decoration: line-through;' : ''}">${l.name}</td><td>${l.status}</td>
+                <td style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="openEdit('local', ${l.id})">Editar</button>
+                    <button class="btn ${l.status === 'Ativo' ? 'btn-danger' : 'btn-success'}" onclick="toggleStatus('local', ${l.id})">${l.status === 'Ativo' ? 'Inativar' : 'Reativar'}</button>
+                </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function addLocal(e) { 
+        e.preventDefault(); 
+        locais.push({ id: Date.now(), name: document.getElementById('newLocalName').value, status: 'Ativo' }); 
+        e.target.reset(); 
+        renderLocais(); 
+        updateLocalSelects(); 
+        renderDashboard(); 
+    }
+
+    function renderItensAdmin() {
+        const tbody = document.getElementById('itensCrudTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        itens.forEach(i => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${i.name}</td><td>${getLocalName(i.localId)}</td><td>${i.status}</td>
+                <td style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="openEdit('item', ${i.id})">Editar</button>
+                    <button class="btn btn-danger" onclick="deleteItem(${i.id})">Excluir</button>
+                </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function addItem(e) {
+        e.preventDefault();
+        itens.push({ id: Date.now(), name: document.getElementById('newItemName').value, localId: parseInt(document.getElementById('newItemLocal').value), status: 'Disponível', requester: null });
+        e.target.reset(); 
+        renderItensAdmin(); 
+        renderDashboard();
+    }
+
+    function deleteItem(id) { 
+        if(confirm('Excluir permanentemente?')) { 
+            itens = itens.filter(i => i.id !== id); 
+            renderItensAdmin(); 
+            renderDashboard(); 
+        } 
+    }
+
+    function renderUsuarios() {
+        const tbody = document.getElementById('usuariosTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        usuarios.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="${u.status === 'Inativo' ? 'text-decoration: line-through;' : ''}">${u.name}</td><td>${u.login}</td><td>${u.role}</td><td>${u.status}</td>
+                <td style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="openEdit('user', ${u.id})">Editar</button>
+                    <button class="btn ${u.status === 'Ativo' ? 'btn-danger' : 'btn-success'}" onclick="toggleStatus('user', ${u.id})">${u.status === 'Ativo' ? 'Inativar' : 'Reativar'}</button>
+                </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Função de Adicionar Utilizador Atualizada (Inclui Palavra-passe)
+    function addUser(e) {
+        e.preventDefault();
+        usuarios.push({ 
+            id: Date.now(), 
+            name: document.getElementById('newUserName').value, 
+            login: document.getElementById('newUserLogin').value, 
+            pass: document.getElementById('newUserPass').value, 
+            role: document.getElementById('newUserRole').value, 
+            status: 'Ativo' 
+        });
+        e.target.reset(); 
+        renderUsuarios();
+    }
+
+    function openEdit(type, id) {
+        document.getElementById('editEntityType').value = type;
+        document.getElementById('editEntityId').value = id;
+        const formFields = document.getElementById('editFormFields');
+        formFields.innerHTML = '';
+
+        if(type === 'local') {
+            document.getElementById('editModalTitle').innerText = 'Editar Local';
+            formFields.innerHTML = `<div class="form-group"><label>Nome</label><input type="text" id="editFieldValue" value="${locais.find(l => l.id == id).name}"></div>`;
+        } else if(type === 'item') {
+            document.getElementById('editModalTitle').innerText = 'Editar Item';
+            const item = itens.find(i => i.id == id);
+            let options = locais.filter(l => l.status === 'Ativo').map(l => `<option value="${l.id}" ${l.id == item.localId ? 'selected' : ''}>${l.name}</option>`).join('');
+            formFields.innerHTML = `<div class="form-group"><label>Descrição</label><input type="text" id="editFieldValue" value="${item.name}"></div><div class="form-group" style="margin-top:10px;"><label>Local Vinculado</label><select id="editFieldSelect" style="width: 100%;">${options}</select></div>`;
+        } else if(type === 'user') {
+            document.getElementById('editModalTitle').innerText = 'Editar Utilizador';
+            const user = usuarios.find(u => u.id == id);
+            formFields.innerHTML = `
+                <div class="form-group"><label>Nome</label><input type="text" id="editFieldValue" value="${user.name}"></div>
+                <div class="form-group" style="margin-top:10px;"><label>Login</label><input type="text" id="editFieldLogin" value="${user.login}"></div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Palavra-passe</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="editFieldPass" value="${user.pass}">
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('editFieldPass', this)">
+                            <img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Perfil</label>
+                    <select id="editFieldSelect" style="width: 100%;">
+                        <option value="Usuário" ${user.role==='Usuário'?'selected':''}>Utilizador Comum</option>
+                        <option value="Admin" ${user.role==='Admin'?'selected':''}>Administrador</option>
+                    </select>
+                </div>`;
+        }
+        openModal('modalEditGenerico');
+        
+        setTimeout(() => { $('#editFieldSelect').select2({ width: '100%', language: "pt-BR" }); }, 50);
+    }
+
+    function saveEdit() {
+        const type = document.getElementById('editEntityType').value;
+        const id = parseInt(document.getElementById('editEntityId').value);
+
+        if(type === 'local') { 
+            locais.find(l => l.id === id).name = document.getElementById('editFieldValue').value; 
+            renderLocais(); 
+            updateLocalSelects(); 
+        } 
+        else if(type === 'item') { 
+            const item = itens.find(i => i.id === id); 
+            item.name = document.getElementById('editFieldValue').value; 
+            item.localId = parseInt(document.getElementById('editFieldSelect').value); 
+            renderItensAdmin(); 
+        } 
+        else if(type === 'user') { 
+            const user = usuarios.find(u => u.id === id); 
+            user.name = document.getElementById('editFieldValue').value; 
+            user.login = document.getElementById('editFieldLogin').value; 
+            user.pass = document.getElementById('editFieldPass').value; 
+            user.role = document.getElementById('editFieldSelect').value; 
+            renderUsuarios(); 
+        }
+        
+        closeModal('modalEditGenerico'); 
+        alert('Registo atualizado com sucesso!'); 
+        renderDashboard();
+    }
+
+    function toggleStatus(type, id) {
+        if(type === 'local') { 
+            const local = locais.find(l => l.id === id); 
+            local.status = local.status === 'Ativo' ? 'Inativo' : 'Ativo'; 
+            renderLocais(); 
+            updateLocalSelects(); 
+        } 
+        else if (type === 'user') { 
+            const user = usuarios.find(u => u.id === id); 
+            user.status = user.status === 'Ativo' ? 'Inativo' : 'Ativo'; 
+            renderUsuarios(); 
+        }
+        renderDashboard();
+    }
+
+    // --- DASHBOARD DE RELATÓRIOS E EXPORTAÇÃO ---
+    function toggleFiltros() {
+        const tempo = document.getElementById('filterTempo').value;
+        const isCustom = (tempo === 'custom');
+        
+        document.getElementById('divFiltroTurno').style.display = (tempo === '1' || isCustom) ? 'block' : 'none';
+        document.getElementById('divDataInicial').style.display = isCustom ? 'block' : 'none';
+        document.getElementById('divDataFinal').style.display = isCustom ? 'block' : 'none';
+    }
+
+    function updateRelatorios() {
+        const tempo = document.getElementById('filterTempo').value;
+        const salaId = document.getElementById('filterSalaRelatorio').value;
+        
+        let baseValue = 540;
+        if (tempo === '30') baseValue = 142;
+        if (tempo === '7') baseValue = 35;
+        if (tempo === '1') baseValue = 8;
+        if (tempo === 'custom') baseValue = 88; 
+        
+        document.getElementById('statEmprestimos').innerText = baseValue;
+        document.getElementById('statUsuarios').innerText = Math.max(1, Math.floor(baseValue * 0.4));
+        
+        const chartSalas = document.getElementById('chartSalasContainer');
+        const chartItensContent = document.getElementById('chartItensContent');
+        
+        if(salaId === 'todos') {
+            chartSalas.style.display = 'block';
+            chartItensContent.innerHTML = `
+                <div class="chart-row">
+                    <div class="chart-label">Controle Projetor</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 92%;"></div></div>
+                    <div class="chart-value">92%</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">Chave Principal</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 78%; background: var(--status-orange);"></div></div>
+                    <div class="chart-value">78%</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">Microfone Sem Fio</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 50%; background: var(--senai-red);"></div></div>
+                    <div class="chart-value">50%</div>
+                </div>
+            `;
+        } else {
+            chartSalas.style.display = 'none';
+            const itensDaSala = itens.filter(i => i.localId == salaId);
+            chartItensContent.innerHTML = '';
+            
+            if(itensDaSala.length === 0) {
+                chartItensContent.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Nenhum item cadastrado neste ambiente.</p>';
+            } else {
+                itensDaSala.forEach((item, index) => {
+                    const perc = Math.max(10, 95 - (index * 25)); 
+                    const color = perc > 70 ? 'var(--senai-blue)' : (perc > 40 ? 'var(--status-orange)' : 'var(--senai-red)');
+                    chartItensContent.innerHTML += `
+                        <div class="chart-row">
+                            <div class="chart-label">${item.name}</div>
+                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: ${perc}%; background: ${color};"></div></div>
+                            <div class="chart-value">${perc}%</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+    }
+
+    function exportarLog() {
+        const logs = document.getElementById('expLogs').checked;
+        const users = document.getElementById('expUsers').checked;
+        const items = document.getElementById('expItems').checked;
+        const rooms = document.getElementById('expRooms').checked;
+        
+        if(!logs && !users && !items && !rooms) {
+            alert("Atenção: Tem de selecionar pelo menos um módulo para exportação.");
+            return;
+        }
+
+        const selTempo = document.getElementById('filterTempo').value;
+        const textSala = $('#filterSalaRelatorio').find("option:selected").text();
+        const textTurno = $('#filterTurno').find("option:selected").text();
+
+        let selecionados = [];
+        if(logs) selecionados.push("Histórico de Empréstimos");
+        if(users) selecionados.push("Cadastro de Utilizadores");
+        if(items) selecionados.push("Inventário de Itens");
+        if(rooms) selecionados.push("Relação de Ambientes");
+
+        let calcDiasTexto = "";
+        let isMultiDay = false;
+        
+        if (selTempo === 'sempre') {
+            calcDiasTexto = "Todo o período (Desde a implantação)";
+            isMultiDay = true;
+        } else if (selTempo === '1') {
+            calcDiasTexto = "1 dia (Hoje)";
+            isMultiDay = false;
+        } else if (selTempo === '7') {
+            calcDiasTexto = "Últimos 7 dias";
+            isMultiDay = true;
+        } else if (selTempo === '30') {
+            calcDiasTexto = "Últimos 30 dias";
+            isMultiDay = true;
+        } else if (selTempo === 'custom') {
+            const dataIn = document.getElementById('dataInicial').value;
+            const dataFim = document.getElementById('dataFinal').value;
+            
+            if(!dataIn || !dataFim) {
+                alert("Erro: Preencha a data inicial e final para exportar.");
+                return;
+            }
+            
+            const d1 = new Date(dataIn);
+            const d2 = new Date(dataFim);
+            const diffTime = d2 - d1;
+            
+            if(diffTime < 0) {
+                alert("Erro: Data final é anterior à data inicial.");
+                return;
+            }
+            
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            const d1Format = dataIn.split('-').reverse().join('/');
+            const d2Format = dataFim.split('-').reverse().join('/');
+            
+            calcDiasTexto = `${diffDays} dia(s) processado(s) (De ${d1Format} até ${d2Format})`;
+            isMultiDay = (diffDays > 1);
+        }
+
+        let turnoTexto = isMultiDay ? "[Turno: Todos]" : `[Turno: ${textTurno}]`;
+
+        alert(`A gerar relatório Excel/CSV...\n\nFiltros Aplicados:\n- Período: ${calcDiasTexto}\n- ${turnoTexto}\n- Ambiente: ${textSala}\n\nDados Exportados:\n- ${selecionados.join('\n- ')}\n\n(Ação concluída com sucesso)`);
+    }
+
+    // --- VISUALIZAÇÃO DE SENHA ---
+    function togglePasswordVisibility(inputId, btnElement) {
+        const inputElement = document.getElementById(inputId);
+        if (!inputElement) return;
+
+        if (inputElement.type === "password") {
+            inputElement.type = "text";
+            btnElement.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/5704/5704746.png" alt="Ocultar" width="20" height="20">'; 
+        } else {
+            inputElement.type = "password";
+            btnElement.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/158/158746.png" alt="Mostrar" width="20" height="20">'; 
+        }
+    }
+
+    // Inicialização do Sistema
+    window.onload = () => {
+        // Inicializar a biblioteca Select2 para todos os selects no boot
+        $('select').select2({ width: '100%', language: "pt-BR" });
+        
+        // Garantir que as funções onchange originais disparam corretamente com o jQuery Select2
+        $(document).on('select2:select', 'select', function (e) {
+            this.dispatchEvent(new Event('change'));
+        });
+
+        updateLocalSelects();
+        updateUIRole(); 
+    };
+</script>
+
+</body>
+</html>
