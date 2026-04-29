@@ -1,4 +1,4 @@
-﻿using SCA.Back.Data;
+using SCA.Back.Data;
 using Microsoft.EntityFrameworkCore;
 
 using UserServe = SCA.Back.Services.UsuarioService;
@@ -31,7 +31,7 @@ namespace SCA.Back.Services
         }
 
         //CriarInten - Adiciona os intnes
-        public static bool CriarIntens(string descricao)
+        public static bool CriarIntens(string descricao, int salaId)
         {
             try
             {
@@ -45,17 +45,26 @@ namespace SCA.Back.Services
                     return false;
                 }
 
+                // Verifica se a sala existe
+                var sala = context.Salas.Find(salaId);
+                if (sala == null)
+                {
+                    Console.WriteLine($"Erro: Sala com ID {salaId} não encontrada.");
+                    return false;
+                }
+
                 var item = new Itens
                 {
                     Descricao = descricao,
                     Estado = Estados.Livre,
-                    IsAtivo = true
+                    IsAtivo = true,
+                    SalaId = salaId
                 };
 
                 context.Itens.Add(item);
                 context.SaveChanges();
 
-                Console.WriteLine($"Item '{descricao}' criado com sucesso!");
+                Console.WriteLine($"Item '{descricao}' criado com sucesso na Sala {salaId}!");
                 return true;
             }
             catch (Exception ex)
@@ -66,7 +75,7 @@ namespace SCA.Back.Services
         }
 
         //EditarInten - Alterar os Itens no banco
-        public static bool EditarIntens(int id, string? novaDescricao = null, string? NewStatos = null)
+        public static bool EditarIntens(int id, string? novaDescricao = null, string? NewStatos = null, int? novaSalaId = null)
         {
             try
             {
@@ -96,6 +105,14 @@ namespace SCA.Back.Services
                     inten.Estado = NewStatos;
                 }
 
+                if (novaSalaId.HasValue)
+                {
+                    var sala = context.Salas.Find(novaSalaId.Value);
+                    if (sala != null)
+                    {
+                        inten.SalaId = novaSalaId.Value;
+                    }
+                }
 
                 context.SaveChanges();
                 Console.WriteLine($"Itens ID {id} atualizado com sucesso!");

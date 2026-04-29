@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,7 @@ namespace SCA
             var usuario = SCA.Back.Services.UsuarioService.LoginUser(txtUsername.Text, txtPassword.Password);
             if (usuario != null)
             {
-                MainWindow mainWindow = new MainWindow();
+                MainWindow mainWindow = new MainWindow(usuario);
                 mainWindow.Show();
                 this.Close();
             }

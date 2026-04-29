@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,6 +25,10 @@ namespace SCA.Back.Data
         public string Estado { get; set; } = Estados.Livre;
 
         public bool IsAtivo { get; set; } = false;
+
+        // FK para a Sala vinculada a este Item
+        public int SalaId { get; set; }
+        public virtual Sala Sala { get; set; } = null!;
 
         public virtual ICollection<EmprestimoIntens> EmprestimoIntens { get; set; } = null!;
 

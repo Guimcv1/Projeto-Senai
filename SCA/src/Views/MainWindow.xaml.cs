@@ -1,78 +1,118 @@
-﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SCA
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public bool IsAdminMode { get; set; } = false;
+        public SCA.Back.Data.Usuario CurrentAdmin { get; set; } = null;
+
+        public MainWindow(SCA.Back.Data.Usuario adminUser = null)
         {
             InitializeComponent();
-            CarregarAmbientes();
+            
+            if (adminUser != null && adminUser.Pefil == "Admin")
+            {
+                IsAdminMode = true;
+                CurrentAdmin = adminUser;
+            }
+
+            UpdateUIRole();
+            LoadView(new Views.DashboardView(this));
         }
 
-        private void CarregarAmbientes()
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            // Reset background for all buttons
+            ResetMenuButtons();
+            var btn = sender as Button;
+            if (btn != null)
             {
-                var salas = SCA.Back.Services.SalasService.ListarSala();
-                var ambientes = new System.Collections.Generic.List<Keys_manager___Tester.AmbienteTemp>();
-
-                string filtro = "";
-                if (ComboFiltro != null && ComboFiltro.SelectedItem is ComboBoxItem item)
-                {
-                    filtro = item.Content.ToString();
-                }
-
-                foreach (var sala in salas)
-                {
-                  
-                    string cor = sala.isAtivo ? "#16a34a" : "#94a3b8";
-                    string statusTxt = sala.isAtivo ? "Disponíveis" : "Manutenção";
-
-                    // Filtro
-                    if (filtro == "Disponíveis" && statusTxt != "Disponíveis") continue;
-                    if (filtro == "Em Uso" && statusTxt != "Em Uso") continue;
-                    if (filtro == "Manutenção" && statusTxt != "Manutenção") continue;
-
-                    ambientes.Add(new Keys_manager___Tester.AmbienteTemp
-                    {
-                        Id = sala.Id,
-                        Nome = sala.Descricao,
-                        CorStatus = cor
-                    });
-                }
-
-                if (icAmbientes != null)
-                {
-                    icAmbientes.ItemsSource = ambientes;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar ambientes: {ex.Message}");
+                btn.Background = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)); // rgba(255,255,255,0.15)
+                btn.BorderThickness = new Thickness(4, 0, 0, 0);
+                btn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EA580C"));
+                
+                if (btn == btnVisaoGeral) LoadView(new Views.DashboardView(this));
+                else if (btn == btnAprovacoes) LoadView(new Views.AprovacoesView(this));
+                else if (btn == btnLocais) LoadView(new Views.LocaisView(this));
+                else if (btn == btnItens) LoadView(new Views.ItensView(this));
+                else if (btn == btnUsuarios) LoadView(new Views.UsuariosView(this));
+                else if (btn == btnRelatorios) LoadView(new Views.RelatoriosView(this));
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ResetMenuButtons()
         {
-            LoginPage loginPage = new LoginPage();
-            loginPage.Show();
-            this.Close();
+            var buttons = new[] { btnVisaoGeral, btnAprovacoes, btnLocais, btnItens, btnUsuarios, btnRelatorios };
+            foreach (var b in buttons)
+            {
+                b.Background = Brushes.Transparent;
+                b.BorderThickness = new Thickness(0);
+            }
         }
 
-        private void ComboFiltro_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void LoadView(UserControl view)
         {
-            CarregarAmbientes();
+            MainContent.Content = view;
         }
 
+        private void BtnAuth_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsAdminMode)
+            {
+                IsAdminMode = false;
+                CurrentAdmin = null;
+                UpdateUIRole();
+                
+                ResetMenuButtons();
+                btnVisaoGeral.Background = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255));
+                btnVisaoGeral.BorderThickness = new Thickness(4, 0, 0, 0);
+                btnVisaoGeral.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EA580C"));
+                LoadView(new Views.DashboardView(this));
+            }
+            else
+            {
+                // Open Admin Login Dialog (LoginPage actually acts as a login window for both Admin and User)
+                // For simplicity, we open LoginPage
+                LoginPage loginPage = new LoginPage();
+                loginPage.Show();
+                this.Close();
+            }
+        }
+
+        public void UpdateUIRole()
+        {
+            var adminVisibility = IsAdminMode ? Visibility.Visible : Visibility.Collapsed;
+            
+            btnAprovacoes.Visibility = adminVisibility;
+            btnLocais.Visibility = adminVisibility;
+            btnItens.Visibility = adminVisibility;
+            btnUsuarios.Visibility = adminVisibility;
+            btnRelatorios.Visibility = adminVisibility;
+            
+            UserBadge.Visibility = adminVisibility;
+
+            if (IsAdminMode)
+            {
+                txtUserNameDisplay.Text = $"Admin ({CurrentAdmin?.Nome})";
+                txtAuth.Text = "Sair do Sistema";
+                btnAuth.Foreground = Brushes.White;
+                btnAuth.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#dc2626"));
+                btnAuth.BorderThickness = new Thickness(0);
+                iconAuth.Kind = MaterialDesignThemes.Wpf.PackIconKind.Logout;
+                iconAuth.Foreground = Brushes.White;
+            }
+            else
+            {
+                txtAuth.Text = "Acesso Administrativo";
+                btnAuth.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#002776"));
+                btnAuth.Background = Brushes.Transparent;
+                btnAuth.BorderThickness = new Thickness(2);
+                iconAuth.Kind = MaterialDesignThemes.Wpf.PackIconKind.AccountLock;
+                iconAuth.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#002776"));
+            }
+        }
     }
 }
