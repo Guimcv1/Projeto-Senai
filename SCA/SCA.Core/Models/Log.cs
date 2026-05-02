@@ -1,4 +1,4 @@
-﻿// O "SQLAlchemy" do C#
+// O "SQLAlchemy" do C#
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SCA.Core.Models
 {
     //Declaração o nome da tabela do banco de dados
-    [Table("Log")]
+    [Table("Logs")]
 
     public class Log
     {

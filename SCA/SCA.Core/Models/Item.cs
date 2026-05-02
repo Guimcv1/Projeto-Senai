@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SCA.Core.Models
 {
     //Declaração o nome da tabela do banco de dados
-    [Table("Item")]
+    [Table("Itens")]
 
     public class Item
     {

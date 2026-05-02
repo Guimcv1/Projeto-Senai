@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace SCA.Core.Models
 {
     //Declaração o nome da tabela do banco de dados
-    [Table("EmprestimoItem")]
+    [Table("EmprestimoIntens")]
 
     public class EmprestimoItem
     {
