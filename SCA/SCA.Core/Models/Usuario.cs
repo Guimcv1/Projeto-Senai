@@ -35,6 +35,6 @@ namespace SCA.Core.Models
         //Base para o Fk
         public virtual ICollection<Emprestimos> Emprestimos { get; set; } = null!;
 
-        public virtual ICollection<Logs> Logs { get; set; } = null!;
+        public virtual ICollection<Log> Log { get; set; } = null!;
     }
 }

@@ -13,7 +13,7 @@
                 <DataGrid Grid.Row="0" x:Name="dgAprovacoes" AutoGenerateColumns="False" IsReadOnly="False" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50" MinHeight="300">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Header="Sel." Binding="{Binding IsSelected, Mode=TwoWay}" Width="100"/>
-                        <DataGridTextColumn Header="Itens" Binding="{Binding DescricaoItems}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Item" Binding="{Binding DescricaoItems}" Width="*" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Ambiente" Binding="{Binding Ambiente}" Width="*" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Solicitante" Binding="{Binding Solicitante}" Width="*" IsReadOnly="True"/>
                         <DataGridTemplateColumn Header="Ação" Width="150">

@@ -14,8 +14,8 @@ namespace SCA.Back.Debug
             {
                 Console.WriteLine("\nEscolha a entidade:");
                 Console.WriteLine("1 - Usuários");
-                Console.WriteLine("2 - Salas");
-                Console.WriteLine("3 - Itens");
+                Console.WriteLine("2 - Sala");
+                Console.WriteLine("3 - Item");
                 Console.WriteLine("4 - Empréstimos"); 
                 Console.WriteLine("5 - Exportar para Excel");
                 Console.WriteLine("0 - Sair");

@@ -11,14 +11,14 @@ namespace SCA.Views;
 
 public partial class AprovacoesView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
 
     public AprovacoesView()
     {
         InitializeComponent();
     }
 
-    public AprovacoesView(MainWindow parent) : this()
+    public AprovacoesView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
         LoadPendencias();
@@ -28,7 +28,7 @@ public partial class AprovacoesView : UserControl
     {
         try
         {
-            var emprestimos = EmprestimosService.ListarEmprestimo();
+            var emprestimos = EmprestimoService.ListarEmprestimo();
             Console.WriteLine($"[Aprovações] Total de empréstimos no banco: {emprestimos.Count}");
 
             var pendentes = emprestimos.Where(e => e.Estado == Estados.Analise).ToList();
@@ -38,29 +38,29 @@ public partial class AprovacoesView : UserControl
 
             foreach (var emp in pendentes)
             {
-                if (emp.EmprestimoIntens == null || !emp.EmprestimoIntens.Any())
+                if (emp.EmprestimoItem == null || !emp.EmprestimoItem.Any())
                 {
                     Console.WriteLine($"[Aprovações] Empréstimo {emp.Id} ignorado: sem itens vinculados.");
                     continue;
                 }
 
                 // Verifica qual tipo de solicitação é baseado no estado dos itens
-                var primeiroItem = emp.EmprestimoIntens.First().Itens;
+                var primeiroItem = emp.EmprestimoItem.First().Item;
                 bool isDevolucao = primeiroItem != null && primeiroItem.Estado == Estados.Emprestado;
 
                 listUI.Add(new AprovacaoUI
                 {
                     EmprestimoId = emp.Id,
-                    DescricaoItems = string.Join(", ", emp.EmprestimoIntens.Select(ei => ei.Itens?.Descricao ?? "Item s/ Desc")),
+                    DescricaoItems = string.Join(", ", emp.EmprestimoItem.Select(ei => ei.Item?.Descricao ?? "Item s/ Desc")),
                     Ambiente = emp.Sala?.Descricao ?? "Desconhecido",
                     Solicitante = emp.Usuario?.Nome ?? "Usuário Desconhecido",
                     Acao = isDevolucao ? "Devolução" : "Empréstimo",
                     BadgeColor = isDevolucao ? "#EA580C" : "#002776",
-                    Tipo = isDevolucao ? EmprestimosService.TipoSolicitacao.Devolucao : EmprestimosService.TipoSolicitacao.Emprestimo
+                    Tipo = isDevolucao ? EmprestimoService.TipoSolicitacao.Devolucao : EmprestimoService.TipoSolicitacao.Emprestimo
                 });
             }
 
-            Console.WriteLine($"[Aprovações] Itens para o DataGrid: {listUI.Count}");
+            Console.WriteLine($"[Aprovações] Item para o DataGrid: {listUI.Count}");
             dgAprovacoes.ItemsSource = listUI;
         }
         catch (Exception ex)
@@ -101,7 +101,7 @@ public partial class AprovacoesView : UserControl
         {
             try 
             {
-                if (EmprestimosService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
+                if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
                 {
                     successCount++;
                 }
@@ -134,5 +134,5 @@ public class AprovacaoUI
     public string Solicitante { get; set; } = "";
     public string Acao { get; set; } = "";
     public string BadgeColor { get; set; } = "";
-    public EmprestimosService.TipoSolicitacao Tipo { get; set; }
+    public EmprestimoService.TipoSolicitacao Tipo { get; set; }
 }

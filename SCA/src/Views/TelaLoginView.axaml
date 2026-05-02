@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:material="using:Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
-        x:Class="SCA.Views.LoginPage"
-        Title="LoginPage"
+        x:Class="SCA.Views.TelaLoginView"
+        Title="TelaLoginView"
         Height="540" Width="960" WindowStartupLocation="CenterScreen" 
         SystemDecorations="None" CanResize="False" Background="White">
 

@@ -12,7 +12,7 @@ namespace SCA.Views;
 
 public partial class ItensView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
     private int _editingId = -1;
     private List<Sala> _salasDisponiveis = new();
 
@@ -21,7 +21,7 @@ public partial class ItensView : UserControl
         InitializeComponent();
     }
 
-    public ItensView(MainWindow parent) : this()
+    public ItensView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
         LoadData();
@@ -31,7 +31,7 @@ public partial class ItensView : UserControl
     {
         try
         {
-            _salasDisponiveis = SalasService.ListarSala();
+            _salasDisponiveis = SalaService.ListarSala();
             
             // Populate Combos for Dialog
             cbSala.ItemsSource = _salasDisponiveis.Select(s => s.Descricao).ToList();

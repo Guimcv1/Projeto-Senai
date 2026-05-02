@@ -8,9 +8,9 @@ namespace SCA.Back.Execel
 {
     public class ExportadorUsuarios
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo, List<Usuario> usuarios)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo, List<Usuario> usuarios)
         {
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.Usuario)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.Usuario)
             {
                 var listaUsuarios = workbook.Worksheets.Add("Lista de Usuarios");
 

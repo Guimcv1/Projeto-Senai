@@ -19,12 +19,12 @@ namespace SCA.Back.Debug
             {
                 Console.Write("Nome/Descrição da Sala: ");
                 string nome = Console.ReadLine() ?? "";
-                SalasService.CriarSala(nome);
+                SalaService.CriarSala(nome);
                 Console.WriteLine("Comando executado.");
             }
             else if (op == "2")
             {
-                var salas = SalasService.ListarSala();
+                var salas = SalaService.ListarSala();
                 foreach (var s in salas)
                     Console.WriteLine($"ID: {s.Id} | Descrição: {s.Descricao} | Ativo: {s.isAtivo}");
             }
@@ -35,7 +35,7 @@ namespace SCA.Back.Debug
                 {
                     Console.Write("Nova Descrição: ");
                     string nome = Console.ReadLine() ?? "";
-                    SalasService.EditarSala(id, nome);
+                    SalaService.EditarSala(id, nome);
                 }
             }
             else if (op == "4")
@@ -43,7 +43,7 @@ namespace SCA.Back.Debug
                 Console.Write("ID da sala para inativar: ");
                 if (int.TryParse(Console.ReadLine(), out int id))
                 {
-                    SalasService.InativaSala(id);
+                    SalaService.InativaSala(id);
                 }
             }
         }

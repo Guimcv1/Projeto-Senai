@@ -3,11 +3,11 @@ using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 using UserServe = SCA.Core.Services.UsuarioService;
-using Enum = SCA.Core.Models.Estados;
+using Estados = SCA.Core.Models.Estados;
 
 namespace SCA.Core.Services
 {
-    public class SalasService
+    public class SalaService
     {
 
         //InativarSala- Inativa o Sala
@@ -26,7 +26,7 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao atualizar Salas: {ex.Message}");
+                Console.WriteLine($"Erro ao atualizar Sala: {ex.Message}");
                 return false;
             }
         }
@@ -86,7 +86,7 @@ namespace SCA.Core.Services
             }
         }
 
-        //ListarSala - Listar as Salas do Banco
+        //ListarSala - Listar as Sala do Banco
         public static List<Sala> ListarSala()
         {
             try
@@ -96,7 +96,7 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao listar as Salas: {ex.Message}");
+                Console.WriteLine($"Erro ao listar as Sala: {ex.Message}");
                 return new List<Sala>();
             }
         }
@@ -111,7 +111,7 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar Itens: {ex.Message}");
+                Console.WriteLine($"Erro ao buscar Item: {ex.Message}");
                 return null;
             }
         }
@@ -126,7 +126,7 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar Itens: {ex.Message}");
+                Console.WriteLine($"Erro ao buscar Item: {ex.Message}");
                 return null;
             }
         }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:material="using:Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
-             x:Class="SCA.Views.DashboardView">
+             x:Class="SCA.Views.PainelVisaoGeralView">
 
     <Grid>
         <StackPanel>

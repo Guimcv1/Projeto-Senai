@@ -11,7 +11,7 @@ namespace SCA.Views;
 
 public partial class LocaisView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
     public LocaisView()
@@ -19,7 +19,7 @@ public partial class LocaisView : UserControl
         InitializeComponent();
     }
 
-    public LocaisView(MainWindow parent) : this()
+    public LocaisView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
         LoadLocais();
@@ -29,7 +29,7 @@ public partial class LocaisView : UserControl
     {
         try
         {
-            var salas = SalasService.ListarSala();
+            var salas = SalaService.ListarSala();
             
             var listUI = new List<LocalUI>();
 
@@ -66,7 +66,7 @@ public partial class LocaisView : UserControl
     {
         if (sender is Button btn && btn.DataContext is LocalUI local)
         {
-            var sala = SalasService.BuscarPorIdSala(local.Id);
+            var sala = SalaService.BuscarPorIdSala(local.Id);
             if (sala != null)
             {
                 _editingId = sala.Id;
@@ -83,7 +83,7 @@ public partial class LocaisView : UserControl
     {
         if (sender is Button btn && btn.DataContext is LocalUI local)
         {
-            if (SalasService.InativaSala(local.Id))
+            if (SalaService.InativaSala(local.Id))
             {
                 LoadLocais();
             }
@@ -102,8 +102,8 @@ public partial class LocaisView : UserControl
         if (string.IsNullOrEmpty(nome)) return;
 
         bool success;
-        if (_editingId == -1) success = SalasService.CriarSala(nome);
-        else success = SalasService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked);
+        if (_editingId == -1) success = SalaService.CriarSala(nome);
+        else success = SalaService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked);
 
         if (success)
         {

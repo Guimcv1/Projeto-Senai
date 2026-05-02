@@ -8,16 +8,16 @@ using SCA.Core.Services;
 
 namespace SCA.Back.Execel
 {
-    public class ExportarExecel
+    public class ExportacaoExcel
     {
         //Garanta que não há erro de digitação
-        public enum TipoExeport
+        public enum TipoExportacao
         {
-            Tudo, Intens, Usuario, Sala, Empresitmos,
-            TodosLogs, LogsIntens, LogsSala, LogsUsuario, EmprestimoIntens
+            Tudo, Item, Usuario, Sala, Empresitmos,
+            TodosLogs, LogsIntens, LogsSala, LogsUsuario, EmprestimoItem
         }
 
-        public static string ExportarParaExcel(string caminhoArquivo, TipoExeport tipo, DateTime? inicio = null, DateTime? fim = null)
+        public static string ExportarParaExcel(string caminhoArquivo, TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace SCA.Back.Execel
                 //Cria um novo workbook (arquivo Excel)
                 using var workbook = new XLWorkbook();
 
-                //Aba de Itens
+                //Aba de Item
                 ExportadorIntens.AdicionarAba(workbook, tipo, intens);
 
                 //Aba de Usuários
@@ -50,10 +50,10 @@ namespace SCA.Back.Execel
                 //Aba de Emprestimos
                 ExportadorEmprestimos.AdicionarAba(workbook, tipo, inicio, fim);
 
-                //Aba de EmprestimoIntens
+                //Aba de EmprestimoItem
                 ExportadorEmprestimoIntens.AdicionarAba(workbook, tipo);
 
-                //Aba de Logs
+                //Aba de Log
                 ExportadorLogs.AdicionarAba(workbook, tipo, inicio, fim);
 
                 //Salva o arquivo

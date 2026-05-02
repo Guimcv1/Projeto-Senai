@@ -13,17 +13,17 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class DashboardView : UserControl
+public partial class PainelVisaoGeralView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
     private List<Sala> _todasSalas = new();
 
-    public DashboardView()
+    public PainelVisaoGeralView()
     {
         InitializeComponent();
     }
 
-    public DashboardView(MainWindow parent) : this()
+    public PainelVisaoGeralView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
     }
@@ -38,7 +38,7 @@ public partial class DashboardView : UserControl
     {
         try
         {
-            _todasSalas = SalasService.ListarSala();
+            _todasSalas = SalaService.ListarSala();
             FilterDashboard();
         }
         catch (Exception ex)
@@ -79,7 +79,7 @@ public partial class DashboardView : UserControl
         icAmbientes.ItemsSource = ambientesUI;
     }
 
-    private string GetRoomColor(int salaId, List<Itens> itens, List<Emprestimos> emprestimos)
+    private string GetRoomColor(int salaId, List<Item> itens, List<Emprestimos> emprestimos)
     {
         var itensDaSala = itens.Where(i => i.SalaId == salaId).ToList();
         if (itensDaSala.Count == 0) return "#94a3b8"; 
@@ -123,7 +123,7 @@ public partial class DashboardView : UserControl
     {
         if (txtDialogTitle == null || dgItems == null || RoomDialogOverlay == null) return;
 
-        txtDialogTitle.Text = $"Itens em: {salaName}";
+        txtDialogTitle.Text = $"Item em: {salaName}";
 
         using var context = new BancoContext();
         var itensDaSala = context.Itens.Where(i => i.SalaId == salaId).ToList();
@@ -231,7 +231,7 @@ public partial class DashboardView : UserControl
 
             if (salaId != 0)
             {
-                if (EmprestimosService.SolicitarEmprestimo(currentUserId, salaId, itemsToLoan))
+                if (EmprestimoService.SolicitarEmprestimo(currentUserId, salaId, itemsToLoan))
                 {
                     _parent?.ShowMessage($"Solicitado empréstimo de {itemsToLoan.Count} itens.", false);
                 }
@@ -245,14 +245,14 @@ public partial class DashboardView : UserControl
             foreach (var item in itemsToReturn)
             {
                 var activeLoan = context.Emprestimos
-                    .Include(e => e.EmprestimoIntens)
-                    .Where(e => e.Estado == Estados.Emprestado && e.EmprestimoIntens.Any(ei => ei.ItemId == item.Id))
+                    .Include(e => e.EmprestimoItem)
+                    .Where(e => e.Estado == Estados.Emprestado && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
                     .OrderByDescending(e => e.DataEstado)
                     .FirstOrDefault();
 
                 if (activeLoan != null)
                 {
-                    if (EmprestimosService.SolicitarDevolucao(activeLoan.Id))
+                    if (EmprestimoService.SolicitarDevolucao(activeLoan.Id))
                     {
                         returnCount++;
                     }

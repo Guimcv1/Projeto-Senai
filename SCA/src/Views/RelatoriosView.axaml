@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel>
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,20">
-                <TextBlock Grid.Column="0" FontSize="40" Foreground="#002776" VerticalAlignment="Center" FontWeight="Bold">Relatórios e Logs</TextBlock>
+                <TextBlock Grid.Column="0" FontSize="40" Foreground="#002776" VerticalAlignment="Center" FontWeight="Bold">Relatórios e Log</TextBlock>
                 <Button Grid.Column="1" Background="#16A34A" Foreground="White" Height="45" Padding="20,0" Click="ExportarExcel_Click">
                     <StackPanel Orientation="Horizontal">
                         <material:MaterialIcon Kind="FileExcel" Width="24" Height="24" Margin="0,0,10,0"/>

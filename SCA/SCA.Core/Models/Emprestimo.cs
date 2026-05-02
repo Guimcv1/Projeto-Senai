@@ -27,7 +27,7 @@ namespace SCA.Core.Models
         public virtual Sala Sala { get; set; } = null!;
 
         //Base apra o Fk 
-        public virtual ICollection<EmprestimoIntens> EmprestimoIntens { get; set; } = null!;
+        public virtual ICollection<EmprestimoItem> EmprestimoItem { get; set; } = null!;
 
     }
 }

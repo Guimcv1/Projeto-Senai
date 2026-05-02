@@ -8,14 +8,14 @@ namespace SCA.Back.Execel
 {
     public class ExportadorEmprestimos
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo, DateTime? inicio, DateTime? fim)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo, DateTime? inicio, DateTime? fim)
         {
             //Verifica se o tipo solicitado envolve empréstimos ou se é para exportar tudo
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.Empresitmos)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.Empresitmos)
             {
                 //Configuração inicial da aba
                 var worksheet = workbook.Worksheets.Add("Lista de Emprestimos");
-                var emprestimos = EmprestimosService.FiltrarEmprestimo(tipo, inicio, fim);
+                var emprestimos = EmprestimoService.FiltrarEmprestimo(tipo, inicio, fim);
 
                 //Configuração dos cabeçalhos das colunas
                 worksheet.Cell(1, 1).Value = "ID";

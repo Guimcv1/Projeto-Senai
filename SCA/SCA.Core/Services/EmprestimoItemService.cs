@@ -8,21 +8,21 @@ using System.Linq;
 
 namespace SCA.Core.Services
 {
-    public class EmprestimoIntensService
+    public class EmprestimoItemService
     {
-        //Filtrar EmprestimoIntens para Exportação
-        public static List<EmprestimoIntens> FiltrarEmprestimoIntens(ExportarExecel.TipoExeport tipo)
+        //Filtrar EmprestimoItem para Exportação
+        public static List<EmprestimoItem> FiltrarEmprestimoIntens(ExportacaoExcel.TipoExportacao tipo)
         {
             try
             {
                 using var context = new BancoContext();
 
-                //Monta a consulta inicial na tabela de EmprestimoIntens
+                //Monta a consulta inicial na tabela de EmprestimoItem
                
                 //O .ThenInclude é usado para carregar uma entidade relacionada a partir da entidade incluída anteriormente.
-                var query = context.EmprestimoIntens
+                var query = context.EmprestimoItens
                     //Carrega os dados do Item relacionado
-                    .Include(i => i.Itens)
+                    .Include(i => i.Item)
                     //Carrega os dados do Empréstimo relacionado
                     .Include(i => i.Emprestimos)
                     //e para o empréstimo, carrega o respectivo Usuário
@@ -39,48 +39,48 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao filtrar EmprestimoIntens: {ex.Message}");
+                Console.WriteLine($"Erro ao filtrar EmprestimoItem: {ex.Message}");
                 // Retorna uma lista vazia caso ocorra algum erro durante a busca
-                return new List<EmprestimoIntens>();
+                return new List<EmprestimoItem>();
             }
         }
 
-        //Listar todos os EmprestimoIntens
-        public static List<EmprestimoIntens> ListarEmprestimoIntens()
+        //Listar todos os EmprestimoItem
+        public static List<EmprestimoItem> ListarEmprestimoIntens()
         {
             try
             {
                 using var context = new BancoContext();
-                /*Busca todos os registros populando as tabelas relacionadas básicas (Itens e Emprestimos)
-                retorna a lista completa de EmprestimoIntens*/
-                return context.EmprestimoIntens
-                    .Include(ei => ei.Itens)
+                /*Busca todos os registros populando as tabelas relacionadas básicas (Item e Emprestimos)
+                retorna a lista completa de EmprestimoItem*/
+                return context.EmprestimoItens
+                    .Include(ei => ei.Item)
                     .Include(ei => ei.Emprestimos)
                     .ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao listar EmprestimoIntens: {ex.Message}");
-                return new List<EmprestimoIntens>();
+                Console.WriteLine($"Erro ao listar EmprestimoItem: {ex.Message}");
+                return new List<EmprestimoItem>();
             }
         }
 
         //Buscar por ID
-        public static EmprestimoIntens? BuscarPorId(int id)
+        public static EmprestimoItem? BuscarPorId(int id)
         {
             try
             {
                 using var context = new BancoContext();
                 /*Realiza a busca pelo relacionamento específico utilizando Id,
                 incluindo na consulta as informações do Item e Emprestimo atrelados*/
-                return context.EmprestimoIntens
-                    .Include(i => i.Itens)
+                return context.EmprestimoItens
+                    .Include(i => i.Item)
                     .Include(i => i.Emprestimos)
                     .FirstOrDefault(i => i.Id == id);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar EmprestimoIntens: {ex.Message}");
+                Console.WriteLine($"Erro ao buscar EmprestimoItem: {ex.Message}");
                 return null;
             }
         }

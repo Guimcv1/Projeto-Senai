@@ -10,7 +10,7 @@ namespace SCA.Views;
 
 public partial class UsuariosView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
     public UsuariosView()
@@ -18,7 +18,7 @@ public partial class UsuariosView : UserControl
         InitializeComponent();
     }
 
-    public UsuariosView(MainWindow parent) : this()
+    public UsuariosView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
         LoadData();

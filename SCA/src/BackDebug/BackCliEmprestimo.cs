@@ -23,7 +23,7 @@ namespace SCA.Back.Debug
                 Console.Write("ID Sala: ");
                 if (!int.TryParse(Console.ReadLine(), out int sID)) return;
 
-                Console.Write("ID dos Itens (separados por vírgula): ");
+                Console.Write("ID dos Item (separados por vírgula): ");
                 string itensStr = Console.ReadLine();
                 var itensIds = new System.Collections.Generic.List<int>();
                 if (!string.IsNullOrEmpty(itensStr))
@@ -35,12 +35,12 @@ namespace SCA.Back.Debug
                     }
                 }
 
-                EmprestimosService.SolicitarEmprestimo(usrId, sID, itensIds);
+                EmprestimoService.SolicitarEmprestimo(usrId, sID, itensIds);
                 Console.WriteLine("Comando executado.");
             }
             else if (op == "2")
             {
-                var emp = EmprestimosService.ListarEmprestimo();
+                var emp = EmprestimoService.ListarEmprestimo();
                 foreach (var e in emp)
                     Console.WriteLine($"ID: {e.Id} | UsrId: {e.UsuarioId} | SalaId: {e.SalaId} | Data: {e.DataEstado} | Estado: {e.Estado}");
             }
@@ -53,7 +53,7 @@ namespace SCA.Back.Debug
                     int tipo = int.Parse(Console.ReadLine());
                     Console.Write("Aprovar? (s/n): ");
                     bool aprova = Console.ReadLine()?.ToLower() == "s";
-                    EmprestimosService.AprovarSolicitacao(id, tipo == 0 ? EmprestimosService.TipoSolicitacao.Emprestimo : EmprestimosService.TipoSolicitacao.Devolucao, aprova);
+                    EmprestimoService.AprovarSolicitacao(id, tipo == 0 ? EmprestimoService.TipoSolicitacao.Emprestimo : EmprestimoService.TipoSolicitacao.Devolucao, aprova);
                 }
             }
             else if (op == "4")
@@ -61,7 +61,7 @@ namespace SCA.Back.Debug
                 Console.Write("ID Empréstimo para devoluçÁo: ");
                 if (int.TryParse(Console.ReadLine(), out int id))
                 {
-                    EmprestimosService.SolicitarDevolucao(id);
+                    EmprestimoService.SolicitarDevolucao(id);
                 }
             }
         }

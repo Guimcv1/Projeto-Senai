@@ -9,14 +9,14 @@ namespace SCA.Back.Execel
 {
     public class ExportadorEmprestimoIntens
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo)
         {
             //Verifica se o tipo solicitado envolve a relação EmprestimoItens ou se é para exportar tudo
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.EmprestimoIntens)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.EmprestimoItem)
             {
                 //Criação da aba e busca dos dados no serviço
                 var worksheet = workbook.Worksheets.Add("EmprestimoItens");
-                var emprestimoItens = EmprestimoIntensService.FiltrarEmprestimoIntens(tipo);
+                var emprestimoItens = EmprestimoItemService.FiltrarEmprestimoIntens(tipo);
 
                 //Configuração dos cabeçalhos das colunas
                 worksheet.Cell(1, 1).Value = "ID da Relação";
@@ -37,7 +37,7 @@ namespace SCA.Back.Execel
                     worksheet.Cell(linha, 3).Value = i.Emprestimos?.Usuario?.Nome ?? "";
                     worksheet.Cell(linha, 4).Value = i.Emprestimos?.Sala?.Descricao ?? "";
                     worksheet.Cell(linha, 5).Value = i.ItemId;
-                    worksheet.Cell(linha, 6).Value = i.Itens?.Descricao ?? "";
+                    worksheet.Cell(linha, 6).Value = i.Item?.Descricao ?? "";
                     worksheet.Cell(linha, 7).Value = i.Emprestimos?.Estado ?? "";
                     linha++;
                 }

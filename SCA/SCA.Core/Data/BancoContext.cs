@@ -8,11 +8,11 @@ namespace SCA.Core.Models
     {
         //Mapeia as tabelas para o projeto
         public DbSet<Usuario> Usuarios { get; set; } 
-        public DbSet<Itens> Itens { get; set; }
+        public DbSet<Item> Itens { get; set; }
         public DbSet<Sala> Salas { get; set; }
         public DbSet<Emprestimos> Emprestimos { get; set; }
-        public DbSet<EmprestimoIntens> EmprestimoIntens { get; set; }
-        public DbSet<Logs> Logs { get; set; }
+        public DbSet<EmprestimoItem> EmprestimoItens { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
         //Configuração da conexão com o banco de dados
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -86,24 +86,24 @@ namespace SCA.Core.Models
                 .WithMany(s => s.Emprestimos)
                 .HasForeignKey(m => m.SalaId);
 
-            //Relacionamento 1:N (Um Empréstimo para Muitos Itens na lista de itens do empréstimo)
-            //Parte da relação N:N entre Emprestimos e Itens
-            modelBuilder.Entity<EmprestimoIntens>()
+            //Relacionamento 1:N (Um Empréstimo para Muitos Item na lista de itens do empréstimo)
+            //Parte da relação N:N entre Emprestimos e Item
+            modelBuilder.Entity<EmprestimoItem>()
                 .HasOne(ei => ei.Emprestimos)
-                .WithMany(e => e.EmprestimoIntens)
+                .WithMany(e => e.EmprestimoItem)
                 .HasForeignKey(ei => ei.EmprestimoId);
 
-            //Relacionamento 1:N (Um Item para Muitos registros na tabela de junção EmprestimoIntens)
-            //Parte da relação N:N entre Emprestimos e Itens
-            modelBuilder.Entity<EmprestimoIntens>()
-                .HasOne(ei => ei.Itens)
-                .WithMany(i => i.EmprestimoIntens)
+            //Relacionamento 1:N (Um Item para Muitos registros na tabela de junção EmprestimoItem)
+            //Parte da relação N:N entre Emprestimos e Item
+            modelBuilder.Entity<EmprestimoItem>()
+                .HasOne(ei => ei.Item)
+                .WithMany(i => i.EmprestimoItem)
                 .HasForeignKey(ei => ei.ItemId);
 
-            //Relacionamento 1:N (Um Usuário para Muitos Logs)
-            modelBuilder.Entity<Logs>()
+            //Relacionamento 1:N (Um Usuário para Muitos Log)
+            modelBuilder.Entity<Log>()
                 .HasOne(l => l.Usuario)
-                .WithMany(u => u.Logs)
+                .WithMany(u => u.Log)
                 .HasForeignKey(l => l.UsuarioId);
 
             base.OnModelCreating(modelBuilder);

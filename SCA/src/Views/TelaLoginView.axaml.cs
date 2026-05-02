@@ -7,16 +7,16 @@ using System;
 
 namespace SCA.Views;
 
-public partial class LoginPage : Window
+public partial class TelaLoginView : Window
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
 
-    public LoginPage()
+    public TelaLoginView()
     {
         InitializeComponent();
     }
 
-    public LoginPage(MainWindow parent) : this()
+    public TelaLoginView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
     }
@@ -38,7 +38,7 @@ public partial class LoginPage : Window
         var usuario = UsuarioService.LoginUser(txtUsername.Text ?? "", txtPassword.Text ?? "");
         if (usuario != null)
         {
-            Console.WriteLine("Login realizado com sucesso. Atualizando MainWindow...");
+            Console.WriteLine("Login realizado com sucesso. Atualizando JanelaPrincipal...");
             if (_parent != null)
             {
                 _parent.IsAdminMode = true;
@@ -48,7 +48,7 @@ public partial class LoginPage : Window
             }
             else
             {
-                MainWindow mainWindow = new MainWindow(usuario);
+                JanelaPrincipal mainWindow = new JanelaPrincipal(usuario);
                 mainWindow.Show();
                 this.Close();
             }

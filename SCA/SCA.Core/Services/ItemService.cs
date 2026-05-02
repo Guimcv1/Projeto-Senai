@@ -3,7 +3,7 @@ using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 using UserServe = SCA.Core.Services.UsuarioService;
-using Enum = SCA.Core.Models.Estados;
+using Estados = SCA.Core.Models.Estados;
 
 namespace SCA.Core.Services
 {
@@ -21,12 +21,12 @@ namespace SCA.Core.Services
                 if (intes != null) { intes.IsAtivo = false; }
 
                 context.SaveChanges();
-                Console.WriteLine($"Itens ID {id} inativada com sucesso!");
+                Console.WriteLine($"Item ID {id} inativada com sucesso!");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao atualizar Itens: {ex.Message}");
+                Console.WriteLine($"Erro ao atualizar Item: {ex.Message}");
                 return false;
             }
         }
@@ -54,7 +54,7 @@ namespace SCA.Core.Services
                     return false;
                 }
 
-                var item = new Itens
+                var item = new Item
                 {
                     Descricao = descricao,
                     Estado = Estados.Livre,
@@ -75,7 +75,7 @@ namespace SCA.Core.Services
             }
         }
 
-        //EditarInten - Alterar os Itens no banco
+        //EditarInten - Alterar os Item no banco
         public static bool EditarIntens(int id, string? novaDescricao = null, string? NewStatos = null, int? novaSalaId = null)
         {
             try
@@ -101,7 +101,7 @@ namespace SCA.Core.Services
                     inten.Descricao = novaDescricao;
                 }
 
-                if (!string.IsNullOrEmpty(NewStatos) && Array.Exists(Enum.TodosEstados, e => e == NewStatos))
+                if (!string.IsNullOrEmpty(NewStatos) && Array.Exists(Estados.TodosEstados, e => e == NewStatos))
                 {
                     inten.Estado = NewStatos;
                 }
@@ -116,7 +116,7 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
-                Console.WriteLine($"Itens ID {id} atualizado com sucesso!");
+                Console.WriteLine($"Item ID {id} atualizado com sucesso!");
                 return true;
             }
             catch (Exception ex)
@@ -126,26 +126,26 @@ namespace SCA.Core.Services
             }
         }
 
-        //ListarIntens - Listar os Itens do Banco
-        public static List<Itens> ListarIntens()
+        //ListarIntens - Listar os Item do Banco
+        public static List<Item> ListarIntens()
         {
             try
             {
                 using var context = new BancoContext();
 
-                Console.WriteLine($"Itens bancos = {context.Itens.ToList()}");
+                Console.WriteLine($"Item bancos = {context.Itens.ToList()}");
 
                 return context.Itens.ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao listar os Itens: {ex.Message}");
-                return new List<Itens>();
+                Console.WriteLine($"Erro ao listar os Item: {ex.Message}");
+                return new List<Item>();
             }
         }
 
         //BuscarPorIdIntens - Buscar usuário por ID
-        public static Itens? BuscarPorIdIntens(int id)
+        public static Item? BuscarPorIdIntens(int id)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar Itens: {ex.Message}");
+                Console.WriteLine($"Erro ao buscar Item: {ex.Message}");
                 return null;
             }
         }

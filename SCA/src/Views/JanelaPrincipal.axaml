@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:material="using:Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
-        x:Class="SCA.Views.MainWindow"
+        x:Class="SCA.Views.JanelaPrincipal"
         Title="Controle de Ambientes | SENAI" WindowStartupLocation="CenterScreen">
 
     <Grid Background="#F1F5F9">
@@ -46,7 +46,7 @@
                 <Button x:Name="btnItens" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Gerir Itens</TextBlock>
+                        <TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
                     </StackPanel>
                 </Button>
 
@@ -60,7 +60,7 @@
                 <Button x:Name="btnRelatorios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Logs</TextBlock>
+                        <TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>
                     </StackPanel>
                 </Button>
             </StackPanel>

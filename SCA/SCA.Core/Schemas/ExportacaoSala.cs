@@ -5,11 +5,11 @@ namespace SCA.Back.Execel
 {
     public class ExportadorSala
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo, List<Sala> salas)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo, List<Sala> salas)
         {
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.Sala)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.Sala)
             {
-                var listaSalas = workbook.Worksheets.Add("Lista de Salas");
+                var listaSalas = workbook.Worksheets.Add("Lista de Sala");
 
                 //Define os cabeçalhos na primeira linha
                 listaSalas.Cell(1, 1).Value = "ID";

@@ -8,24 +8,24 @@ namespace SCA.Back.Execel
 { 
     public class ExportadorLogs
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo, DateTime? inicio, DateTime? fim)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo, DateTime? inicio, DateTime? fim)
         {
             //Verifica se o tipo solicitado envolve logs
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.TodosLogs ||
-                tipo == ExportarExecel.TipoExeport.LogsIntens || tipo == ExportarExecel.TipoExeport.LogsSala || tipo == ExportarExecel.TipoExeport.LogsUsuario)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.TodosLogs ||
+                tipo == ExportacaoExcel.TipoExportacao.LogsIntens || tipo == ExportacaoExcel.TipoExportacao.LogsSala || tipo == ExportacaoExcel.TipoExportacao.LogsUsuario)
             {
   
                 var nomeAba = tipo switch
                 {
-                    ExportarExecel.TipoExeport.LogsIntens => "Logs Itens",
-                    ExportarExecel.TipoExeport.LogsSala => "Logs Salas",
-                    ExportarExecel.TipoExeport.LogsUsuario => "Logs Usuarios",
-                    _ => "Logs Gerais"
+                    ExportacaoExcel.TipoExportacao.LogsIntens => "Log Item",
+                    ExportacaoExcel.TipoExportacao.LogsSala => "Log Sala",
+                    ExportacaoExcel.TipoExportacao.LogsUsuario => "Log Usuarios",
+                    _ => "Log Gerais"
                 };
 
                 var worksheet = workbook.Worksheets.Add(nomeAba);
 
-                var logs = LogsService.FiltrarLogs(tipo, inicio, fim);
+                var logs = LogService.FiltrarLogs(tipo, inicio, fim);
 
                 //Define os cabeçalhos na primeira linha
                 worksheet.Cell(1, 1).Value = "ID";

@@ -8,17 +8,17 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class MainWindow : Window
+public partial class JanelaPrincipal : Window
 {
     public bool IsAdminMode { get; set; } = false;
     public Usuario? CurrentAdmin { get; set; } = null;
 
-    public MainWindow()
+    public JanelaPrincipal()
     {
         InitializeComponent();
     }
 
-    public MainWindow(Usuario adminUser) : this()
+    public JanelaPrincipal(Usuario adminUser) : this()
     {
         if (adminUser != null && adminUser.IsAdmin)
         {
@@ -31,7 +31,7 @@ public partial class MainWindow : Window
     {
         base.OnOpened(e);
         UpdateUIRole();
-        LoadView(new DashboardView(this));
+        LoadView(new PainelVisaoGeralView(this));
     }
 
     private void MenuButton_Click(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ public partial class MainWindow : Window
             btn.BorderThickness = new Thickness(4, 0, 0, 0);
             btn.BorderBrush = Brush.Parse("#EA580C");
             
-            if (btn == btnVisaoGeral) LoadView(new DashboardView(this));
+            if (btn == btnVisaoGeral) LoadView(new PainelVisaoGeralView(this));
             else if (btn == btnAprovacoes) LoadView(new AprovacoesView(this));
             else if (btn == btnLocais) LoadView(new LocaisView(this));
             else if (btn == btnItens) LoadView(new ItensView(this));
@@ -88,11 +88,11 @@ public partial class MainWindow : Window
                 btnVisaoGeral.BorderThickness = new Thickness(4, 0, 0, 0);
                 btnVisaoGeral.BorderBrush = Brush.Parse("#EA580C");
             }
-            LoadView(new DashboardView(this));
+            LoadView(new PainelVisaoGeralView(this));
         }
         else
         {
-            LoginPage loginPage = new LoginPage(this);
+            TelaLoginView loginPage = new TelaLoginView(this);
             loginPage.ShowDialog(this);
         }
     }

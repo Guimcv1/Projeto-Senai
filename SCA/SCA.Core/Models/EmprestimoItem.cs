@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SCA.Core.Models
 {
     //Declaração o nome da tabela do banco de dados
-    [Table("EmprestimoIntens")]
+    [Table("EmprestimoItem")]
 
-    public class EmprestimoIntens
+    public class EmprestimoItem
     {
         //Declaração do id como chave primária e auto-incrementável
         [Key]
@@ -16,7 +16,7 @@ namespace SCA.Core.Models
 
         //FK para o Item
         public int ItemId { get; set; }
-        public virtual Itens Itens { get; set; } = null!;
+        public virtual Item Item { get; set; } = null!;
 
         //FK para o Emprestimo
         public int EmprestimoId { get; set; }

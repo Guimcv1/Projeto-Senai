@@ -17,14 +17,14 @@ namespace SCA.Views;
 
 public partial class RelatoriosView : UserControl
 {
-    private MainWindow? _parent;
+    private JanelaPrincipal? _parent;
 
     public RelatoriosView()
     {
         InitializeComponent();
     }
 
-    public RelatoriosView(MainWindow parent) : this()
+    public RelatoriosView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
         LoadCharts();
@@ -129,7 +129,7 @@ public partial class RelatoriosView : UserControl
             if (file != null)
             {
                 string filePath = file.Path.LocalPath;
-                ExportarExecel.ExportarParaExcel(filePath, ExportarExecel.TipoExeport.Empresitmos);
+                ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Empresitmos);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
                 Console.WriteLine($"Relatório de empréstimos exportado com sucesso para {filePath}.");
             }

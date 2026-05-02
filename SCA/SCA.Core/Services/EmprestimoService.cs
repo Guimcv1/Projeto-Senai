@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SCA.Core.Services
 {
-    public class EmprestimosService
+    public class EmprestimoService
     {
         //Ajudar a permite só uma das escritas(evitando erros de digitação)
         public enum TipoSolicitacao { Emprestimo, Devolucao }
 
-        //Filtrar Emprestimos - Filtro básico de tempo e categoria compatível com o TipoExeport
-        public static List<Emprestimos> FiltrarEmprestimo(ExportarExecel.TipoExeport tipo, DateTime? inicio = null, DateTime? fim = null)
+        //Filtrar Emprestimos - Filtro básico de tempo e categoria compatível com o TipoExportacao
+        public static List<Emprestimos> FiltrarEmprestimo(ExportacaoExcel.TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null)
         {
             try
             {
@@ -19,8 +19,8 @@ namespace SCA.Core.Services
                 var query = context.Emprestimos
                     .Include(e => e.Usuario)
                     .Include(e => e.Sala)
-                    .Include(e => e.EmprestimoIntens)
-                    .ThenInclude(ei => ei.Itens)
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
                     .AsQueryable();
 
                 if (inicio.HasValue)
@@ -70,12 +70,12 @@ namespace SCA.Core.Services
                 // Salva todos os itens vinculados a esse empréstimo
                 foreach (var i in itensIds)
                 {
-                    var emprestimoItem = new EmprestimoIntens
+                    var emprestimoItem = new EmprestimoItem
                     {
                         EmprestimoId = emprestimo.Id,
                         ItemId = i
                     };
-                    context.EmprestimoIntens.Add(emprestimoItem);
+                    context.EmprestimoItens.Add(emprestimoItem);
 
                     var item = context.Itens.Find(i);
                     // Atualiza o estado do Item para Analise
@@ -135,8 +135,8 @@ namespace SCA.Core.Services
 
                 #region emprestimo
                 var emprestimo = context.Emprestimos
-                    .Include(e => e.EmprestimoIntens)
-                    .ThenInclude(ei => ei.Itens)
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
                     .FirstOrDefault(e => e.Id == emprestimoId);
                 #endregion
 
@@ -161,9 +161,9 @@ namespace SCA.Core.Services
                 emprestimo.Estado = novoEstadoEmprestimo;
                 emprestimo.DataEstado = DateTime.UtcNow;
 
-                foreach (var i in emprestimo.EmprestimoIntens)
+                foreach (var i in emprestimo.EmprestimoItem)
                 {
-                    if (i.Itens != null) { i.Itens.Estado = novoEstadoItem; }
+                    if (i.Item != null) { i.Item.Estado = novoEstadoItem; }
                 }
 
                 context.SaveChanges();
@@ -187,8 +187,8 @@ namespace SCA.Core.Services
                 return context.Emprestimos
                     .Include(e => e.Usuario)
                     .Include(e => e.Sala)
-                    .Include(e => e.EmprestimoIntens)
-                    .ThenInclude(ei => ei.Itens)
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
                     .ToList();
             }
             catch (Exception ex)
@@ -207,8 +207,8 @@ namespace SCA.Core.Services
                 return context.Emprestimos
                     .Include(e => e.Usuario)
                     .Include(e => e.Sala)
-                    .Include(e => e.EmprestimoIntens)
-                    .ThenInclude(ei => ei.Itens)
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
                     .FirstOrDefault(e => e.Id == id);
             }
             catch (Exception ex)

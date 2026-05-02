@@ -9,10 +9,10 @@ using SCA.Back.Execel;
 
 namespace SCA.Core.Services
 {
-    public class LogsService
+    public class LogService
     {
-        //Filtrar Logs - Filtro básico de tempo e categoria compatível com o TipoExeport
-        public static List<Logs> FiltrarLogs(ExportarExecel.TipoExeport tipo, DateTime? inicio = null, DateTime? fim = null)
+        //Filtrar Log - Filtro básico de tempo e categoria compatível com o TipoExportacao
+        public static List<Log> FiltrarLogs(ExportacaoExcel.TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null)
         {
             try
             {
@@ -31,15 +31,15 @@ namespace SCA.Core.Services
                     query = query.Where(l => l.DataAcao <= fim.Value);
                 }
 
-                if (tipo == ExportarExecel.TipoExeport.LogsIntens) 
+                if (tipo == ExportacaoExcel.TipoExportacao.LogsIntens) 
                 { 
                     query = query.Where(l => l.TipoAcao == AcaoTipo.Item);
                 }
-                else if (tipo == ExportarExecel.TipoExeport.LogsSala)
+                else if (tipo == ExportacaoExcel.TipoExportacao.LogsSala)
                 {
                     query = query.Where(l => l.TipoAcao == AcaoTipo.Sala);
                 }
-                else if (tipo == ExportarExecel.TipoExeport.LogsUsuario)
+                else if (tipo == ExportacaoExcel.TipoExportacao.LogsUsuario)
                 {
                     query = query.Where(l => l.TipoAcao == AcaoTipo.Usuario);
                 }
@@ -49,7 +49,7 @@ namespace SCA.Core.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao filtrar logs: {ex.Message}");
-                return new List<Logs>();
+                return new List<Log>();
             }
         }
 
@@ -60,7 +60,7 @@ namespace SCA.Core.Services
             {
                 using var context = new BancoContext();
                 
-                var log = new Logs
+                var log = new Log
                 {
                     Acao = acao,
                     TipoAcao = tipoAcao,
@@ -80,8 +80,8 @@ namespace SCA.Core.Services
             }
         }
 
-        //Listar Logs - Apenas ler, sem edição ou deleção
-        public static List<Logs> ListarLogs()
+        //Listar Log - Apenas ler, sem edição ou deleção
+        public static List<Log> ListarLogs()
         {
             try
             {
@@ -91,7 +91,7 @@ namespace SCA.Core.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao listar logs: {ex.Message}");
-                return new List<Logs>();
+                return new List<Log>();
             }
         }
     }

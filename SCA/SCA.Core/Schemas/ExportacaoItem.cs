@@ -8,11 +8,11 @@ namespace SCA.Back.Execel
 {
     public class ExportadorIntens
     {
-        public static void AdicionarAba(XLWorkbook workbook, ExportarExecel.TipoExeport tipo, List<Itens> intens)
+        public static void AdicionarAba(XLWorkbook workbook, ExportacaoExcel.TipoExportacao tipo, List<Item> intens)
         {
-            if (tipo == ExportarExecel.TipoExeport.Tudo || tipo == ExportarExecel.TipoExeport.Intens)
+            if (tipo == ExportacaoExcel.TipoExportacao.Tudo || tipo == ExportacaoExcel.TipoExportacao.Item)
             {
-                var listaIntens = workbook.Worksheets.Add("Lista de Itens");
+                var listaIntens = workbook.Worksheets.Add("Lista de Item");
 
                 // Define os cabeçalhos na primeira linha
                 listaIntens.Cell(1, 1).Value = "ID";
