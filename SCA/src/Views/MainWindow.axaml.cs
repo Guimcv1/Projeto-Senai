@@ -92,9 +92,8 @@ public partial class MainWindow : Window
         }
         else
         {
-            LoginPage loginPage = new LoginPage();
-            loginPage.Show();
-            this.Close();
+            LoginPage loginPage = new LoginPage(this);
+            loginPage.ShowDialog(this);
         }
     }
 
