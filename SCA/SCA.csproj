@@ -1,59 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <SelfContained>false</SelfContained>
-    <UseAppHost>true</UseAppHost>
-    <RollForward>LatestMinor</RollForward>
-    <AssemblyTitle>SCA</AssemblyTitle>
-    <RootNamespace>SCA</RootNamespace>
-    <ApplicationIcon>assets\icone.ico</ApplicationIcon>
-    <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**</DefaultItemExcludes>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.3" />
-    <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.3" />
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update=".env">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <AvaloniaResource Include="assets\**" />
-    <None Update="runtimeconfig.template.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="assets\icone.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="SCA.Core\SCA.Core.csproj" />
-  </ItemGroup>
-
-</Project>
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <TargetFramework>net10.0</TargetFramework>
+     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+     <Nullable>enable</Nullable>
+     <ImplicitUsings>enable</ImplicitUsings>
+     <SelfContained>false</SelfContained>
+     <UseAppHost>true</UseAppHost>
+     <RollForward>LatestMinor</RollForward>
+     <AssemblyTitle>SCA</AssemblyTitle>
+     <RootNamespace>SCA</RootNamespace>
+     <ApplicationIcon>assets\icone.ico</ApplicationIcon>
+     <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**;SCA.Tests\**</DefaultItemExcludes>
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+     <Optimize>True</Optimize>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <PackageReference Include="Avalonia" Version="11.2.5" />
+     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
+     <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
+     <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.5" />
+     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
+     <PackageReference Include="Avalonia.Diagnostics" Version="11.2.5" />
+     <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
+     <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
+     <PackageReference Include="DotNetEnv" Version="3.1.1" />
+     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+       <PrivateAssets>all</PrivateAssets>
+     </PackageReference>
+     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+     <None Update=".env">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+     <AvaloniaResource Include="assets\**" />
+     <None Update="runtimeconfig.template.json">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
+ 
+   <ItemGroup>
+     <Content Include="assets\icone.ico" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+     <ProjectReference Include="SCA.Core\SCA.Core.csproj" />
+   </ItemGroup>
+ 
+ </Project>

@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="SCA.csproj" />
   <Project Path="SCA.Core/SCA.Core.csproj" />
+  <Project Path="SCA.Tests/SCA.Tests.csproj" />
 </Solution>
