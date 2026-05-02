@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:material="using:Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="SCA.Views.AprovacoesView">
+    <Grid RowDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" FontSize="40" Foreground="#002776" Margin="0,0,0,20" FontWeight="Bold">Aprovações Pendentes</TextBlock>
+        
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+            <Grid RowDefinitions="*,Auto">
+                <DataGrid Grid.Row="0" x:Name="dgAprovacoes" AutoGenerateColumns="False" IsReadOnly="False" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50" MinHeight="300">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Header="Sel." Binding="{Binding IsSelected, Mode=TwoWay}" Width="100"/>
+                        <DataGridTextColumn Header="Itens" Binding="{Binding DescricaoItems}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Ambiente" Binding="{Binding Ambiente}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Solicitante" Binding="{Binding Solicitante}" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Ação" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding BadgeColor}" CornerRadius="12" Padding="12,6" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+                                        <TextBlock Text="{Binding Acao}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button Background="#16A34A" Foreground="White" Padding="20,10" Margin="0,0,10,0" Click="Aprovar_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <material:MaterialIcon Kind="CheckBold" Width="20" Height="20" Margin="0,0,10,0"/>
+                            <TextBlock Text="Aprovar Selecionados"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Background="#DC2626" Foreground="White" Padding="20,10" Click="Recusar_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <material:MaterialIcon Kind="CloseBold" Width="20" Height="20" Margin="0,0,10,0"/>
+                            <TextBlock Text="Recusar Selecionados"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

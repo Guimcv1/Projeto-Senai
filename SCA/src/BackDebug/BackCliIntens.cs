@@ -1,4 +1,4 @@
-﻿using SCA.Back.Data;
+using SCA.Back.Data;
 using SCA.Back.Services;
 using System;
 
@@ -19,7 +19,11 @@ namespace SCA.Back.Debug
             {
                 Console.Write("Descricao: ");
                 string desc = Console.ReadLine();
-                AdminService.CriarIntens(desc);
+                Console.Write("Sala ID: ");
+                if (int.TryParse(Console.ReadLine(), out int salaId))
+                {
+                    AdminService.CriarIntens(desc, salaId);
+                }
                 Console.WriteLine("Comando executado.");
             }
             else if (op == "2")

@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:material="using:Material.Icons.Avalonia"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="SCA.Views.RelatoriosView">
+    <Grid>
+        <StackPanel>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                <TextBlock Grid.Column="0" FontSize="40" Foreground="#002776" VerticalAlignment="Center" FontWeight="Bold">Relatórios e Logs</TextBlock>
+                <Button Grid.Column="1" Background="#16A34A" Foreground="White" Height="45" Padding="20,0" Click="ExportarExcel_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="FileExcel" Width="24" Height="24" Margin="0,0,10,0"/>
+                        <TextBlock FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Exportar Excel (Empréstimos)</TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            
+            <Grid ColumnDefinitions="*,*">
+                <!-- Chart 1: Status de Locais -->
+                <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,10,20">
+                    <StackPanel>
+                        <TextBlock Foreground="#002776" FontSize="20" FontWeight="Bold" Margin="0,0,0,20">Ocupação dos Ambientes</TextBlock>
+                        <lvc:PieChart Name="chartOcupacao" Height="300" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Chart 2: Locais mais usados -->
+                <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="10,0,0,20">
+                    <StackPanel>
+                        <TextBlock Foreground="#002776" FontSize="20" FontWeight="Bold" Margin="0,0,0,20">Ambientes Mais Solicitados</TextBlock>
+                        <lvc:CartesianChart Name="chartUso" Height="300" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

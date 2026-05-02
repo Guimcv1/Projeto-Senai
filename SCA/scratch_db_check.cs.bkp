@@ -1,0 +1,23 @@
+using SCA.Back.Data;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
+try
+{
+    using var context = new BancoContext();
+    var hasBloco = context.Model.FindEntityType(typeof(Sala))?
+        .GetProperties().Any(p => p.Name == "Bloco") ?? false;
+    
+    Console.WriteLine($"[DB Check] Model has Bloco property: {hasBloco}");
+    
+    // Test a simple query
+    var count = context.Salas.Count();
+    Console.WriteLine($"[DB Check] Successfully queried Salas table. Total: {count}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[DB Check] ERROR: {ex.Message}");
+    if (ex.InnerException != null)
+        Console.WriteLine($"[DB Check] INNER ERROR: {ex.InnerException.Message}");
+}

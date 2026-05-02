@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 
 namespace SCA.Back.Data
@@ -47,8 +47,8 @@ namespace SCA.Back.Data
                         if (string.IsNullOrEmpty(User)) faltando.Add("DB_USER");
                         if (string.IsNullOrEmpty(Senha)) faltando.Add("DB_SENHA");
                         if (string.IsNullOrEmpty(Database)) faltando.Add("DB_NAME");
-                        if (string.IsNullOrEmpty(Database)) faltando.Add("USER_ADMIN_LOGIN");
-                        if (string.IsNullOrEmpty(Database)) faltando.Add("USER_ADMIN_SENHA");
+                        if (string.IsNullOrEmpty(UserAdminLogin)) faltando.Add("USER_ADMIN_LOGIN");
+                        if (string.IsNullOrEmpty(UserAdminSenha)) faltando.Add("USER_ADMIN_SENHA");
 
                         string mensagem = $"Variáveis de ambiente faltando no arquivo .env: {string.Join(", ", faltando)}";
                         Console.WriteLine($"Erro: {mensagem}");

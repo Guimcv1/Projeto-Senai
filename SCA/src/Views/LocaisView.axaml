@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:material="using:Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="SCA.Views.LocaisView">
+    <Grid>
+        <Grid RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                <TextBlock Grid.Column="0" FontSize="40" Foreground="#002776" VerticalAlignment="Center" FontWeight="Bold">Gerir Locais</TextBlock>
+                <Button Grid.Column="1" Background="#EA580C" Foreground="White" Height="45" Padding="20,0" Click="NovoLocal_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="Plus" Width="24" Height="24" Margin="0,0,10,0"/>
+                        <TextBlock FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Novo Local</TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            
+            <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+                <Grid>
+                    <DataGrid x:Name="dgLocais" AutoGenerateColumns="False" IsReadOnly="True" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
+                            <DataGridTextColumn Header="Nome do Local" Binding="{Binding Descricao}" Width="*"/>
+                            <DataGridTemplateColumn Header="Status" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{Binding BadgeColor}" CornerRadius="12" Padding="12,6" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+                                            <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Ações" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                                            <Button Background="Transparent" BorderThickness="0" ToolTip.Tip="Editar" Foreground="#3B82F6" Width="35" Height="35" Click="Editar_Click">
+                                                <material:MaterialIcon Kind="Pencil" Width="20" Height="20"/>
+                                            </Button>
+                                            <Button Background="Transparent" BorderThickness="0" ToolTip.Tip="Remover/Desativar" Foreground="#DC2626" Width="35" Height="35" Click="Remover_Click">
+                                                <material:MaterialIcon Kind="Delete" Width="20" Height="20"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Dialog Overlay -->
+        <Border x:Name="LocalDialogOverlay" IsVisible="False" Background="#80000000">
+            <Border Background="White" CornerRadius="12" Width="500" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+                <Grid RowDefinitions="Auto,Auto,Auto">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                        <TextBlock x:Name="txtDialogTitle" FontSize="20" FontWeight="Bold" Foreground="#002776" Text="Novo Local"/>
+                        <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Click="CloseDialog_Click" Foreground="#64748b" Padding="0" Height="30" Width="30">
+                            <material:MaterialIcon Kind="Close" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                        <TextBlock Text="Nome do Ambiente/Local" Foreground="#64748B" FontSize="12" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtLocalNome" FontSize="16" Margin="0,0,0,20" Watermark="Ex: Sala 01"/>
+                        
+                        <CheckBox x:Name="chkIsAtivo" Content="Ativo" IsChecked="True"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                        <Button Grid.Column="0" Content="Cancelar" Click="CloseDialog_Click"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Background="#16A34A" Foreground="White" Content="Salvar Local" Click="Salvar_Click"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Border>
+    </Grid>
+</UserControl>

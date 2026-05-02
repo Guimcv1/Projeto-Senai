@@ -1,66 +1,51 @@
-namespace SCA
+using Avalonia;
+using Avalonia.ReactiveUI;
+using System;
+using SCA.Back.Services;
+using DotNetEnv;
+
+namespace SCA;
+
+class Program
 {
-    using SCA.Back.Services;
-    using SCA.Back.Data;
-    using _ = SCA.Back.Debug.BackCliDebug;
-    using System;
-    using System.Reflection;
-    using System.IO;
-
-    internal class Program
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    [STAThread]
+    public static void Main(string[] args)
     {
-        [STAThread]
-        static void Main(string[] args)
+        try
         {
-            //Cria a pasta chamada dll e pega e a ponta onde ela está para salvar as dll's do sistemas
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, resolveArgs) =>
-            {
-                string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dll");
-                //Aqui usamos o nome completo para não dar erro
-                string assemblyName = new System.Reflection.AssemblyName(resolveArgs.Name).Name + ".dll";
-                string assemblyPath = Path.Combine(folderPath, assemblyName);
+            // Load environment variables
+            Env.Load();
 
-                if (File.Exists(assemblyPath))
-                {
-                    //Aponta para o .exe oonde fica estão as dlls
-                    return System.Reflection.Assembly.LoadFrom(assemblyPath);
-                }
-                return null;
-            };
-
-            //Testa a conexão com o banco
+            // Setup DB
             if (!Migration.TestarConexao())
             {
-                //Pop de erro
-                System.Windows.MessageBox.Show("Não foi possível conectar ao banco. Verifique o arquivo .env", 
-                    "Erro de Conexão",
-                    System.Windows.MessageBoxButton.OK, 
-                    System.Windows.MessageBoxImage.Error);
-                return;
+                Console.WriteLine("Erro crítico: Não foi possível conectar ao banco de dados.");
+                // In a real app, we might want to show a native dialog here if possible, 
+                // but for now, console is safer during migration.
             }
 
-            //Garante que as tabelas existam
             if (!Migration.GarantirBancoCriado())
             {
-                System.Windows.MessageBox.Show("Não foi possível criar/atualizar as tabelas no banco.", 
-                    "Erro no Banco de Dados", 
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Error);
-                return;
+                Console.WriteLine("Erro crítico: Falha ao garantir integridade do banco de dados.");
             }
 
-            Console.WriteLine("Conexão estabelecida com sucesso!\n");
-
-            _.MenuPrincipal();
-
-             
-            /*Start interface
-            SCA.App app = new SCA.App();
-            app.InitializeComponent();
-            app.Run();*/
-             
-        }   
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Falha catastrófica ao iniciar aplicação: {ex.Message}");
+        }
     }
 
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace()
+            .UseReactiveUI();
 }
-

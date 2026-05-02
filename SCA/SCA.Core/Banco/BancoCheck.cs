@@ -1,4 +1,4 @@
-﻿using SCA.Back.Data;
+using SCA.Back.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace SCA.Back.Services
@@ -70,8 +70,8 @@ namespace SCA.Back.Services
             {
                 using var context = new BancoContext();
 
-                string loginAdmin = Environment.GetEnvironmentVariable("ADMIN_LOGIN") ?? "admin";
-                string senhaAdmin = Environment.GetEnvironmentVariable("ADMIN_SENHA") ?? "admin";
+                string loginAdmin = Environment.GetEnvironmentVariable("USER_ADMIN_LOGIN") ?? "admin";
+                string senhaAdmin = Environment.GetEnvironmentVariable("USER_ADMIN_SENHA") ?? "admin";
 
                 if (!context.Usuarios.Any(u => u.Login == loginAdmin))
                 {

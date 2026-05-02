@@ -1,1 +1,4 @@
-<Solution><Project Path="SCA.csproj" /></Solution>
+<Solution>
+  <Project Path="SCA.csproj" />
+  <Project Path="SCA.Core/SCA.Core.csproj" />
+</Solution>

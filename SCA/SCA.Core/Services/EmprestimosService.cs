@@ -1,4 +1,4 @@
-﻿using SCA.Back.Data;
+using SCA.Back.Data;
 using SCA.Back.Execel;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,17 +43,30 @@ namespace SCA.Back.Services
             {
                 using var context = new BancoContext();
 
-                //Cria o empréstimo com o status inicial 'Analise' (Aguardando aprovação)
+                // Verify if any requested item is already loaned (Emprestado)
+                var alreadyLoaned = context.Itens
+                    .Where(i => itensIds.Contains(i.Id) && i.Estado == Estados.Emprestado)
+                    .Select(i => i.Descricao)
+                    .ToList();
+                if (alreadyLoaned.Any())
+                {
+                    Console.WriteLine($"Erro ao solicitar empréstimo: itens já emprestados - {string.Join(", ", alreadyLoaned)}");
+                    return false;
+                }
+
+                // Cria o empréstimo com o status inicial 'Analise' (Aguardando aprovação)
                 var emprestimo = new Emprestimos
                 {
-                    UsuarioId = usuarioId, SalaId = salaId, Estado = Estados.Analise,
-                    DataEstado = DateTime.Now
+                    UsuarioId = usuarioId,
+                    SalaId = salaId,
+                    Estado = Estados.Analise,
+                    DataEstado = DateTime.UtcNow
                 };
 
                 context.Emprestimos.Add(emprestimo);
                 context.SaveChanges();
 
-                //Salva todos os itens vinculados a esse empréstimo
+                // Salva todos os itens vinculados a esse empréstimo
                 foreach (var i in itensIds)
                 {
                     var emprestimoItem = new EmprestimoIntens
@@ -64,9 +77,8 @@ namespace SCA.Back.Services
                     context.EmprestimoIntens.Add(emprestimoItem);
 
                     var item = context.Itens.Find(i);
-                    //Atualiza o estado do Item para Analise
+                    // Atualiza o estado do Item para Analise
                     if (item != null) { item.Estado = Estados.Analise; }
-
                 }
 
                 context.SaveChanges();
@@ -76,11 +88,15 @@ namespace SCA.Back.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao solicitar empréstimo: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Detalhe do Erro (Inner): {ex.InnerException.Message}");
+                }
                 return false;
             }
         }
 
-        //SolicitarDevolucao - O usuário consegue solicitar devolver os itens
+        //SolicitarDevolucao - O usuário consegue solicitar devolver os itens (internally uses auth method)
         public static bool SolicitarDevolucao(int emprestimoId)
         {
             try
@@ -94,9 +110,9 @@ namespace SCA.Back.Services
                     return false;
                 }
 
-                //Retorna o estado para Analise, indicando que deseja devolver
+                // Retorna o estado para Analise, indicando que deseja devolver
                 emprestimo.Estado = Estados.Analise;
-                emprestimo.DataEstado = DateTime.Now;
+                emprestimo.DataEstado = DateTime.UtcNow;
 
                 context.SaveChanges();
                 Console.WriteLine($"Devolução do Empréstimo ID {emprestimoId} solicitada com sucesso!");
@@ -142,7 +158,7 @@ namespace SCA.Back.Services
                 };
 
                 emprestimo.Estado = novoEstadoEmprestimo;
-                emprestimo.DataEstado = DateTime.Now;
+                emprestimo.DataEstado = DateTime.UtcNow;
 
                 foreach (var i in emprestimo.EmprestimoIntens)
                 {
