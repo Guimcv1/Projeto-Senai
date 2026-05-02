@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Input;
-using SCA.Back.Services;
+using SCA.Core.Services;
 using System;
 
 namespace SCA.Views;

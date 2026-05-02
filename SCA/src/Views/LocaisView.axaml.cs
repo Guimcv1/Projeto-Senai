@@ -1,8 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using SCA.Back.Data;
-using SCA.Back.Services;
+using SCA.Core.Models;
+using SCA.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,8 @@
-using SCA.Back.Data;
+using SCA.Core.Data;
+using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace SCA.Back.Services
+namespace SCA.Core.Data
 {
     public class Migration
     {
@@ -75,7 +76,7 @@ namespace SCA.Back.Services
 
                 if (!context.Usuarios.Any(u => u.Login == loginAdmin))
                 {
-                    SCA.Back.Services.UsuarioService.CriarUser("AdminDefalte", loginAdmin, senhaAdmin, true, true);
+                    SCA.Core.Services.UsuarioService.CriarUser("AdminDefalte", loginAdmin, senhaAdmin, true, true);
                     Console.WriteLine("Usuário admin padrão criado com sucesso.");
                 }
                 else

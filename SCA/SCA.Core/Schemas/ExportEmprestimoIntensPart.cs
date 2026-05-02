@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-using SCA.Back.Data;
-using SCA.Back.Services;
+using SCA.Core.Models;
+using SCA.Core.Services;
 
 namespace SCA.Back.Execel
 {

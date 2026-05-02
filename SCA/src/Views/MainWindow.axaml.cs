@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using SCA.Back.Data;
+using SCA.Core.Models;
 using System;
 using System.Linq;
 

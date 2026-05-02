@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace SCA.Back.Data
+namespace SCA.Core.Models
 {
     //Declaração o nome da tabela do banco de dados
     [Table("Sala")]

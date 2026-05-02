@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System;
 
 
-namespace SCA.Back.Data
+namespace SCA.Core.Models
 {
     [Table("Emprestimos")]
 

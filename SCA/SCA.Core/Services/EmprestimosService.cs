@@ -1,8 +1,9 @@
-using SCA.Back.Data;
+using SCA.Core.Data;
+using SCA.Core.Models;
 using SCA.Back.Execel;
 using Microsoft.EntityFrameworkCore;
 
-namespace SCA.Back.Services
+namespace SCA.Core.Services
 {
     public class EmprestimosService
     {

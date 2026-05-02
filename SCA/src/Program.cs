@@ -1,7 +1,8 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
-using SCA.Back.Services;
+using SCA.Core.Services;
+using SCA.Core.Data;
 using DotNetEnv;
 
 namespace SCA;

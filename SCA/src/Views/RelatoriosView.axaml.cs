@@ -1,11 +1,12 @@
+using SCA.Core.Data;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SCA.Back.Data;
-using SCA.Back.Services;
+using SCA.Core.Models;
+using SCA.Core.Services;
 using SCA.Back.Execel;
 using SkiaSharp;
 using System;
@@ -104,17 +105,39 @@ public partial class RelatoriosView : UserControl
         }
     }
 
-    private void ExportarExcel_Click(object sender, RoutedEventArgs e)
+    private async void ExportarExcel_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            string fileName = "Relatorio_SCA.xlsx";
-            ExportarExecel.ExportarParaExcel(fileName, ExportarExecel.TipoExeport.Empresitmos);
-            Console.WriteLine($"Relatório de empréstimos exportado com sucesso para {fileName}.");
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel == null) return;
+
+            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new Avalonia.Platform.Storage.FilePickerSaveOptions
+            {
+                Title = "Salvar Relatório",
+                SuggestedFileName = "Relatorio_SCA.xlsx",
+                DefaultExtension = ".xlsx",
+                FileTypeChoices = new[]
+                {
+                    new Avalonia.Platform.Storage.FilePickerFileType("Planilha do Excel")
+                    {
+                        Patterns = new[] { "*.xlsx" }
+                    }
+                }
+            });
+
+            if (file != null)
+            {
+                string filePath = file.Path.LocalPath;
+                ExportarExecel.ExportarParaExcel(filePath, ExportarExecel.TipoExeport.Empresitmos);
+                _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
+                Console.WriteLine($"Relatório de empréstimos exportado com sucesso para {filePath}.");
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao exportar: {ex.Message}");
+            _parent?.ShowMessage($"Erro ao exportar o relatório.");
         }
     }
 }

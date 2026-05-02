@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using SCA.Back.Data;
+using SCA.Core.Models;
 
 namespace SCA.Back.Execel
 {

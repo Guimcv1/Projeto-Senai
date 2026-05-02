@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 
-namespace SCA.Back.Data
+namespace SCA.Core.Models
 {
     //Classe que vai gerenciar a conexão do banco
     public class BancoContext : DbContext

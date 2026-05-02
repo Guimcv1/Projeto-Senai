@@ -1,8 +1,8 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 
-using SCA.Back.Data;
-using SCA.Back.Services;
+using SCA.Core.Models;
+using SCA.Core.Services;
 
 namespace SCA.Back.Execel
 {

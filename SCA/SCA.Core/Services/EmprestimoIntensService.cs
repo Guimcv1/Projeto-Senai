@@ -1,11 +1,12 @@
-﻿using SCA.Back.Data;
+using SCA.Core.Data;
+﻿using SCA.Core.Models;
 using SCA.Back.Execel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SCA.Back.Services
+namespace SCA.Core.Services
 {
     public class EmprestimoIntensService
     {

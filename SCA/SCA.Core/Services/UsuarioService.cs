@@ -1,10 +1,11 @@
-﻿using SCA.Back.Data;
+using SCA.Core.Data;
+﻿using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 //Isso seria a mesma coisa de "import bibliotecas as outronome" do Python
 using Has = BCrypt.Net.BCrypt;
 
-namespace SCA.Back.Services
+namespace SCA.Core.Services
 {
     public class UsuarioService
     {

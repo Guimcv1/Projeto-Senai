@@ -1,5 +1,5 @@
-using SCA.Back.Data;
-using SCA.Back.Services;
+using SCA.Core.Models;
+using SCA.Core.Services;
 using System;
 
 namespace SCA.Back.Debug

@@ -13,8 +13,10 @@
      <AssemblyTitle>SCA</AssemblyTitle>
      <RootNamespace>SCA</RootNamespace>
      <ApplicationIcon>assets\icone.ico</ApplicationIcon>
-     <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**;SCA.Tests\**</DefaultItemExcludes>
-   </PropertyGroup>
+     <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**</DefaultItemExcludes>
+     <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
  
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
      <Optimize>True</Optimize>
@@ -36,6 +38,7 @@
        <PrivateAssets>all</PrivateAssets>
      </PackageReference>
      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+     <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.1" />
    </ItemGroup>
  
    <ItemGroup>

@@ -1,10 +1,11 @@
-using SCA.Back.Data;
+using SCA.Core.Data;
+using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-using UserServe = SCA.Back.Services.UsuarioService;
-using Enum = SCA.Back.Data.Estados;
+using UserServe = SCA.Core.Services.UsuarioService;
+using Enum = SCA.Core.Models.Estados;
 
-namespace SCA.Back.Services
+namespace SCA.Core.Services
 {
     public class SalasService
     {
