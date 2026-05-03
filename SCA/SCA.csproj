@@ -1,13 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
  
    <PropertyGroup>
      <OutputType>WinExe</OutputType>
-     <TargetFramework>net10.0</TargetFramework>
+	 <TargetFramework>net6.0-windows</TargetFramework>
      <EnableWindowsTargeting>true</EnableWindowsTargeting>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
      <Nullable>enable</Nullable>
      <ImplicitUsings>enable</ImplicitUsings>
-     <SelfContained>false</SelfContained>
+     <SelfContained>true</SelfContained>
+     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
      <UseAppHost>true</UseAppHost>
      <RollForward>LatestMinor</RollForward>
      <AssemblyTitle>SCA</AssemblyTitle>
@@ -34,11 +35,11 @@
      <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
      <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
      <PackageReference Include="DotNetEnv" Version="3.1.1" />
-     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.32">
        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
        <PrivateAssets>all</PrivateAssets>
      </PackageReference>
-     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.29" />
      <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.1" />
    </ItemGroup>
  

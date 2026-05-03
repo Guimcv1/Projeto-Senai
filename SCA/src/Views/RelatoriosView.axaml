@@ -13,7 +13,7 @@
 				<Button Grid.Column="1" Background="#16A34A" Foreground="White" Height="45" Padding="20,0" Click="ExportarExcel_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="FileExcel" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Exportar Excel (Empréstimos)</TextBlock>
+						<TextBlock FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Exportar Excel</TextBlock>
 					</StackPanel>
 				</Button>
 			</Grid>

@@ -129,9 +129,9 @@ public partial class RelatoriosView : UserControl
             if (file != null)
             {
                 string filePath = file.Path.LocalPath;
-                ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Empresitmos);
+                ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
-                Console.WriteLine($"Relatório de empréstimos exportado com sucesso para {filePath}.");
+                Console.WriteLine($"Relatório geral exportado com sucesso para {filePath}.");
             }
         }
         catch (Exception ex)
