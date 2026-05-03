@@ -1,5 +1,5 @@
 using SCA.Core.Data;
-﻿using SCA.Core.Models;
+using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 //Isso seria a mesma coisa de "import bibliotecas as outronome" do Python

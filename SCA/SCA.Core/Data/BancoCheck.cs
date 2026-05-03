@@ -1,6 +1,7 @@
 using SCA.Core.Data;
 using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace SCA.Core.Data
 {
@@ -74,14 +75,17 @@ namespace SCA.Core.Data
                 string loginAdmin = Environment.GetEnvironmentVariable("USER_ADMIN_LOGIN") ?? "admin";
                 string senhaAdmin = Environment.GetEnvironmentVariable("USER_ADMIN_SENHA") ?? "admin";
 
-                if (!context.Usuarios.Any(u => u.Login == loginAdmin))
+                var usuarioExistente = context.Usuarios.FirstOrDefault(u => u.Login == loginAdmin);
+
+                if (usuarioExistente == null)
                 {
                     SCA.Core.Services.UsuarioService.CriarUser("AdminDefalte", loginAdmin, senhaAdmin, true, true);
                     Console.WriteLine("Usuário admin padrão criado com sucesso.");
                 }
                 else
-                {
-                    Console.WriteLine("Usuário admin já existe. Ignorando a criação.");
+                { 
+                    SCA.Core.Services.UsuarioService.AtualizarUser(usuarioExistente.Id, null, loginAdmin, senhaAdmin);
+                    Console.WriteLine("Admin já exite criação ignorada");
                 }
             }
             catch (Exception ex)

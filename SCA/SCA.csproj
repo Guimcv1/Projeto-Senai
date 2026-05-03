@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
  
    <PropertyGroup>
-     <OutputType>Exe</OutputType>
+     <OutputType>WinExe</OutputType>
      <TargetFramework>net10.0</TargetFramework>
      <EnableWindowsTargeting>true</EnableWindowsTargeting>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -58,5 +58,13 @@
    <ItemGroup>
      <ProjectReference Include="SCA.Core\SCA.Core.csproj" />
    </ItemGroup>
+
+	<Target Name="OrganizeDLLs" AfterTargets="Build">
+		<ItemGroup>
+			<MyDlls Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll" />
+		</ItemGroup>
+		<MakeDir Directories="$(TargetDir)dll" Condition="!Exists('$(TargetDir)dll')" />
+		<Move SourceFiles="@(MyDlls)" DestinationFolder="$(TargetDir)dll" />
+	</Target>
  
  </Project>

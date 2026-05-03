@@ -7,107 +7,134 @@
         x:Class="SCA.Views.JanelaPrincipal"
         Title="Controle de Ambientes | SENAI" WindowStartupLocation="CenterScreen">
 
-    <Grid Background="#F1F5F9">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+	<Grid Background="#F1F5F9">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="250"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
-        <Border Grid.Column="0" Background="#002776">
-            <StackPanel>
-                <Border Background="White" Height="100" Padding="15">
-                    <!-- Image path might need adjustment for Avalonia assets -->
-                    <Image Source="avares://SCA/assets/senai_logo.png" Stretch="Uniform"/>
-                </Border>
-                <Border Height="4" Background="#EA580C"/>
+		<!-- Sidebar -->
+		<Border Grid.Column="0" Background="#002776">
+			<StackPanel>
+				<Border Background="White" Height="100" Padding="15">
+					<!-- Image path might need adjustment for Avalonia assets -->
+					<Image Source="avares://SCA/assets/senai_logo.png" Stretch="Uniform"/>
+				</Border>
+				<Border Height="4" Background="#EA580C"/>
 
-                <Button x:Name="btnVisaoGeral" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="ViewDashboard" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Visão Geral</TextBlock>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="btnAprovacoes" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="CheckAll" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Aprovações</TextBlock>
-                    </StackPanel>
-                </Button>
+				<Button x:Name="btnVisaoGeral" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="ViewDashboard" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Visão Geral</TextBlock>
+					</StackPanel>
+				</Button>
 
-                <Button x:Name="btnLocais" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="MapMarker" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Gerir Locais</TextBlock>
-                    </StackPanel>
-                </Button>
+				<Button x:Name="btnAprovacoes" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="CheckAll" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Aprovações</TextBlock>
+					</StackPanel>
+				</Button>
 
-                <Button x:Name="btnItens" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
-                    </StackPanel>
-                </Button>
+				<Button x:Name="btnLocais" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="MapMarker" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Locais</TextBlock>
+					</StackPanel>
+				</Button>
 
-                <Button x:Name="btnUsuarios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="AccountMultiple" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Gerir Utilizadores</TextBlock>
-                    </StackPanel>
-                </Button>
+				<Button x:Name="btnItens" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
+					</StackPanel>
+				</Button>
 
-                <Button x:Name="btnRelatorios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
-                        <TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-        </Border>
+				<Button x:Name="btnUsuarios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="AccountMultiple" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Utilizadores</TextBlock>
+					</StackPanel>
+				</Button>
 
-        <!-- Main Content Area -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+				<Button x:Name="btnRelatorios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
+						<TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+		</Border>
 
-            <!-- Header -->
-            <Border Grid.Row="0" Background="White" Height="80" BorderBrush="#EA580C" BorderThickness="0,0,0,4" Padding="20,0">
-                <Grid>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <Border x:Name="UserBadge" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="20" Padding="15,8" Margin="0,0,20,0" IsVisible="False">
-                            <TextBlock x:Name="txtUserNameDisplay" Foreground="#002776" FontWeight="SemiBold">Sessão: Admin</TextBlock>
-                        </Border>
-                        <Button x:Name="btnAuth" Height="45" Padding="15,0"
+		<!-- Main Content Area -->
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Header -->
+			<Border Grid.Row="0" Background="White" Height="80" BorderBrush="#EA580C" BorderThickness="0,0,0,4" Padding="20,0">
+				<Grid>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+						<Border x:Name="UserBadge" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="20" Padding="15,8" Margin="0,0,20,0" IsVisible="False">
+							<TextBlock x:Name="txtUserNameDisplay" Foreground="#002776" FontWeight="SemiBold">Sessão: Admin</TextBlock>
+						</Border>
+						<Button x:Name="btnAuth" Height="45" Padding="15,0"
                                 Background="Transparent" Foreground="#002776" BorderThickness="2" BorderBrush="#002776"
                                 Click="BtnAuth_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <material:MaterialIcon x:Name="iconAuth" Kind="AccountLock" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtAuth" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Acesso Administrativo</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
+							<StackPanel Orientation="Horizontal">
+								<material:MaterialIcon x:Name="iconAuth" Kind="AccountLock" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+								<TextBlock x:Name="txtAuth" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center">Acesso Administrativo</TextBlock>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
 
-            <!-- Page Content -->
-            <ContentControl x:Name="MainContent" Grid.Row="1" Margin="30"/>
+			<!-- Page Content -->
+			<ContentControl x:Name="MainContent" Grid.Row="1" Margin="30"/>
 
-            <!-- Notification Bar -->
-            <Border x:Name="NotificationBar" Grid.Row="1" IsVisible="False" VerticalAlignment="Bottom" 
+			<!-- Notification Bar -->
+			<Border x:Name="NotificationBar" Grid.Row="1" IsVisible="False" VerticalAlignment="Bottom"
                     Background="#DC2626" Padding="20,10" Margin="30,0,30,20" CornerRadius="8" ZIndex="100">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Orientation="Horizontal" Grid.Column="0">
-                        <material:MaterialIcon x:Name="iconNotification" Kind="AlertCircle" Foreground="White" Width="20" Height="20" Margin="0,0,10,0"/>
-                        <TextBlock x:Name="txtNotification" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    <Button Grid.Column="1" Background="Transparent" Foreground="White" BorderThickness="0" Click="CloseNotification_Click" Padding="5">
-                        <material:MaterialIcon Kind="Close" Width="18" Height="18"/>
-                    </Button>
-                </Grid>
-            </Border>
-        </Grid>
-    </Grid>
+				<Grid ColumnDefinitions="*,Auto">
+					<StackPanel Orientation="Horizontal" Grid.Column="0">
+						<material:MaterialIcon x:Name="iconNotification" Kind="AlertCircle" Foreground="White" Width="20" Height="20" Margin="0,0,10,0"/>
+						<TextBlock x:Name="txtNotification" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+					</StackPanel>
+					<Button Grid.Column="1" Background="Transparent" Foreground="White" BorderThickness="0" Click="CloseNotification_Click" Padding="5">
+						<material:MaterialIcon Kind="Close" Width="18" Height="18"/>
+					</Button>
+				</Grid>
+			</Border>
+		</Grid>
+
+		<!-- Admin Login Overlay (Unificado) -->
+		<Border x:Name="AdminLoginOverlay" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="False" Background="#80000000" ZIndex="200">
+			<Border Background="White" CornerRadius="12" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+				<StackPanel>
+					<TextBlock Text="Identificação Administrativa" FontSize="20" FontWeight="Bold" Foreground="#002776" Margin="0,0,0,10"/>
+					<TextBlock Text="Por favor, informe suas credenciais de administrador." Foreground="#64748B" FontSize="14" Margin="0,0,0,20" TextWrapping="Wrap"/>
+
+					<TextBlock Text="Login" Foreground="#64748B" FontSize="12" Margin="0,0,0,5"/>
+					<TextBox x:Name="txtAdminLogin" Margin="0,0,0,15" Watermark="Seu login"/>
+
+					<TextBlock Text="Senha" Foreground="#64748B" FontSize="12" Margin="0,0,0,5"/>
+					<TextBox x:Name="txtAdminPassword" PasswordChar="*" Margin="0,0,0,25" Watermark="Sua senha">
+						<TextBox.InnerRightContent>
+							<Button Background="Transparent" BorderThickness="0" Width="30" Height="30" Click="ToggleAdminPasswordVisibility_Click">
+								<material:MaterialIcon x:Name="iconAdminPasswordVisibility" Kind="EyeOff" Width="20" Height="20" Foreground="#64748B"/>
+							</Button>
+						</TextBox.InnerRightContent>
+					</TextBox>
+
+					<Grid ColumnDefinitions="*,*">
+						<Button Grid.Column="0" Content="Cancelar" HorizontalAlignment="Left" Click="CloseAdminLogin_Click"/>
+						<Button Grid.Column="1" Content="Entrar" HorizontalAlignment="Right" Background="#002776" Foreground="White" Click="ConfirmAdminLogin_Click"/>
+					</Grid>
+				</StackPanel>
+			</Border>
+		</Border>
+	</Grid>
 </Window>

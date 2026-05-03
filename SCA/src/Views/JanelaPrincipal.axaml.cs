@@ -42,7 +42,7 @@ public partial class JanelaPrincipal : Window
             btn.Background = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255));
             btn.BorderThickness = new Thickness(4, 0, 0, 0);
             btn.BorderBrush = Brush.Parse("#EA580C");
-            
+
             if (btn == btnVisaoGeral) LoadView(new PainelVisaoGeralView(this));
             else if (btn == btnAprovacoes) LoadView(new AprovacoesView(this));
             else if (btn == btnLocais) LoadView(new LocaisView(this));
@@ -80,7 +80,7 @@ public partial class JanelaPrincipal : Window
             IsAdminMode = false;
             CurrentAdmin = null;
             UpdateUIRole();
-            
+
             ResetMenuButtons();
             if (btnVisaoGeral != null)
             {
@@ -92,8 +92,63 @@ public partial class JanelaPrincipal : Window
         }
         else
         {
-            TelaLoginView loginPage = new TelaLoginView(this);
-            loginPage.ShowDialog(this);
+            if (AdminLoginOverlay != null)
+            {
+                txtAdminLogin.Text = "";
+                txtAdminPassword.Text = "";
+                AdminLoginOverlay.IsVisible = true;
+            }
+        }
+    }
+
+    private void CloseAdminLogin_Click(object sender, RoutedEventArgs e)
+    {
+        if (AdminLoginOverlay != null) AdminLoginOverlay.IsVisible = false;
+    }
+
+    private bool _isAdminPasswordVisible = false;
+    private void ToggleAdminPasswordVisibility_Click(object sender, RoutedEventArgs e)
+    {
+        _isAdminPasswordVisible = !_isAdminPasswordVisible;
+        if (txtAdminPassword != null && iconAdminPasswordVisibility != null)
+        {
+            if (_isAdminPasswordVisible)
+            {
+                txtAdminPassword.PasswordChar = '\0';
+                iconAdminPasswordVisibility.Kind = Material.Icons.MaterialIconKind.Eye;
+            }
+            else
+            {
+                txtAdminPassword.PasswordChar = '*';
+                iconAdminPasswordVisibility.Kind = Material.Icons.MaterialIconKind.EyeOff;
+            }
+        }
+    }
+
+    private void ConfirmAdminLogin_Click(object sender, RoutedEventArgs e)
+    {
+        string login = txtAdminLogin?.Text ?? "";
+        string senha = txtAdminPassword?.Text ?? "";
+
+        if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(senha))
+        {
+            ShowMessage("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        var usuario = SCA.Core.Services.UsuarioService.LoginUser(login, senha);
+
+        if (usuario != null && usuario.IsAdmin)
+        {
+            IsAdminMode = true;
+            CurrentAdmin = usuario;
+            UpdateUIRole();
+            if (AdminLoginOverlay != null) AdminLoginOverlay.IsVisible = false;
+            ShowMessage($"Bem-vindo, {usuario.Nome}!", false);
+        }
+        else
+        {
+            ShowMessage("Usuário ou senha incorretos ou sem permissão de administrador.");
         }
     }
 
@@ -106,7 +161,7 @@ public partial class JanelaPrincipal : Window
         btnItens.IsVisible = IsAdminMode;
         btnUsuarios.IsVisible = IsAdminMode;
         btnRelatorios.IsVisible = IsAdminMode;
-        
+
         if (UserBadge != null) UserBadge.IsVisible = IsAdminMode;
 
         if (IsAdminMode)
@@ -148,7 +203,7 @@ public partial class JanelaPrincipal : Window
         txtNotification.Text = msg;
         NotificationBar.Background = isError ? Brush.Parse("#DC2626") : Brush.Parse("#16A34A");
         if (iconNotification != null) iconNotification.Kind = isError ? Material.Icons.MaterialIconKind.AlertCircle : Material.Icons.MaterialIconKind.CheckCircle;
-        
+
         NotificationBar.IsVisible = true;
 
         // Auto-hide after 5 seconds

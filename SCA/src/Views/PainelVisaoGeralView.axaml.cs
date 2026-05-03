@@ -53,16 +53,16 @@ public partial class PainelVisaoGeralView : UserControl
 
         string searchText = txtSearch.Text?.ToLower() ?? "";
 
-        var salasFiltradas = _todasSalas.Where(s => 
-            (string.IsNullOrEmpty(searchText) || 
+        var salasFiltradas = _todasSalas.Where(s =>
+            (string.IsNullOrEmpty(searchText) ||
              (s.Descricao != null && s.Descricao.ToLower().Contains(searchText)))
         ).ToList();
-        
+
         var ambientesUI = new List<AmbienteTemp>();
 
         using var context = new BancoContext();
         var todosItens = context.Itens.ToList();
-        var todosEmprestimos = context.Emprestimos.ToList(); 
+        var todosEmprestimos = context.Emprestimos.ToList();
 
         foreach (var sala in salasFiltradas)
         {
@@ -82,7 +82,7 @@ public partial class PainelVisaoGeralView : UserControl
     private string GetRoomColor(int salaId, List<Item> itens, List<Emprestimos> emprestimos)
     {
         var itensDaSala = itens.Where(i => i.SalaId == salaId).ToList();
-        if (itensDaSala.Count == 0) return "#94a3b8"; 
+        if (itensDaSala.Count == 0) return "#94a3b8";
 
         int total = itensDaSala.Count;
         int available = itensDaSala.Count(i => i.Estado == Estados.Livre);
@@ -90,9 +90,9 @@ public partial class PainelVisaoGeralView : UserControl
         int pending = itensDaSala.Count(i => i.Estado == Estados.Analise);
 
         if (pending == total) return "#94a3b8";
-        if (available == total) return "#16a34a"; 
-        if (borrowed == total) return "#dc2626"; 
-        if (available > 0) return "#ea580c"; 
+        if (available == total) return "#16a34a";
+        if (borrowed == total) return "#dc2626";
+        if (available > 0) return "#ea580c";
 
         return "#dc2626";
     }
@@ -187,7 +187,7 @@ public partial class PainelVisaoGeralView : UserControl
 
         // Close room details and open login
         RoomDialogOverlay.IsVisible = false;
-        
+
         txtRequestLogin.Text = "";
         txtRequestPassword.Text = "";
         LoginDialogOverlay.IsVisible = true;
@@ -196,6 +196,25 @@ public partial class PainelVisaoGeralView : UserControl
     private void CloseLoginDialog_Click(object sender, RoutedEventArgs e)
     {
         if (LoginDialogOverlay != null) LoginDialogOverlay.IsVisible = false;
+    }
+
+    private bool _isRequestPasswordVisible = false;
+    private void ToggleRequestPasswordVisibility_Click(object sender, RoutedEventArgs e)
+    {
+        _isRequestPasswordVisible = !_isRequestPasswordVisible;
+        if (txtRequestPassword != null && iconRequestPasswordVisibility != null)
+        {
+            if (_isRequestPasswordVisible)
+            {
+                txtRequestPassword.PasswordChar = '\0';
+                iconRequestPasswordVisibility.Kind = Material.Icons.MaterialIconKind.Eye;
+            }
+            else
+            {
+                txtRequestPassword.PasswordChar = '*';
+                iconRequestPasswordVisibility.Kind = Material.Icons.MaterialIconKind.EyeOff;
+            }
+        }
     }
 
     private void ConfirmLoanRequest_Click(object sender, RoutedEventArgs e)
