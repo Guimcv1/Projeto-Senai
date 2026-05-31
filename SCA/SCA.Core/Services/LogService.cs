@@ -1,5 +1,5 @@
 using SCA.Core.Data;
-﻿using SCA.Core.Models;
+using SCA.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

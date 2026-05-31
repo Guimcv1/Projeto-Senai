@@ -14,6 +14,15 @@ public partial class LocaisView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
+    private void RegistrarAcao(string acao)
+    {
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+        if (usuarioId > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Sala, usuarioId);
+        }
+    }
+
     public LocaisView()
     {
         InitializeComponent();
@@ -65,6 +74,7 @@ public partial class LocaisView : UserControl, IReloadableView
         
         chkIsAtivo.IsChecked = true;
         LocalDialogOverlay.IsVisible = true;
+        RegistrarAcao("Abriu cadastro de novo local");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -80,6 +90,7 @@ public partial class LocaisView : UserControl, IReloadableView
                 
                 chkIsAtivo.IsChecked = sala.isAtivo;
                 LocalDialogOverlay.IsVisible = true;
+                RegistrarAcao($"Abriu edição do local {sala.Id}");
             }
         }
     }
@@ -91,6 +102,7 @@ public partial class LocaisView : UserControl, IReloadableView
             if (SalaService.InativaSala(local.Id))
             {
                 LoadLocais();
+                RegistrarAcao($"Inativou local {local.Id}: {local.Descricao}");
             }
         }
     }
@@ -98,6 +110,7 @@ public partial class LocaisView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         LocalDialogOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de local");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
@@ -114,6 +127,7 @@ public partial class LocaisView : UserControl, IReloadableView
         {
             LocalDialogOverlay.IsVisible = false;
             LoadLocais();
+            RegistrarAcao(_editingId == -1 ? $"Criou local: {nome}" : $"Editou local {_editingId}: {nome}");
         }
     }
 }

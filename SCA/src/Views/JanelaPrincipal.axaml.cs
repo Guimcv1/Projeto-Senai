@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using SCA.Core.Models;
+using SCA.Core.Services;
 using System;
 using System.Linq;
 
@@ -13,6 +14,15 @@ public partial class JanelaPrincipal : Window
     public bool IsAdminMode { get; set; } = false;
     public Usuario? CurrentAdmin { get; set; } = null;
     private Avalonia.Threading.DispatcherTimer _autoReloadTimer;
+
+    private void RegistrarAcao(string acao, string tipoAcao = "Usuario", int? usuarioId = null)
+    {
+        int id = usuarioId ?? CurrentAdmin?.Id ?? 0;
+        if (id > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, tipoAcao, id);
+        }
+    }
 
     public JanelaPrincipal()
     {
@@ -60,12 +70,36 @@ public partial class JanelaPrincipal : Window
             btn.BorderThickness = new Thickness(4, 0, 0, 0);
             btn.BorderBrush = Brush.Parse("#EA580C");
 
-            if (btn == btnVisaoGeral) LoadView(new PainelVisaoGeralView(this));
-            else if (btn == btnAprovacoes) LoadView(new AprovacoesView(this));
-            else if (btn == btnLocais) LoadView(new LocaisView(this));
-            else if (btn == btnItens) LoadView(new ItensView(this));
-            else if (btn == btnUsuarios) LoadView(new UsuariosView(this));
-            else if (btn == btnRelatorios) LoadView(new RelatoriosView(this));
+            if (btn == btnVisaoGeral)
+            {
+                LoadView(new PainelVisaoGeralView(this));
+                RegistrarAcao("Abriu menu Visao Geral", AcaoTipo.Sala);
+            }
+            else if (btn == btnAprovacoes)
+            {
+                LoadView(new AprovacoesView(this));
+                RegistrarAcao("Abriu menu Aprovacoes", AcaoTipo.Item);
+            }
+            else if (btn == btnLocais)
+            {
+                LoadView(new LocaisView(this));
+                RegistrarAcao("Abriu menu Locais", AcaoTipo.Sala);
+            }
+            else if (btn == btnItens)
+            {
+                LoadView(new ItensView(this));
+                RegistrarAcao("Abriu menu Itens", AcaoTipo.Item);
+            }
+            else if (btn == btnUsuarios)
+            {
+                LoadView(new UsuariosView(this));
+                RegistrarAcao("Abriu menu Usuarios", AcaoTipo.Usuario);
+            }
+            else if (btn == btnRelatorios)
+            {
+                LoadView(new RelatoriosView(this));
+                RegistrarAcao("Abriu menu Relatorios", AcaoTipo.Usuario);
+            }
         }
     }
 
@@ -94,6 +128,7 @@ public partial class JanelaPrincipal : Window
     {
         if (IsAdminMode)
         {
+            RegistrarAcao("Saiu do modo administrativo", AcaoTipo.Usuario);
             IsAdminMode = false;
             CurrentAdmin = null;
             UpdateUIRole();
@@ -114,6 +149,7 @@ public partial class JanelaPrincipal : Window
                 txtAdminLogin.Text = "";
                 txtAdminPassword.Text = "";
                 AdminLoginOverlay.IsVisible = true;
+                RegistrarAcao("Abriu dialogo de login administrativo", AcaoTipo.Usuario);
             }
         }
     }
@@ -121,6 +157,7 @@ public partial class JanelaPrincipal : Window
     private void CloseAdminLogin_Click(object sender, RoutedEventArgs e)
     {
         if (AdminLoginOverlay != null) AdminLoginOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de login administrativo", AcaoTipo.Usuario);
     }
 
     private bool _isAdminPasswordVisible = false;
@@ -140,6 +177,7 @@ public partial class JanelaPrincipal : Window
                 iconAdminPasswordVisibility.Kind = Material.Icons.MaterialIconKind.EyeOff;
             }
         }
+        RegistrarAcao("Alternou visibilidade da senha administrativa", AcaoTipo.Usuario);
     }
 
     private void ConfirmAdminLogin_Click(object sender, RoutedEventArgs e)
@@ -162,10 +200,16 @@ public partial class JanelaPrincipal : Window
             UpdateUIRole();
             if (AdminLoginOverlay != null) AdminLoginOverlay.IsVisible = false;
             ShowMessage($"Bem-vindo, {usuario.Nome}!", false);
+            RegistrarAcao($"Login administrativo confirmado para {usuario.Login}", AcaoTipo.Usuario, usuario.Id);
         }
         else
         {
             ShowMessage("Usuário ou senha incorretos ou sem permissão de administrador.");
+            var usuarioTentativa = UsuarioService.ListarUser().FirstOrDefault(u => u.Login == login);
+            if (usuarioTentativa != null)
+            {
+                RegistrarAcao($"Tentativa de login administrativo com falha para {usuarioTentativa.Login}", AcaoTipo.Usuario, usuarioTentativa.Id);
+            }
         }
     }
 
@@ -238,5 +282,6 @@ public partial class JanelaPrincipal : Window
     private void CloseNotification_Click(object sender, RoutedEventArgs e)
     {
         if (NotificationBar != null) NotificationBar.IsVisible = false;
+        RegistrarAcao("Fechou notificacao", AcaoTipo.Usuario);
     }
 }

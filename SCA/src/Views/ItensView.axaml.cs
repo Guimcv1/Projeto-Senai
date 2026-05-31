@@ -16,6 +16,15 @@ public partial class ItensView : UserControl, IReloadableView
     private int _editingId = -1;
     private List<Sala> _salasDisponiveis = new();
 
+    private void RegistrarAcao(string acao)
+    {
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+        if (usuarioId > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Item, usuarioId);
+        }
+    }
+
     public ItensView()
     {
         InitializeComponent();
@@ -87,6 +96,7 @@ public partial class ItensView : UserControl, IReloadableView
         cbEstado.SelectedIndex = 0; 
         cbEstado.IsEnabled = false; 
         ItemDialogOverlay.IsVisible = true;
+        RegistrarAcao("Abriu cadastro de novo item");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -111,6 +121,7 @@ public partial class ItensView : UserControl, IReloadableView
                 cbEstado.SelectedItem = item.Estado;
 
                 ItemDialogOverlay.IsVisible = true;
+                RegistrarAcao($"Abriu edição do item {item.Id}");
             }
         }
     }
@@ -118,6 +129,7 @@ public partial class ItensView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         ItemDialogOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de item");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
@@ -158,6 +170,7 @@ public partial class ItensView : UserControl, IReloadableView
             ItemDialogOverlay.IsVisible = false;
             LoadData();
             _parent?.ShowMessage("Item salvo com sucesso!", false);
+            RegistrarAcao(_editingId == -1 ? $"Criou item: {descricao}" : $"Editou item {_editingId}: {descricao}");
         }
         else
         {

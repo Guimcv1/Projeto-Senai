@@ -19,6 +19,15 @@ public partial class RelatoriosView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
 
+    private void RegistrarAcao(string acao)
+    {
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+        if (usuarioId > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Usuario, usuarioId);
+        }
+    }
+
     public RelatoriosView()
     {
         InitializeComponent();
@@ -155,12 +164,14 @@ public partial class RelatoriosView : UserControl, IReloadableView
                 if (!expLogs && !expUsers && !expItems && !expRooms)
                 {
                     _parent?.ShowMessage("Selecione pelo menos uma tabela para exportação.");
+                    RegistrarAcao("Tentou exportar relatorio sem selecionar tabelas");
                     return;
                 }
 
                 ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo, inicio, fim, statusItem, isAdmin, expLogs, expUsers, expItems, expRooms);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
                 Console.WriteLine($"Relatório geral exportado com sucesso para {filePath}.");
+                RegistrarAcao("Exportou relatorio para Excel");
             }
         }
         catch (Exception ex)

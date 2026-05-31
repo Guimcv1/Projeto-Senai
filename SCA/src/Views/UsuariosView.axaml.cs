@@ -13,6 +13,15 @@ public partial class UsuariosView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
+    private void RegistrarAcao(string acao)
+    {
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+        if (usuarioId > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, "Usuario", usuarioId);
+        }
+    }
+
     public UsuariosView()
     {
         InitializeComponent();
@@ -67,6 +76,7 @@ public partial class UsuariosView : UserControl, IReloadableView
         chkIsAdmin.IsChecked = false;
         chkIsAtivo.IsChecked = true;
         UsuarioDialogOverlay.IsVisible = true;
+        RegistrarAcao("Abriu cadastro de novo usuario");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -84,6 +94,7 @@ public partial class UsuariosView : UserControl, IReloadableView
                 chkIsAdmin.IsChecked = user.IsAdmin;
                 chkIsAtivo.IsChecked = user.IsAtivo;
                 UsuarioDialogOverlay.IsVisible = true;
+                RegistrarAcao($"Abriu edição do usuario {user.Id}");
             }
         }
     }
@@ -91,6 +102,7 @@ public partial class UsuariosView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         UsuarioDialogOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de usuario");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
@@ -128,6 +140,7 @@ public partial class UsuariosView : UserControl, IReloadableView
         {
             UsuarioDialogOverlay.IsVisible = false;
             LoadData();
+            RegistrarAcao(_editingId == -1 ? $"Criou usuario: {login}" : $"Editou usuario {_editingId}: {login}");
         }
         else
         {
@@ -143,6 +156,7 @@ public partial class UsuariosView : UserControl, IReloadableView
             if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus))
             {
                 LoadData();
+                RegistrarAcao($"Alterou status do usuario {userUI.Id} para {(novoStatus ? "Ativo" : "Inativo")}");
             }
         }
     }

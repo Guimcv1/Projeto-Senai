@@ -18,6 +18,15 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private List<Sala> _todasSalas = new();
 
+    private void RegistrarAcao(string acao, string tipoAcao = "Item", int? usuarioId = null)
+    {
+        int id = usuarioId ?? _parent?.CurrentAdmin?.Id ?? 0;
+        if (id > 0)
+        {
+            SCA.Core.Services.LogService.RegistrarLog(acao, tipoAcao, id);
+        }
+    }
+
     public PainelVisaoGeralView()
     {
         InitializeComponent();
@@ -120,6 +129,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             if (sala != null)
             {
                 OpenRoomDetails(ambiente.Id, sala.Descricao);
+                RegistrarAcao($"Abriu detalhes da sala {sala.Id}: {sala.Descricao}", AcaoTipo.Sala);
             }
         }
     }
@@ -173,6 +183,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         if (RoomDialogOverlay != null) RoomDialogOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de detalhes da sala", AcaoTipo.Sala);
     }
 
     private List<ItemUI> _pendingSelectedItems = new();
@@ -196,11 +207,13 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         txtRequestLogin.Text = "";
         txtRequestPassword.Text = "";
         LoginDialogOverlay.IsVisible = true;
+        RegistrarAcao($"Selecionou {_pendingSelectedItems.Count} itens para solicitar", AcaoTipo.Item);
     }
 
     private void CloseLoginDialog_Click(object sender, RoutedEventArgs e)
     {
         if (LoginDialogOverlay != null) LoginDialogOverlay.IsVisible = false;
+        RegistrarAcao("Fechou dialogo de solicitacao", AcaoTipo.Usuario);
     }
 
     private bool _isRequestPasswordVisible = false;
@@ -220,6 +233,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
                 iconRequestPasswordVisibility.Kind = Material.Icons.MaterialIconKind.EyeOff;
             }
         }
+        RegistrarAcao("Alternou visibilidade da senha de solicitacao", AcaoTipo.Usuario);
     }
 
     private void ConfirmLoanRequest_Click(object sender, RoutedEventArgs e)
@@ -237,10 +251,16 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         if (usuario == null)
         {
             _parent?.ShowMessage("Usuário ou senha incorretos.");
+            var usuarioTentativa = UsuarioService.ListarUser().FirstOrDefault(u => u.Login == login);
+            if (usuarioTentativa != null)
+            {
+                RegistrarAcao($"Tentativa de autenticacao de solicitacao com falha para {usuarioTentativa.Login}", AcaoTipo.Usuario, usuarioTentativa.Id);
+            }
             return;
         }
 
         int currentUserId = usuario.Id;
+        RegistrarAcao($"Autenticou solicitacao com usuario {usuario.Login}", AcaoTipo.Usuario, currentUserId);
         LoginDialogOverlay.IsVisible = false;
 
         // Determine if we are requesting Loans or Returns
@@ -258,6 +278,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
                 if (EmprestimoService.SolicitarEmprestimo(currentUserId, salaId, itemsToLoan))
                 {
                     _parent?.ShowMessage($"Solicitado empréstimo de {itemsToLoan.Count} itens.", false);
+                    RegistrarAcao($"Solicitou emprestimo de {itemsToLoan.Count} itens", AcaoTipo.Item, currentUserId);
                 }
             }
         }
@@ -285,6 +306,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             if (returnCount > 0)
             {
                 _parent?.ShowMessage($"Solicitada devolução de {returnCount} itens.", false);
+                RegistrarAcao($"Solicitou devolucao de {returnCount} itens", AcaoTipo.Item, currentUserId);
             }
         }
 
