@@ -45,13 +45,13 @@
         .btn-success { background-color: var(--status-green); }
         .btn-warning { background-color: var(--status-orange); }
         .btn-outline { background: transparent; border: 2px solid var(--senai-blue); color: var(--senai-blue); }
-        .btn-outline:hover { background: var(--senai-blue); color: white; }
+        .btn-outline:hover { background: var(--senai-red); border-color: var(--senai-red); color: white; }
 
         .container { display: flex; flex: 1; overflow: hidden; }
 
         .sidebar { width: 250px; background-color: var(--senai-blue); padding: 20px 0; display: flex; flex-direction: column; }
         .sidebar button { background: transparent; color: #cbd5e1; border: none; padding: 16px 24px; text-align: left; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; border-left: 4px solid transparent; display: flex; align-items: center; gap: 10px; }
-        .sidebar button:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar button:hover { background-color: var(--senai-red); color: white; }
         .sidebar button.active { background-color: rgba(255,255,255,0.15); color: white; border-left-color: var(--senai-red); font-weight: 600; }
 
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
@@ -83,6 +83,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; }
         th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; }
+        tbody tr:hover { background-color: #f1f5f9; }
         
         .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 700; text-transform: uppercase; }
         .bg-green { background-color: var(--status-green); }
@@ -429,14 +430,44 @@
 
             <div class="admin-panel">
                 <h3 style="margin-top: 0; color: var(--senai-blue);">Exportar Base de Dados</h3>
-                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0;">O relatório exportado obedecerá aos filtros de Período e Ambiente definidos acima.</p>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0;">O relatório exportado obedecerá aos filtros definidos abaixo.</p>
                 
                 <div class="export-options">
-                    <div class="export-checkboxes">
+                    <div style="margin-bottom: 15px; font-weight: 600; font-size: 0.95rem; color: var(--senai-blue);">Tabelas para Exportação:</div>
+                    <div class="export-checkboxes" style="margin-top: 0; margin-bottom: 20px;">
                         <label><input type="checkbox" id="expLogs" checked> Histórico de Empréstimos</label>
                         <label><input type="checkbox" id="expUsers" checked> Cadastro de Utilizadores</label>
                         <label><input type="checkbox" id="expItems" checked> Inventário de Itens</label>
                         <label><input type="checkbox" id="expRooms" checked> Relação de Ambientes</label>
+                    </div>
+
+                    <div style="font-weight: 600; font-size: 0.95rem; color: var(--senai-blue); border-top: 1px solid #e2e8f0; padding-top: 15px; margin-bottom: 15px;">Filtros de Exportação:</div>
+                    <div class="form-row" style="flex-wrap: wrap;">
+                        <div class="form-group" style="min-width: 150px;">
+                            <label>Data Inicial</label>
+                            <input type="date" id="expDataInicial" style="height: 42px;">
+                        </div>
+                        <div class="form-group" style="min-width: 150px;">
+                            <label>Data Final</label>
+                            <input type="date" id="expDataFinal" style="height: 42px;">
+                        </div>
+                        <div class="form-group" style="min-width: 150px;">
+                            <label>Status (Itens)</label>
+                            <select id="expStatusFilter" style="width: 100%;">
+                                <option value="todos">Todos</option>
+                                <option value="Disponível">Disponível</option>
+                                <option value="Emprestado">Emprestado</option>
+                                <option value="Pendente">Pendente</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="min-width: 150px;">
+                            <label>Perfil (Utilizadores)</label>
+                            <select id="expRoleFilter" style="width: 100%;">
+                                <option value="todos">Todos</option>
+                                <option value="Admin">Administrador</option>
+                                <option value="Usuário">Utilizador Comum</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -1135,9 +1166,10 @@
             return;
         }
 
-        const selTempo = document.getElementById('filterTempo').value;
-        const textSala = $('#filterSalaRelatorio').find("option:selected").text();
-        const textTurno = $('#filterTurno').find("option:selected").text();
+        const dataIn = document.getElementById('expDataInicial').value;
+        const dataFim = document.getElementById('expDataFinal').value;
+        const statusFilter = document.getElementById('expStatusFilter').value;
+        const roleFilter = document.getElementById('expRoleFilter').value;
 
         let selecionados = [];
         if(logs) selecionados.push("Histórico de Empréstimos");
@@ -1145,50 +1177,14 @@
         if(items) selecionados.push("Inventário de Itens");
         if(rooms) selecionados.push("Relação de Ambientes");
 
-        let calcDiasTexto = "";
-        let isMultiDay = false;
-        
-        if (selTempo === 'sempre') {
-            calcDiasTexto = "Todo o período (Desde a implantação)";
-            isMultiDay = true;
-        } else if (selTempo === '1') {
-            calcDiasTexto = "1 dia (Hoje)";
-            isMultiDay = false;
-        } else if (selTempo === '7') {
-            calcDiasTexto = "Últimos 7 dias";
-            isMultiDay = true;
-        } else if (selTempo === '30') {
-            calcDiasTexto = "Últimos 30 dias";
-            isMultiDay = true;
-        } else if (selTempo === 'custom') {
-            const dataIn = document.getElementById('dataInicial').value;
-            const dataFim = document.getElementById('dataFinal').value;
-            
-            if(!dataIn || !dataFim) {
-                alert("Erro: Preencha a data inicial e final para exportar.");
-                return;
-            }
-            
-            const d1 = new Date(dataIn);
-            const d2 = new Date(dataFim);
-            const diffTime = d2 - d1;
-            
-            if(diffTime < 0) {
-                alert("Erro: Data final é anterior à data inicial.");
-                return;
-            }
-            
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        let periodo = "Todo o período";
+        if(dataIn && dataFim) {
             const d1Format = dataIn.split('-').reverse().join('/');
             const d2Format = dataFim.split('-').reverse().join('/');
-            
-            calcDiasTexto = `${diffDays} dia(s) processado(s) (De ${d1Format} até ${d2Format})`;
-            isMultiDay = (diffDays > 1);
+            periodo = `De ${d1Format} até ${d2Format}`;
         }
 
-        let turnoTexto = isMultiDay ? "[Turno: Todos]" : `[Turno: ${textTurno}]`;
-
-        alert(`A gerar relatório Excel/CSV...\n\nFiltros Aplicados:\n- Período: ${calcDiasTexto}\n- ${turnoTexto}\n- Ambiente: ${textSala}\n\nDados Exportados:\n- ${selecionados.join('\n- ')}\n\n(Ação concluída com sucesso)`);
+        alert(`A gerar relatório Excel/CSV...\n\nFiltros Aplicados:\n- Período: ${periodo}\n- Status Itens: ${statusFilter}\n- Perfil Usuários: ${roleFilter}\n\nDados Exportados:\n- ${selecionados.join('\n- ')}\n\n(Ação concluída com sucesso)`);
     }
 
     // --- VISUALIZAÇÃO DE SENHA ---
@@ -1217,6 +1213,19 @@
 
         updateLocalSelects();
         updateUIRole(); 
+
+        // Reload Automático das Abas para Atualizações em Tempo Real
+        setInterval(() => {
+            const activeTabId = document.querySelector('.section.active')?.id;
+            if (activeTabId) {
+                if (activeTabId === 'dashboard') filterDashboard();
+                if (activeTabId === 'aprovacoes') renderApprovals();
+                if (activeTabId === 'crudLocais') renderLocais();
+                if (activeTabId === 'crudItens') renderItensAdmin();
+                if (activeTabId === 'crudUsuarios') renderUsuarios();
+                if (activeTabId === 'exportarLogs') updateRelatorios();
+            }
+        }, 5000);
     };
 </script>
 

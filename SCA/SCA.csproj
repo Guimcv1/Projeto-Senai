@@ -1,21 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
  
    <PropertyGroup>
      <OutputType>WinExe</OutputType>
-	 <TargetFramework>net6.0-windows</TargetFramework>
-     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+	 <TargetFramework>net6.0</TargetFramework>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
      <Nullable>enable</Nullable>
      <ImplicitUsings>enable</ImplicitUsings>
-     <SelfContained>true</SelfContained>
-     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+     <SelfContained>false</SelfContained>
      <UseAppHost>true</UseAppHost>
-     <RollForward>LatestMinor</RollForward>
+     <RollForward>LatestMajor</RollForward>
      <AssemblyTitle>SCA</AssemblyTitle>
      <RootNamespace>SCA</RootNamespace>
      <ApplicationIcon>assets\icone.ico</ApplicationIcon>
      <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**</DefaultItemExcludes>
-     <PublishSingleFile>true</PublishSingleFile>
+     <PublishSingleFile>false</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>

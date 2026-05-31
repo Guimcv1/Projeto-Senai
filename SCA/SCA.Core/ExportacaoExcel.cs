@@ -17,7 +17,7 @@ namespace SCA.Back.Execel
             TodosLogs, LogsIntens, LogsSala, LogsUsuario, EmprestimoItem
         }
 
-        public static string ExportarParaExcel(string caminhoArquivo, TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null)
+        public static string ExportarParaExcel(string caminhoArquivo, TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null, string? statusItem = null, bool? isAdmin = null, bool expLogs = true, bool expUsers = true, bool expItems = true, bool expRooms = true)
         {
             try
             {
@@ -32,29 +32,33 @@ namespace SCA.Back.Execel
 
                 //Busca os dados sem rastreamento (AsNoTracking) para economizar memória RAM
                 var intens = context.Itens.AsNoTracking().ToList();
+                if (!string.IsNullOrEmpty(statusItem)) intens = intens.Where(i => i.Estado == statusItem).ToList();
+
                 var usuarios = context.Usuarios.AsNoTracking().ToList();
+                if (isAdmin.HasValue) usuarios = usuarios.Where(u => u.IsAdmin == isAdmin.Value).ToList();
+
                 var salas = context.Salas.AsNoTracking().ToList();
 
                 //Cria um novo workbook (arquivo Excel)
                 using var workbook = new XLWorkbook();
 
                 //Aba de Item
-                ExportadorIntens.AdicionarAba(workbook, tipo, intens);
+                if (expItems) ExportadorIntens.AdicionarAba(workbook, tipo, intens);
 
                 //Aba de Usuários
-                ExportadorUsuarios.AdicionarAba(workbook, tipo, usuarios);
+                if (expUsers) ExportadorUsuarios.AdicionarAba(workbook, tipo, usuarios);
 
                 //Aba de Sala
-                ExportadorSala.AdicionarAba(workbook, tipo, salas);
+                if (expRooms) ExportadorSala.AdicionarAba(workbook, tipo, salas);
 
                 //Aba de Emprestimos
-                ExportadorEmprestimos.AdicionarAba(workbook, tipo, inicio, fim);
+                if (expLogs) ExportadorEmprestimos.AdicionarAba(workbook, tipo, inicio, fim);
 
                 //Aba de EmprestimoItem
-                ExportadorEmprestimoIntens.AdicionarAba(workbook, tipo);
+                if (expLogs) ExportadorEmprestimoIntens.AdicionarAba(workbook, tipo);
 
                 //Aba de Log
-                ExportadorLogs.AdicionarAba(workbook, tipo, inicio, fim);
+                if (expLogs) ExportadorLogs.AdicionarAba(workbook, tipo, inicio, fim);
 
                 //Salva o arquivo
                 workbook.SaveAs(caminhoArquivo);

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class UsuariosView : UserControl
+public partial class UsuariosView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
@@ -21,6 +21,11 @@ public partial class UsuariosView : UserControl
     public UsuariosView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
+        LoadData();
+    }
+
+    public void Reload()
+    {
         LoadData();
     }
 

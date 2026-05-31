@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class ItensView : UserControl
+public partial class ItensView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
@@ -24,6 +24,11 @@ public partial class ItensView : UserControl
     public ItensView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
+        LoadData();
+    }
+
+    public void Reload()
+    {
         LoadData();
     }
 
@@ -125,6 +130,18 @@ public partial class ItensView : UserControl
         string selectedSalaDesc = cbSala.SelectedItem.ToString() ?? "";
         int salaId = _salasDisponiveis.FirstOrDefault(s => s.Descricao == selectedSalaDesc)?.Id ?? 0;
 
+        using var context = new BancoContext();
+        if (_editingId == -1 && context.Itens.Any(i => i.Descricao == descricao))
+        {
+            _parent?.ShowMessage($"O item '{descricao}' já existe no banco de dados!");
+            return;
+        }
+        if (_editingId != -1 && context.Itens.Any(i => i.Descricao == descricao && i.Id != _editingId))
+        {
+            _parent?.ShowMessage($"O item '{descricao}' já existe no banco de dados!");
+            return;
+        }
+
         bool success;
         if (_editingId == -1)
         {
@@ -140,6 +157,11 @@ public partial class ItensView : UserControl
         {
             ItemDialogOverlay.IsVisible = false;
             LoadData();
+            _parent?.ShowMessage("Item salvo com sucesso!", false);
+        }
+        else
+        {
+            _parent?.ShowMessage("Ocorreu um erro ao salvar o item.");
         }
     }
 }

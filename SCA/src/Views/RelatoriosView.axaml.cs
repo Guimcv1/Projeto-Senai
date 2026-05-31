@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class RelatoriosView : UserControl
+public partial class RelatoriosView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
 
@@ -27,6 +27,11 @@ public partial class RelatoriosView : UserControl
     public RelatoriosView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
+        LoadCharts();
+    }
+
+    public void Reload()
+    {
         LoadCharts();
     }
 
@@ -129,7 +134,31 @@ public partial class RelatoriosView : UserControl
             if (file != null)
             {
                 string filePath = file.Path.LocalPath;
-                ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo);
+
+                DateTime? inicio = dpDataInicial.SelectedDate?.Date;
+                DateTime? fim = dpDataFinal.SelectedDate?.Date;
+
+                string? statusItem = null;
+                if (cbStatusFilter.SelectedIndex == 1) statusItem = Estados.Livre;
+                else if (cbStatusFilter.SelectedIndex == 2) statusItem = Estados.Emprestado;
+                else if (cbStatusFilter.SelectedIndex == 3) statusItem = Estados.Analise;
+
+                bool? isAdmin = null;
+                if (cbRoleFilter.SelectedIndex == 1) isAdmin = true;
+                else if (cbRoleFilter.SelectedIndex == 2) isAdmin = false;
+
+                bool expLogs = chkExpLogs.IsChecked ?? true;
+                bool expUsers = chkExpUsers.IsChecked ?? true;
+                bool expItems = chkExpItems.IsChecked ?? true;
+                bool expRooms = chkExpRooms.IsChecked ?? true;
+
+                if (!expLogs && !expUsers && !expItems && !expRooms)
+                {
+                    _parent?.ShowMessage("Selecione pelo menos uma tabela para exportação.");
+                    return;
+                }
+
+                ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo, inicio, fim, statusItem, isAdmin, expLogs, expUsers, expItems, expRooms);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
                 Console.WriteLine($"Relatório geral exportado com sucesso para {filePath}.");
             }

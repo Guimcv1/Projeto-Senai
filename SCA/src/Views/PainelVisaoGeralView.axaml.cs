@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class PainelVisaoGeralView : UserControl
+public partial class PainelVisaoGeralView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private List<Sala> _todasSalas = new();
@@ -31,6 +31,11 @@ public partial class PainelVisaoGeralView : UserControl
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        LoadSalas();
+    }
+
+    public void Reload()
+    {
         LoadSalas();
     }
 

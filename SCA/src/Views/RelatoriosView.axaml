@@ -35,6 +35,49 @@
 					</StackPanel>
 				</Border>
 			</Grid>
+
+			<Border Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,20">
+				<StackPanel>
+					<TextBlock Foreground="#002776" FontSize="20" FontWeight="Bold" Margin="0,0,0,10">Filtros de Exportação</TextBlock>
+					
+					<TextBlock Foreground="#002776" FontWeight="SemiBold" Margin="0,0,0,10">Tabelas para Exportação:</TextBlock>
+					<StackPanel Orientation="Horizontal" Spacing="20" Margin="0,0,0,20">
+						<CheckBox x:Name="chkExpLogs" Content="Histórico de Empréstimos" IsChecked="True"/>
+						<CheckBox x:Name="chkExpUsers" Content="Cadastro de Utilizadores" IsChecked="True"/>
+						<CheckBox x:Name="chkExpItems" Content="Inventário de Itens" IsChecked="True"/>
+						<CheckBox x:Name="chkExpRooms" Content="Relação de Ambientes" IsChecked="True"/>
+					</StackPanel>
+
+					<TextBlock Foreground="#002776" FontWeight="SemiBold" Margin="0,0,0,10">Filtros:</TextBlock>
+					<Grid ColumnDefinitions="*,*,*,*">
+						<StackPanel Grid.Column="0" Margin="0,0,10,0">
+							<TextBlock Text="Data Inicial"/>
+							<DatePicker x:Name="dpDataInicial" Margin="0,5,0,0"/>
+						</StackPanel>
+						<StackPanel Grid.Column="1" Margin="0,0,10,0">
+							<TextBlock Text="Data Final"/>
+							<DatePicker x:Name="dpDataFinal" Margin="0,5,0,0"/>
+						</StackPanel>
+						<StackPanel Grid.Column="2" Margin="0,0,10,0">
+							<TextBlock Text="Status (Itens)"/>
+							<ComboBox x:Name="cbStatusFilter" SelectedIndex="0" Margin="0,5,0,0" HorizontalAlignment="Stretch">
+								<ComboBoxItem>Todos</ComboBoxItem>
+								<ComboBoxItem>Disponível</ComboBoxItem>
+								<ComboBoxItem>Emprestado</ComboBoxItem>
+								<ComboBoxItem>Pendente</ComboBoxItem>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Grid.Column="3">
+							<TextBlock Text="Perfil (Utilizadores)"/>
+							<ComboBox x:Name="cbRoleFilter" SelectedIndex="0" Margin="0,5,0,0" HorizontalAlignment="Stretch">
+								<ComboBoxItem>Todos</ComboBoxItem>
+								<ComboBoxItem>Administrador</ComboBoxItem>
+								<ComboBoxItem>Utilizador Comum</ComboBoxItem>
+							</ComboBox>
+						</StackPanel>
+					</Grid>
+				</StackPanel>
+			</Border>
 		</StackPanel>
 	</Grid>
 </UserControl>

@@ -7,6 +7,21 @@
         x:Class="SCA.Views.JanelaPrincipal"
         Title="Controle de Ambientes | SENAI" WindowStartupLocation="CenterScreen">
 
+	<Window.Styles>
+		<Style Selector="Button.SidebarButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#EA580C" />
+		</Style>
+		<Style Selector="Button.SidebarButton:pointerover TextBlock">
+			<Setter Property="Foreground" Value="White" />
+		</Style>
+		<Style Selector="Button.SidebarButton:pointerover material|MaterialIcon">
+			<Setter Property="Foreground" Value="White" />
+		</Style>
+		<Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="Fill" Value="#E2E8F0" />
+		</Style>
+	</Window.Styles>
+
 	<Grid Background="#F1F5F9">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="250"/>
@@ -22,42 +37,42 @@
 				</Border>
 				<Border Height="4" Background="#EA580C"/>
 
-				<Button x:Name="btnVisaoGeral" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnVisaoGeral" Classes="SidebarButton" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="ViewDashboard" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Visão Geral</TextBlock>
 					</StackPanel>
 				</Button>
 
-				<Button x:Name="btnAprovacoes" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnAprovacoes" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="CheckAll" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Aprovações</TextBlock>
 					</StackPanel>
 				</Button>
 
-				<Button x:Name="btnLocais" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnLocais" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="MapMarker" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Locais</TextBlock>
 					</StackPanel>
 				</Button>
 
-				<Button x:Name="btnItens" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnItens" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
 					</StackPanel>
 				</Button>
 
-				<Button x:Name="btnUsuarios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnUsuarios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="AccountMultiple" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Utilizadores</TextBlock>
 					</StackPanel>
 				</Button>
 
-				<Button x:Name="btnRelatorios" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+				<Button x:Name="btnRelatorios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
 					<StackPanel Orientation="Horizontal">
 						<material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
 						<TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>

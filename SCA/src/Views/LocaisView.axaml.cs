@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class LocaisView : UserControl
+public partial class LocaisView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
@@ -22,6 +22,11 @@ public partial class LocaisView : UserControl
     public LocaisView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
+        LoadLocais();
+    }
+
+    public void Reload()
+    {
         LoadLocais();
     }
 

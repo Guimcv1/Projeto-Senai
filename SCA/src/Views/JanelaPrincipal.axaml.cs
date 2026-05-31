@@ -12,10 +12,27 @@ public partial class JanelaPrincipal : Window
 {
     public bool IsAdminMode { get; set; } = false;
     public Usuario? CurrentAdmin { get; set; } = null;
+    private Avalonia.Threading.DispatcherTimer _autoReloadTimer;
 
     public JanelaPrincipal()
     {
         InitializeComponent();
+        
+        // Auto-Reload Timer (5 seconds)
+        _autoReloadTimer = new Avalonia.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(5)
+        };
+        _autoReloadTimer.Tick += AutoReloadTimer_Tick;
+        _autoReloadTimer.Start();
+    }
+
+    private void AutoReloadTimer_Tick(object? sender, EventArgs e)
+    {
+        if (MainContent != null && MainContent.Content is IReloadableView reloadableView)
+        {
+            reloadableView.Reload();
+        }
     }
 
     public JanelaPrincipal(Usuario adminUser) : this()

@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net6.0-windows</TargetFramework>
+	<TargetFramework>net6.0</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
-	<RuntimeIdentifier>win-x86</RuntimeIdentifier>
-	<PublishSingleFile>true</PublishSingleFile>
+	<PublishSingleFile>false</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>

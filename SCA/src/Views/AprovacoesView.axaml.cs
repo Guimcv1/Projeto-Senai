@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SCA.Views;
 
-public partial class AprovacoesView : UserControl
+public partial class AprovacoesView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
 
@@ -21,6 +21,11 @@ public partial class AprovacoesView : UserControl
     public AprovacoesView(JanelaPrincipal parent) : this()
     {
         _parent = parent;
+        LoadPendencias();
+    }
+
+    public void Reload()
+    {
         LoadPendencias();
     }
 
