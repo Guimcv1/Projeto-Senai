@@ -13,7 +13,7 @@
      <RootNamespace>SCA</RootNamespace>
      <ApplicationIcon>assets\icone.ico</ApplicationIcon>
      <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**</DefaultItemExcludes>
-     <PublishSingleFile>false</PublishSingleFile>
+     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>

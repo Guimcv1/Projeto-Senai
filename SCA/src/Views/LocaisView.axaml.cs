@@ -43,7 +43,7 @@ public partial class LocaisView : UserControl, IReloadableView
                 listUI.Add(new LocalUI
                 {
                     Id = sala.Id,
-                    Descricao = sala.Descricao,
+                    Descricao = sala.Descricao?.ToUpper() ?? "",
                     StatusText = sala.isAtivo ? "Ativo" : "Inativo",
                     BadgeColor = sala.isAtivo ? "#16A34A" : "#94A3B8"
                 });

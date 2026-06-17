@@ -239,4 +239,24 @@ public partial class JanelaPrincipal : Window
     {
         if (NotificationBar != null) NotificationBar.IsVisible = false;
     }
+
+    private void BtnFAQ_Click(object sender, RoutedEventArgs e)
+    {
+        ShowMessage("Abrindo o manual de uso...", false);
+        try
+        {
+            // Substitua esta URL pelo link do manual (PDF ou página Web)
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "https://www.google.com/search?q=Manual+de+Uso+SCA", 
+                UseShellExecute = true
+            };
+            System.Diagnostics.Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            ShowMessage("Erro ao tentar abrir o manual.");
+            Console.WriteLine(ex.Message);
+        }
+    }
 }
