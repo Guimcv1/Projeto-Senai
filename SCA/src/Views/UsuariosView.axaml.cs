@@ -120,6 +120,7 @@ public partial class UsuariosView : UserControl, IReloadableView
         }
 
         bool success;
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
         if (_editingId == -1)
         {
             if (string.IsNullOrEmpty(senha))
@@ -128,19 +129,18 @@ public partial class UsuariosView : UserControl, IReloadableView
                 return;
             }
 
-            success = UsuarioService.CriarUser(nome, login, senha, isAdmin, isAtivo);
+            success = UsuarioService.CriarUser(nome, login, senha, isAdmin, isAtivo, usuarioId);
         }
         else
         {
             string? novaSenha = string.IsNullOrEmpty(senha) ? null : senha;
-            success = UsuarioService.AtualizarUser(_editingId, nome, login, novaSenha, isAdmin, isAtivo);
+            success = UsuarioService.AtualizarUser(_editingId, nome, login, novaSenha, isAdmin, isAtivo, usuarioId);
         }
 
         if (success)
         {
             UsuarioDialogOverlay.IsVisible = false;
             LoadData();
-            RegistrarAcao(_editingId == -1 ? $"Criou usuario: {login}" : $"Editou usuario {_editingId}: {login}");
         }
         else
         {
@@ -153,10 +153,10 @@ public partial class UsuariosView : UserControl, IReloadableView
         if (sender is Button btn && btn.DataContext is UsuarioUI userUI)
         {
             bool novoStatus = userUI.StatusText == "Inativo";
-            if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus))
+            int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+            if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus, usuarioId))
             {
                 LoadData();
-                RegistrarAcao($"Alterou status do usuario {userUI.Id} para {(novoStatus ? "Ativo" : "Inativo")}");
             }
         }
     }

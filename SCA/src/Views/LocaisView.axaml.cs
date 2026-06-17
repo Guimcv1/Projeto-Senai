@@ -99,10 +99,10 @@ public partial class LocaisView : UserControl, IReloadableView
     {
         if (sender is Button btn && btn.DataContext is LocalUI local)
         {
-            if (SalaService.InativaSala(local.Id))
+            int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+            if (SalaService.InativaSala(local.Id, usuarioId))
             {
                 LoadLocais();
-                RegistrarAcao($"Inativou local {local.Id}: {local.Descricao}");
             }
         }
     }
@@ -120,14 +120,14 @@ public partial class LocaisView : UserControl, IReloadableView
         if (string.IsNullOrEmpty(nome)) return;
 
         bool success;
-        if (_editingId == -1) success = SalaService.CriarSala(nome);
-        else success = SalaService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked);
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+        if (_editingId == -1) success = SalaService.CriarSala(nome, usuarioId);
+        else success = SalaService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked, usuarioId);
 
         if (success)
         {
             LocalDialogOverlay.IsVisible = false;
             LoadLocais();
-            RegistrarAcao(_editingId == -1 ? $"Criou local: {nome}" : $"Editou local {_editingId}: {nome}");
         }
     }
 }

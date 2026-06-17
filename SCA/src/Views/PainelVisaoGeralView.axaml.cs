@@ -278,7 +278,6 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
                 if (EmprestimoService.SolicitarEmprestimo(currentUserId, salaId, itemsToLoan))
                 {
                     _parent?.ShowMessage($"Solicitado empréstimo de {itemsToLoan.Count} itens.", false);
-                    RegistrarAcao($"Solicitou emprestimo de {itemsToLoan.Count} itens", AcaoTipo.Item, currentUserId);
                 }
             }
         }
@@ -297,7 +296,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
                 if (activeLoan != null)
                 {
-                    if (EmprestimoService.SolicitarDevolucao(activeLoan.Id))
+                    if (EmprestimoService.SolicitarDevolucao(activeLoan.Id, currentUserId))
                     {
                         returnCount++;
                     }
@@ -306,7 +305,6 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             if (returnCount > 0)
             {
                 _parent?.ShowMessage($"Solicitada devolução de {returnCount} itens.", false);
-                RegistrarAcao($"Solicitou devolucao de {returnCount} itens", AcaoTipo.Item, currentUserId);
             }
         }
 

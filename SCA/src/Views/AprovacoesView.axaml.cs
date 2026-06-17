@@ -117,7 +117,8 @@ public partial class AprovacoesView : UserControl, IReloadableView
         {
             try 
             {
-                if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
+                int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
+                if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado, usuarioId))
                 {
                     successCount++;
                 }
@@ -130,7 +131,6 @@ public partial class AprovacoesView : UserControl, IReloadableView
 
         if (successCount > 0)
         {
-            RegistrarAcao($"Processou {successCount} solicitações ({(isAprovado ? "aprovadas" : "recusadas")})");
             _parent?.ShowMessage($"{successCount} solicitações processadas com sucesso!", false);
         }
         else

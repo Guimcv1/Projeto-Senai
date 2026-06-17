@@ -155,14 +155,15 @@ public partial class ItensView : UserControl, IReloadableView
         }
 
         bool success;
+        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
         if (_editingId == -1)
         {
-            success = AdminService.CriarIntens(descricao, salaId);
+            success = AdminService.CriarIntens(descricao, salaId, usuarioId);
         }
         else
         {
             string estado = cbEstado.SelectedItem?.ToString() ?? Estados.Livre;
-            success = AdminService.EditarIntens(_editingId, descricao, estado, salaId);
+            success = AdminService.EditarIntens(_editingId, descricao, estado, salaId, usuarioId);
         }
 
         if (success)
@@ -170,7 +171,6 @@ public partial class ItensView : UserControl, IReloadableView
             ItemDialogOverlay.IsVisible = false;
             LoadData();
             _parent?.ShowMessage("Item salvo com sucesso!", false);
-            RegistrarAcao(_editingId == -1 ? $"Criou item: {descricao}" : $"Editou item {_editingId}: {descricao}");
         }
         else
         {

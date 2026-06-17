@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using SCA.Back.Execel;
 
@@ -11,6 +12,48 @@ namespace SCA.Core.Services
 {
     public class LogService
     {
+        private static string LimitarTexto(string? texto, int maximo)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+            {
+                return string.Empty;
+            }
+
+            var limpo = texto.Trim();
+            return limpo.Length <= maximo ? limpo : limpo[..maximo];
+        }
+
+        private static string MontarAcaoDetalhada(string? solicitante = null, string? alvo = null)
+        {
+            var s = LimitarTexto(solicitante, 20);
+            var t = LimitarTexto(alvo, 24);
+            return $"s={s};t={t}";
+        }
+
+        public static string? ExtrairCampo(string? acao, string campo)
+        {
+            if (string.IsNullOrWhiteSpace(acao) || string.IsNullOrWhiteSpace(campo))
+            {
+                return null;
+            }
+
+            campo = campo switch
+            {
+                "solicitante" => "s",
+                "alvo" => "t",
+                _ => campo
+            };
+
+            var match = Regex.Match(acao, $@"(?:^|;\s*){Regex.Escape(campo)}=(.*?)(?=;\s*\w+=|$)", RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            var valor = match.Groups[1].Value.Trim();
+            return string.IsNullOrEmpty(valor) ? null : valor;
+        }
+
         //Filtrar Log - Filtro básico de tempo e categoria compatível com o TipoExportacao
         public static List<Log> FiltrarLogs(ExportacaoExcel.TipoExportacao tipo, DateTime? inicio = null, DateTime? fim = null)
         {
@@ -54,7 +97,7 @@ namespace SCA.Core.Services
         }
 
         //Registrar Log - Apenas cadastrar, sem edição ou deleção
-        public static bool RegistrarLog(string acao, string tipoAcao, int usuarioId)
+        public static bool RegistrarLog(string acao, string tipoAcao, int usuarioId, string? solicitante = null, string? alvo = null)
         {
             try
             {
@@ -62,10 +105,10 @@ namespace SCA.Core.Services
                 
                 var log = new Log
                 {
-                    Acao = acao,
+                    Acao = MontarAcaoDetalhada(solicitante, alvo),
                     TipoAcao = tipoAcao,
                     UsuarioId = usuarioId,
-                    DataAcao = DateTime.Now
+                    DataAcao = DateTime.UtcNow
                 };
 
                 context.Logs.Add(log);
