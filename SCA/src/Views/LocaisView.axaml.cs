@@ -102,7 +102,7 @@ public partial class LocaisView : UserControl, IReloadableView
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string nome = txtLocalNome.Text?.Trim() ?? "";
+        string nome = txtLocalNome.Text?.Trim().ToUpper() ?? "";
         
         if (string.IsNullOrEmpty(nome)) return;
 

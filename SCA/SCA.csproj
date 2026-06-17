@@ -53,6 +53,7 @@
  
    <ItemGroup>
      <Content Include="assets\icone.ico" />
+     <EmbeddedResource Include="..\docs\Manual do Usuário SCA v1.pdf" LogicalName="ManualSCA.pdf" />
    </ItemGroup>
  
    <ItemGroup>

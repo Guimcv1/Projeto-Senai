@@ -245,13 +245,29 @@ public partial class JanelaPrincipal : Window
         ShowMessage("Abrindo o manual de uso...", false);
         try
         {
-            // Substitua esta URL pelo link do manual (PDF ou página Web)
-            var psi = new System.Diagnostics.ProcessStartInfo
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream("ManualSCA.pdf"))
             {
-                FileName = "https://www.google.com/search?q=Manual+de+Uso+SCA", 
-                UseShellExecute = true
-            };
-            System.Diagnostics.Process.Start(psi);
+                if (stream != null)
+                {
+                    string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Manual_SCA.pdf");
+                    using (var fileStream = new System.IO.FileStream(tempPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                    {
+                        stream.CopyTo(fileStream);
+                    }
+                    
+                    var psi = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = tempPath, 
+                        UseShellExecute = true
+                    };
+                    System.Diagnostics.Process.Start(psi);
+                }
+                else
+                {
+                    ShowMessage("Manual não encontrado nos arquivos do sistema.");
+                }
+            }
         }
         catch (Exception ex)
         {

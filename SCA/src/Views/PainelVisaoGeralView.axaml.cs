@@ -56,11 +56,11 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
     {
         if (icAmbientes == null || txtSearch == null) return;
 
-        string searchText = txtSearch.Text?.ToLower() ?? "";
+        string searchText = txtSearch.Text?.ToUpper() ?? "";
 
         var salasFiltradas = _todasSalas.Where(s =>
             (string.IsNullOrEmpty(searchText) ||
-             (s.Descricao != null && s.Descricao.ToLower().Contains(searchText)))
+             (s.Descricao != null && s.Descricao.ToUpper().Contains(searchText)))
         ).ToList();
 
         var ambientesUI = new List<AmbienteTemp>();
@@ -76,7 +76,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             ambientesUI.Add(new AmbienteTemp
             {
                 Id = sala.Id,
-                Nome = sala.Descricao + (!sala.isAtivo ? " (Inativo)" : ""),
+                Nome = sala.Descricao?.ToUpper() + (!sala.isAtivo ? " (INATIVO)" : ""),
                 CorStatus = !sala.isAtivo ? "#94a3b8" : cor
             });
         }
@@ -128,7 +128,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
     {
         if (txtDialogTitle == null || dgItems == null || RoomDialogOverlay == null) return;
 
-        txtDialogTitle.Text = $"Item em: {salaName}";
+        txtDialogTitle.Text = $"Item em: {salaName?.ToUpper()}";
 
         using var context = new BancoContext();
         var itensDaSala = context.Itens.Where(i => i.SalaId == salaId).ToList();
@@ -140,7 +140,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             var uiItem = new ItemUI
             {
                 Id = item.Id,
-                Descricao = item.Descricao,
+                Descricao = item.Descricao?.ToUpper() ?? "",
                 EstadoOrigem = item.Estado
             };
 

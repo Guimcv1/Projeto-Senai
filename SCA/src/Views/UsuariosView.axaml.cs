@@ -41,7 +41,7 @@ public partial class UsuariosView : UserControl, IReloadableView
                 listUI.Add(new UsuarioUI
                 {
                     Id = u.Id,
-                    Nome = u.Nome,
+                    Nome = u.Nome?.ToUpper() ?? "",
                     Login = u.Login,
                     Perfil = u.IsAdmin ? "Administrador" : "Usuário Comum",
                     StatusText = u.IsAtivo ? "Ativo" : "Inativo",
@@ -95,7 +95,7 @@ public partial class UsuariosView : UserControl, IReloadableView
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string nome = txtNome.Text?.Trim() ?? "";
+        string nome = txtNome.Text?.Trim().ToUpper() ?? "";
         string login = txtLogin.Text?.Trim() ?? "";
         string senha = txtSenha.Text ?? "";
         bool isAdmin = chkIsAdmin.IsChecked ?? false;

@@ -55,8 +55,8 @@ public partial class ItensView : UserControl, IReloadableView
                 listUI.Add(new ItemAdminUI
                 {
                     Id = item.Id,
-                    Descricao = item.Descricao,
-                    SalaNome = salaNome,
+                    Descricao = item.Descricao?.ToUpper() ?? "",
+                    SalaNome = salaNome?.ToUpper() ?? "",
                     Estado = item.Estado,
                     BadgeColor = GetBadgeColor(item.Estado)
                 });
@@ -122,7 +122,7 @@ public partial class ItensView : UserControl, IReloadableView
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string descricao = txtItemDescricao.Text?.Trim() ?? "";
+        string descricao = txtItemDescricao.Text?.Trim().ToUpper() ?? "";
         
         if (string.IsNullOrEmpty(descricao)) return;
         if (cbSala.SelectedItem == null) return;
