@@ -245,7 +245,7 @@ public partial class JanelaPrincipal : Window
         ShowMessage("Abrindo o manual de uso...", false);
         try
         {
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var assembly = typeof(JanelaPrincipal).Assembly;
             using (var stream = assembly.GetManifestResourceStream("ManualSCA.pdf"))
             {
                 if (stream != null)
