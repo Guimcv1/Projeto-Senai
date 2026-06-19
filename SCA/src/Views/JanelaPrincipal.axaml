@@ -5,7 +5,8 @@
         xmlns:material="using:Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="SCA.Views.JanelaPrincipal"
-        Title="Controle de Ambientes | SENAI" WindowStartupLocation="CenterScreen">
+        Title="Controle de Ambientes | SENAI" WindowStartupLocation="CenterScreen"
+        Width="1200" Height="800" MinWidth="800" MinHeight="600">
 
 	<Window.Styles>
 		<Style Selector="Button.SidebarButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -30,55 +31,75 @@
 
 		<!-- Sidebar -->
 		<Border Grid.Column="0" Background="#002776">
-			<StackPanel>
-				<Border Background="White" Height="100" Padding="15">
-					<!-- Image path might need adjustment for Avalonia assets -->
-					<Image Source="avares://SCA/assets/senai_logo.png" Stretch="Uniform"/>
-				</Border>
-				<Border Height="4" Background="#EA580C"/>
+			<Grid RowDefinitions="*,Auto">
+				<StackPanel Grid.Row="0">
+					<Border Background="White" Height="100" Padding="15">
+						<!-- Image path might need adjustment for Avalonia assets -->
+						<Image Source="avares://SCA/assets/senai_logo.png" Stretch="Uniform"/>
+					</Border>
+					<Border Height="4" Background="#EA580C"/>
 
-				<Button x:Name="btnVisaoGeral" Classes="SidebarButton" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="ViewDashboard" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Visão Geral</TextBlock>
-					</StackPanel>
-				</Button>
+					<Button x:Name="btnVisaoGeral" Classes="SidebarButton" Background="#26FFFFFF" BorderBrush="#EA580C" BorderThickness="4,0,0,0" Foreground="White" Margin="0,20,0,0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="ViewDashboard" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Visão Geral</TextBlock>
+						</StackPanel>
+					</Button>
 
-				<Button x:Name="btnAprovacoes" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="CheckAll" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Aprovações</TextBlock>
-					</StackPanel>
-				</Button>
+					<Button x:Name="btnAprovacoes" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="CheckAll" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Aprovações</TextBlock>
+						</StackPanel>
+					</Button>
 
-				<Button x:Name="btnLocais" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="MapMarker" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Locais</TextBlock>
-					</StackPanel>
-				</Button>
+					<Button x:Name="btnLocais" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="MapMarker" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Locais</TextBlock>
+						</StackPanel>
+					</Button>
 
-				<Button x:Name="btnItens" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
-					</StackPanel>
-				</Button>
+					<Button x:Name="btnItens" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="PackageVariant" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Item</TextBlock>
+						</StackPanel>
+					</Button>
 
-				<Button x:Name="btnUsuarios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="AccountMultiple" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Utilizadores</TextBlock>
-					</StackPanel>
-				</Button>
+					<Button x:Name="btnUsuarios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="AccountMultiple" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Gerir Utilizadores</TextBlock>
+						</StackPanel>
+					</Button>
 
-				<Button x:Name="btnRelatorios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
-					<StackPanel Orientation="Horizontal">
-						<material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
-						<TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>
+					<Button x:Name="btnRelatorios" Classes="SidebarButton" IsVisible="False" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,15" Click="MenuButton_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="ChartBar" Width="24" Height="24" Margin="0,0,10,0"/>
+							<TextBlock FontSize="16" VerticalAlignment="Center">Relatórios e Log</TextBlock>
+						</StackPanel>
+					</Button>
+				</StackPanel>
+
+				<StackPanel Grid.Row="1" Margin="20">
+					<Button x:Name="btnFAQ" Classes="SidebarButton" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left" Padding="10" Click="BtnFAQ_Click">
+						<StackPanel Orientation="Horizontal">
+							<material:MaterialIcon Kind="HelpCircle" Width="20" Height="20" Margin="0,0,10,0"/>
+							<TextBlock FontSize="14" VerticalAlignment="Center">FAQ / Manual de Uso</TextBlock>
+						</StackPanel>
+					</Button>
+					<StackPanel Margin="0,15,0,0">
+						<TextBlock Foreground="#94A3B8" FontSize="11" FontWeight="Bold" Margin="0,0,0,5">
+							Turma 3º DS SENAI - 2026
+						</TextBlock>
+						<TextBlock Foreground="#94A3B8" FontSize="10">Guilherme Martins Coelho Vilmar - Frontend</TextBlock>
+						<TextBlock Foreground="#94A3B8" FontSize="10">Arthur Nunes de Carvalho - Backend</TextBlock>
+						<TextBlock Foreground="#94A3B8" FontSize="10">Cristiano de Oliveira - Banco de dados</TextBlock>
+						<TextBlock Foreground="#94A3B8" FontSize="10">Davi Coelho Maciel - Gestor</TextBlock>
 					</StackPanel>
-				</Button>
-			</StackPanel>
+				</StackPanel>
+			</Grid>
 		</Border>
 
 		<!-- Main Content Area -->

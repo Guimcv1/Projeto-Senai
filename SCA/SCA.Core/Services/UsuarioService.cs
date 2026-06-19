@@ -13,7 +13,7 @@ namespace SCA.Core.Services
         public static bool IsAdmin(Usuario useObje) { return useObje.IsAdmin; }
 
         //CriarUser - Criar novo usuário
-        public static bool CriarUser(string nome, string login, string senha, bool isAdmin = false, bool isAtivo = true, int? usuarioLogadoId = null)
+        public static bool CriarUser(string nome, string login, string senha, bool isAdmin = false, bool isAtivo = true)
         {
             try
             {
@@ -41,11 +41,6 @@ namespace SCA.Core.Services
 
                 context.Usuarios.Add(usuario);
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Criou usuario", AcaoTipo.Usuario, usuarioLogadoId.Value, alvo: $"{usuario.Nome} ({usuario.Login})");
-                }
 
                 Console.WriteLine($"Usuário '{nome}' criado com sucesso!");
                 return true;
@@ -91,7 +86,7 @@ namespace SCA.Core.Services
         //Busacar geral
 
         //AtualizarUser - Atualizar usuário
-        public static bool AtualizarUser(int id, string? novoNome = null, string? novoLogin = null, string? novaSenha = null, bool? isAdmin = null, bool? isAtivo = null, int? usuarioLogadoId = null)
+        public static bool AtualizarUser(int id, string? novoNome = null, string? novoLogin = null, string? novaSenha = null, bool? isAdmin = null, bool? isAtivo = null)
         {
             try
             {
@@ -141,12 +136,6 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Atualizou usuario", AcaoTipo.Usuario, usuarioLogadoId.Value, alvo: $"{usuario.Nome} ({usuario.Login})");
-                }
-
                 Console.WriteLine($"Usuário ID {id} atualizado com sucesso!");
                 return true;
             }
@@ -158,7 +147,7 @@ namespace SCA.Core.Services
         }
 
         //InativarAtivarUser - Inativar/Ativar o Usuario
-        public static bool InativarAtivarUser(int id, bool isAtivo = true, int? usuarioLogadoId = null)
+        public static bool InativarAtivarUser(int id, bool isAtivo = true)
         {
             try
             {
@@ -173,11 +162,6 @@ namespace SCA.Core.Services
 
                 usuario.IsAtivo = isAtivo;
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog(isAtivo ? "Ativou usuario" : "Inativou usuario", AcaoTipo.Usuario, usuarioLogadoId.Value, alvo: $"{usuario.Nome} ({usuario.Login})");
-                }
 
                 Console.WriteLine($"Usuário ID {id} deletado com sucesso!");
                 return true;

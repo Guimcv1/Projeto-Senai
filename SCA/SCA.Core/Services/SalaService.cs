@@ -11,7 +11,7 @@ namespace SCA.Core.Services
     {
 
         //InativarSala- Inativa o Sala
-        public static bool InativaSala(int id, int? usuarioLogadoId = null) 
+        public static bool InativaSala(int id) 
         {
             try
             {
@@ -21,12 +21,6 @@ namespace SCA.Core.Services
                 if (sala != null) { sala.isAtivo = false; }
 
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0 && sala != null)
-                {
-                    LogService.RegistrarLog("Inativou sala", AcaoTipo.Sala, usuarioLogadoId.Value, alvo: sala.Descricao);
-                }
-
                 Console.WriteLine($"Sala ID {id} inativada com sucesso!");
                 return true;
             }
@@ -38,7 +32,7 @@ namespace SCA.Core.Services
         }
 
         //CriarSala - Adiciona uma sala
-        public static bool CriarSala(string desc, int? usuarioLogadoId = null)
+        public static bool CriarSala(string desc)
         {
             try
             {
@@ -59,11 +53,6 @@ namespace SCA.Core.Services
                 context.Salas.Add(item);
                 context.SaveChanges();
 
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Criou sala", AcaoTipo.Sala, usuarioLogadoId.Value, alvo: item.Descricao);
-                }
-
                 Console.WriteLine($"Sala '{desc}' criada com sucesso!");
                 return true;
             }
@@ -75,7 +64,7 @@ namespace SCA.Core.Services
         }
 
         //EditarSala- Alterar a sala
-        public static bool EditarSala(int id, string? novaDesc = null, bool? novoStatus = null, int? usuarioLogadoId = null)
+        public static bool EditarSala(int id, string? novaDesc = null, bool? novoStatus = null)
         {
             try
             {
@@ -88,12 +77,6 @@ namespace SCA.Core.Services
                 if (novoStatus.HasValue) sala.isAtivo = novoStatus.Value;
 
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Atualizou sala", AcaoTipo.Sala, usuarioLogadoId.Value, alvo: sala.Descricao);
-                }
-
                 return true;
             }
             catch (Exception ex)

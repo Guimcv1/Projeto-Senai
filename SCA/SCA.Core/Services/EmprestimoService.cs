@@ -56,12 +56,6 @@ namespace SCA.Core.Services
                 }
 
                 // Cria o empréstimo com o status inicial 'Analise' (Aguardando aprovação)
-                var usuario = context.Usuarios.Find(usuarioId);
-                var nomesItens = context.Itens
-                    .Where(i => itensIds.Contains(i.Id))
-                    .Select(i => i.Descricao)
-                    .ToList();
-
                 var emprestimo = new Emprestimos
                 {
                     UsuarioId = usuarioId,
@@ -89,12 +83,6 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
-
-                if (usuarioId > 0)
-                {
-                    LogService.RegistrarLog("Solicitou emprestimo", AcaoTipo.Item, usuarioId, solicitante: usuario?.Nome ?? string.Empty, alvo: string.Join(", ", nomesItens));
-                }
-
                 Console.WriteLine($"Empréstimo ID {emprestimo.Id} solicitado com sucesso!");
                 return true;
             }
@@ -110,16 +98,12 @@ namespace SCA.Core.Services
         }
 
         //SolicitarDevolucao - O usuário consegue solicitar devolver os itens (internally uses auth method)
-        public static bool SolicitarDevolucao(int emprestimoId, int? usuarioId = null)
+        public static bool SolicitarDevolucao(int emprestimoId)
         {
             try
             {
                 using var context = new BancoContext();
-                var emprestimo = context.Emprestimos
-                    .Include(e => e.Usuario)
-                    .Include(e => e.EmprestimoItem)
-                    .ThenInclude(ei => ei.Item)
-                    .FirstOrDefault(e => e.Id == emprestimoId);
+                var emprestimo = context.Emprestimos.Find(emprestimoId);
 
                 if (emprestimo == null)
                 {
@@ -132,13 +116,6 @@ namespace SCA.Core.Services
                 emprestimo.DataEstado = DateTime.UtcNow;
 
                 context.SaveChanges();
-
-                var solicitanteId = usuarioId ?? emprestimo.UsuarioId;
-                if (solicitanteId > 0)
-                {
-                    LogService.RegistrarLog("Solicitou devolucao", AcaoTipo.Item, solicitanteId, solicitante: emprestimo.Usuario?.Nome ?? string.Empty, alvo: string.Join(", ", emprestimo.EmprestimoItem.Select(ei => ei.Item?.Descricao ?? string.Empty).Where(descricao => !string.IsNullOrWhiteSpace(descricao))));
-                }
-
                 Console.WriteLine($"Devolução do Empréstimo ID {emprestimoId} solicitada com sucesso!");
                 return true;
             }
@@ -150,7 +127,7 @@ namespace SCA.Core.Services
         }
 
         //AprovarSolicitacao - Aprova/Negar a solicitação do user
-        public static bool AprovarSolicitacao(int emprestimoId, TipoSolicitacao tipo, bool isAprovado = true, int? usuarioId = null)
+        public static bool AprovarSolicitacao(int emprestimoId, TipoSolicitacao tipo, bool isAprovado = true)
         {
             try
             {
@@ -158,7 +135,6 @@ namespace SCA.Core.Services
 
                 #region emprestimo
                 var emprestimo = context.Emprestimos
-                    .Include(e => e.Usuario)
                     .Include(e => e.EmprestimoItem)
                     .ThenInclude(ei => ei.Item)
                     .FirstOrDefault(e => e.Id == emprestimoId);
@@ -191,13 +167,6 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
-
-                var executorId = usuarioId ?? emprestimo.UsuarioId;
-                if (executorId > 0)
-                {
-                    var itensAfetados = string.Join(", ", emprestimo.EmprestimoItem.Select(ei => ei.Item?.Descricao ?? string.Empty).Where(descricao => !string.IsNullOrWhiteSpace(descricao)));
-                    LogService.RegistrarLog($"{(isAprovado ? "Aprovou" : "Recusou")} solicitacao de {tipo.ToString().ToLowerInvariant()}", AcaoTipo.Item, executorId, solicitante: emprestimo.Usuario?.Nome ?? string.Empty, alvo: itensAfetados);
-                }
 
                 Console.WriteLine($"Solicitação de {tipo} do Empréstimo ID {emprestimoId} {(isAprovado ? "aprovada" : "negada")} com sucesso!");
                 return true;

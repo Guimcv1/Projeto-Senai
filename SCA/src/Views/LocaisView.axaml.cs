@@ -14,15 +14,6 @@ public partial class LocaisView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
-    private void RegistrarAcao(string acao)
-    {
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-        if (usuarioId > 0)
-        {
-            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Sala, usuarioId);
-        }
-    }
-
     public LocaisView()
     {
         InitializeComponent();
@@ -52,7 +43,7 @@ public partial class LocaisView : UserControl, IReloadableView
                 listUI.Add(new LocalUI
                 {
                     Id = sala.Id,
-                    Descricao = sala.Descricao,
+                    Descricao = sala.Descricao?.ToUpper() ?? "",
                     StatusText = sala.isAtivo ? "Ativo" : "Inativo",
                     BadgeColor = sala.isAtivo ? "#16A34A" : "#94A3B8"
                 });
@@ -74,7 +65,6 @@ public partial class LocaisView : UserControl, IReloadableView
         
         chkIsAtivo.IsChecked = true;
         LocalDialogOverlay.IsVisible = true;
-        RegistrarAcao("Abriu cadastro de novo local");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -90,7 +80,6 @@ public partial class LocaisView : UserControl, IReloadableView
                 
                 chkIsAtivo.IsChecked = sala.isAtivo;
                 LocalDialogOverlay.IsVisible = true;
-                RegistrarAcao($"Abriu edição do local {sala.Id}");
             }
         }
     }
@@ -99,8 +88,7 @@ public partial class LocaisView : UserControl, IReloadableView
     {
         if (sender is Button btn && btn.DataContext is LocalUI local)
         {
-            int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-            if (SalaService.InativaSala(local.Id, usuarioId))
+            if (SalaService.InativaSala(local.Id))
             {
                 LoadLocais();
             }
@@ -110,19 +98,17 @@ public partial class LocaisView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         LocalDialogOverlay.IsVisible = false;
-        RegistrarAcao("Fechou dialogo de local");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string nome = txtLocalNome.Text?.Trim() ?? "";
+        string nome = txtLocalNome.Text?.Trim().ToUpper() ?? "";
         
         if (string.IsNullOrEmpty(nome)) return;
 
         bool success;
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-        if (_editingId == -1) success = SalaService.CriarSala(nome, usuarioId);
-        else success = SalaService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked, usuarioId);
+        if (_editingId == -1) success = SalaService.CriarSala(nome);
+        else success = SalaService.EditarSala(_editingId, nome, chkIsAtivo.IsChecked);
 
         if (success)
         {

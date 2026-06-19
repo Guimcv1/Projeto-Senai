@@ -11,7 +11,7 @@ namespace SCA.Core.Services
     {
 
         //InativarIntens - Inativa o Intes
-        public static bool InativaIntens(int id, int? usuarioLogadoId = null) 
+        public static bool InativaIntens(int id) 
         {
             try
             {
@@ -21,12 +21,6 @@ namespace SCA.Core.Services
                 if (intes != null) { intes.IsAtivo = false; }
 
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0 && intes != null)
-                {
-                    LogService.RegistrarLog("Inativou item", AcaoTipo.Item, usuarioLogadoId.Value, alvo: intes.Descricao);
-                }
-
                 Console.WriteLine($"Item ID {id} inativada com sucesso!");
                 return true;
             }
@@ -38,7 +32,7 @@ namespace SCA.Core.Services
         }
 
         //CriarInten - Adiciona os intnes
-        public static bool CriarIntens(string descricao, int salaId, int? usuarioLogadoId = null)
+        public static bool CriarIntens(string descricao, int salaId)
         {
             try
             {
@@ -71,11 +65,6 @@ namespace SCA.Core.Services
                 context.Itens.Add(item);
                 context.SaveChanges();
 
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Criou item", AcaoTipo.Item, usuarioLogadoId.Value, alvo: $"{item.Descricao} (Sala {salaId})");
-                }
-
                 Console.WriteLine($"Item '{descricao}' criado com sucesso na Sala {salaId}!");
                 return true;
             }
@@ -87,7 +76,7 @@ namespace SCA.Core.Services
         }
 
         //EditarInten - Alterar os Item no banco
-        public static bool EditarIntens(int id, string? novaDescricao = null, string? NewStatos = null, int? novaSalaId = null, int? usuarioLogadoId = null)
+        public static bool EditarIntens(int id, string? novaDescricao = null, string? NewStatos = null, int? novaSalaId = null)
         {
             try
             {
@@ -127,12 +116,6 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
-
-                if (usuarioLogadoId.HasValue && usuarioLogadoId.Value > 0)
-                {
-                    LogService.RegistrarLog("Atualizou item", AcaoTipo.Item, usuarioLogadoId.Value, alvo: $"{inten.Descricao} (ID {inten.Id})");
-                }
-
                 Console.WriteLine($"Item ID {id} atualizado com sucesso!");
                 return true;
             }

@@ -13,15 +13,6 @@ public partial class AprovacoesView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
 
-    private void RegistrarAcao(string acao)
-    {
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-        if (usuarioId > 0)
-        {
-            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Item, usuarioId);
-        }
-    }
-
     public AprovacoesView()
     {
         InitializeComponent();
@@ -85,13 +76,11 @@ public partial class AprovacoesView : UserControl, IReloadableView
 
     private void Aprovar_Click(object sender, RoutedEventArgs e)
     {
-        RegistrarAcao("Clicou em aprovar solicitações");
         Processar(true);
     }
 
     private void Recusar_Click(object sender, RoutedEventArgs e)
     {
-        RegistrarAcao("Clicou em recusar solicitações");
         Processar(false);
     }
 
@@ -117,8 +106,7 @@ public partial class AprovacoesView : UserControl, IReloadableView
         {
             try 
             {
-                int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-                if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado, usuarioId))
+                if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
                 {
                     successCount++;
                 }

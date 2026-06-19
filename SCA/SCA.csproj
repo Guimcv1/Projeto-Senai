@@ -2,21 +2,18 @@
  
    <PropertyGroup>
      <OutputType>WinExe</OutputType>
-  <TargetFramework>net8.0</TargetFramework>
+	 <TargetFramework>net6.0</TargetFramework>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
      <Nullable>enable</Nullable>
      <ImplicitUsings>enable</ImplicitUsings>
      <SelfContained>false</SelfContained>
-    <SelfContained Condition="'$(OS)' == 'Unix'">true</SelfContained>
-    <RuntimeIdentifier Condition="'$(OS)' == 'Unix'">linux-x64</RuntimeIdentifier>
-    <AppendRuntimeIdentifierToOutputPath Condition="'$(OS)' == 'Unix'">false</AppendRuntimeIdentifierToOutputPath>
      <UseAppHost>true</UseAppHost>
      <RollForward>LatestMajor</RollForward>
      <AssemblyTitle>SCA</AssemblyTitle>
      <RootNamespace>SCA</RootNamespace>
      <ApplicationIcon>assets\icone.ico</ApplicationIcon>
      <DefaultItemExcludes>$(DefaultItemExcludes);SCA.Core\**</DefaultItemExcludes>
-     <PublishSingleFile>false</PublishSingleFile>
+     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -36,11 +33,11 @@
      <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
      <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
      <PackageReference Include="DotNetEnv" Version="3.1.1" />
-     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.32">
        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
        <PrivateAssets>all</PrivateAssets>
      </PackageReference>
-     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
+     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.29" />
      <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.1" />
    </ItemGroup>
  
@@ -56,22 +53,19 @@
  
    <ItemGroup>
      <Content Include="assets\icone.ico" />
+     <EmbeddedResource Include="..\docs\Manual do Usuário SCA v1.pdf" LogicalName="ManualSCA.pdf" />
    </ItemGroup>
  
    <ItemGroup>
      <ProjectReference Include="SCA.Core\SCA.Core.csproj" />
    </ItemGroup>
 
-  <Target Name="OrganizeDLLs" AfterTargets="Build" Condition="'$(OS)' != 'Unix'">
+	<Target Name="OrganizeDLLs" AfterTargets="Build">
 		<ItemGroup>
 			<MyDlls Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll" />
 		</ItemGroup>
 		<MakeDir Directories="$(TargetDir)dll" Condition="!Exists('$(TargetDir)dll')" />
 		<Move SourceFiles="@(MyDlls)" DestinationFolder="$(TargetDir)dll" />
 	</Target>
-
-  <Target Name="PublishOnUnixBuild" AfterTargets="Build" Condition="'$(OS)' == 'Unix' and '$(SkipUnixPublishAfterBuild)' != 'true'">
-    <Exec Command='dotnet publish "$(MSBuildProjectFullPath)" -c $(Configuration) -r linux-x64 --self-contained true -p:SkipUnixPublishAfterBuild=true -o "$(TargetDir)"' />
-  </Target>
  
  </Project>

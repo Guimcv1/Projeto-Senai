@@ -11,15 +11,6 @@ public partial class TelaLoginView : Window
 {
     private JanelaPrincipal? _parent;
 
-    private void RegistrarAcao(string acao, int? usuarioId = null)
-    {
-        int id = usuarioId ?? _parent?.CurrentAdmin?.Id ?? 0;
-        if (id > 0)
-        {
-            SCA.Core.Services.LogService.RegistrarLog(acao, "Usuario", id);
-        }
-    }
-
     public TelaLoginView()
     {
         InitializeComponent();
@@ -47,7 +38,6 @@ public partial class TelaLoginView : Window
         var usuario = UsuarioService.LoginUser(txtUsername.Text ?? "", txtPassword.Text ?? "");
         if (usuario != null)
         {
-            RegistrarAcao($"Login realizado por {usuario.Login}", usuario.Id);
             Console.WriteLine("Login realizado com sucesso. Atualizando JanelaPrincipal...");
             if (_parent != null)
             {
@@ -66,24 +56,17 @@ public partial class TelaLoginView : Window
         else
         {
             Console.WriteLine("Usuário ou senha incorretos.");
-            var usuarioTentativa = UsuarioService.ListarUser().FirstOrDefault(u => u.Login == (txtUsername.Text ?? ""));
-            if (usuarioTentativa != null)
-            {
-                RegistrarAcao($"Tentativa de login com falha para {usuarioTentativa.Login}", usuarioTentativa.Id);
-            }
             // Optional: show a message on the login screen itself
         }
     }
 
     private void btnExit_Click(object sender, RoutedEventArgs e)
     {
-        RegistrarAcao("Fechou tela de login");
         this.Close();
     }
 
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
-        RegistrarAcao("Voltou na tela de login");
         this.Close();
     }
 }

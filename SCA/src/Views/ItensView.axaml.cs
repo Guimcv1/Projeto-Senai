@@ -16,15 +16,6 @@ public partial class ItensView : UserControl, IReloadableView
     private int _editingId = -1;
     private List<Sala> _salasDisponiveis = new();
 
-    private void RegistrarAcao(string acao)
-    {
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-        if (usuarioId > 0)
-        {
-            SCA.Core.Services.LogService.RegistrarLog(acao, AcaoTipo.Item, usuarioId);
-        }
-    }
-
     public ItensView()
     {
         InitializeComponent();
@@ -64,8 +55,8 @@ public partial class ItensView : UserControl, IReloadableView
                 listUI.Add(new ItemAdminUI
                 {
                     Id = item.Id,
-                    Descricao = item.Descricao,
-                    SalaNome = salaNome,
+                    Descricao = item.Descricao?.ToUpper() ?? "",
+                    SalaNome = salaNome?.ToUpper() ?? "",
                     Estado = item.Estado,
                     BadgeColor = GetBadgeColor(item.Estado)
                 });
@@ -96,7 +87,6 @@ public partial class ItensView : UserControl, IReloadableView
         cbEstado.SelectedIndex = 0; 
         cbEstado.IsEnabled = false; 
         ItemDialogOverlay.IsVisible = true;
-        RegistrarAcao("Abriu cadastro de novo item");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -121,7 +111,6 @@ public partial class ItensView : UserControl, IReloadableView
                 cbEstado.SelectedItem = item.Estado;
 
                 ItemDialogOverlay.IsVisible = true;
-                RegistrarAcao($"Abriu edição do item {item.Id}");
             }
         }
     }
@@ -129,12 +118,11 @@ public partial class ItensView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         ItemDialogOverlay.IsVisible = false;
-        RegistrarAcao("Fechou dialogo de item");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string descricao = txtItemDescricao.Text?.Trim() ?? "";
+        string descricao = txtItemDescricao.Text?.Trim().ToUpper() ?? "";
         
         if (string.IsNullOrEmpty(descricao)) return;
         if (cbSala.SelectedItem == null) return;
@@ -155,15 +143,14 @@ public partial class ItensView : UserControl, IReloadableView
         }
 
         bool success;
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
         if (_editingId == -1)
         {
-            success = AdminService.CriarIntens(descricao, salaId, usuarioId);
+            success = AdminService.CriarIntens(descricao, salaId);
         }
         else
         {
             string estado = cbEstado.SelectedItem?.ToString() ?? Estados.Livre;
-            success = AdminService.EditarIntens(_editingId, descricao, estado, salaId, usuarioId);
+            success = AdminService.EditarIntens(_editingId, descricao, estado, salaId);
         }
 
         if (success)

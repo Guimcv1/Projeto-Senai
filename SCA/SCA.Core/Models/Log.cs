@@ -22,7 +22,7 @@ namespace SCA.Core.Models
         //o String.Empty é para quando copilar não dar erro de valor nulo, pois o campo é obrigatório
         public string Acao { get; set; } = string.Empty;
 
-        public DateTime DataAcao { get; set; } = DateTime.UtcNow;
+        public DateTime DataAcao { get; set; } = DateTime.Now;
 
         [Required]
         public string TipoAcao { get; set; } = AcaoTipo.Empty;

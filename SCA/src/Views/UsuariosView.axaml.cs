@@ -13,15 +13,6 @@ public partial class UsuariosView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
 
-    private void RegistrarAcao(string acao)
-    {
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-        if (usuarioId > 0)
-        {
-            SCA.Core.Services.LogService.RegistrarLog(acao, "Usuario", usuarioId);
-        }
-    }
-
     public UsuariosView()
     {
         InitializeComponent();
@@ -50,7 +41,7 @@ public partial class UsuariosView : UserControl, IReloadableView
                 listUI.Add(new UsuarioUI
                 {
                     Id = u.Id,
-                    Nome = u.Nome,
+                    Nome = u.Nome?.ToUpper() ?? "",
                     Login = u.Login,
                     Perfil = u.IsAdmin ? "Administrador" : "Usuário Comum",
                     StatusText = u.IsAtivo ? "Ativo" : "Inativo",
@@ -76,7 +67,6 @@ public partial class UsuariosView : UserControl, IReloadableView
         chkIsAdmin.IsChecked = false;
         chkIsAtivo.IsChecked = true;
         UsuarioDialogOverlay.IsVisible = true;
-        RegistrarAcao("Abriu cadastro de novo usuario");
     }
 
     private void Editar_Click(object sender, RoutedEventArgs e)
@@ -94,7 +84,6 @@ public partial class UsuariosView : UserControl, IReloadableView
                 chkIsAdmin.IsChecked = user.IsAdmin;
                 chkIsAtivo.IsChecked = user.IsAtivo;
                 UsuarioDialogOverlay.IsVisible = true;
-                RegistrarAcao($"Abriu edição do usuario {user.Id}");
             }
         }
     }
@@ -102,12 +91,11 @@ public partial class UsuariosView : UserControl, IReloadableView
     private void CloseDialog_Click(object sender, RoutedEventArgs e)
     {
         UsuarioDialogOverlay.IsVisible = false;
-        RegistrarAcao("Fechou dialogo de usuario");
     }
 
     private void Salvar_Click(object sender, RoutedEventArgs e)
     {
-        string nome = txtNome.Text?.Trim() ?? "";
+        string nome = txtNome.Text?.Trim().ToUpper() ?? "";
         string login = txtLogin.Text?.Trim() ?? "";
         string senha = txtSenha.Text ?? "";
         bool isAdmin = chkIsAdmin.IsChecked ?? false;
@@ -120,7 +108,6 @@ public partial class UsuariosView : UserControl, IReloadableView
         }
 
         bool success;
-        int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
         if (_editingId == -1)
         {
             if (string.IsNullOrEmpty(senha))
@@ -129,12 +116,12 @@ public partial class UsuariosView : UserControl, IReloadableView
                 return;
             }
 
-            success = UsuarioService.CriarUser(nome, login, senha, isAdmin, isAtivo, usuarioId);
+            success = UsuarioService.CriarUser(nome, login, senha, isAdmin, isAtivo);
         }
         else
         {
             string? novaSenha = string.IsNullOrEmpty(senha) ? null : senha;
-            success = UsuarioService.AtualizarUser(_editingId, nome, login, novaSenha, isAdmin, isAtivo, usuarioId);
+            success = UsuarioService.AtualizarUser(_editingId, nome, login, novaSenha, isAdmin, isAtivo);
         }
 
         if (success)
@@ -153,8 +140,7 @@ public partial class UsuariosView : UserControl, IReloadableView
         if (sender is Button btn && btn.DataContext is UsuarioUI userUI)
         {
             bool novoStatus = userUI.StatusText == "Inativo";
-            int usuarioId = _parent?.CurrentAdmin?.Id ?? 0;
-            if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus, usuarioId))
+            if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus))
             {
                 LoadData();
             }
