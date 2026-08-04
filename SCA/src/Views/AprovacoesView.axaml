@@ -5,14 +5,32 @@
              xmlns:material="using:Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
              x:Class="SCA.Views.AprovacoesView">
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
         <TextBlock Grid.Row="0" FontSize="40" Foreground="#002776" Margin="0,0,0,20" FontWeight="Bold">Aprovações Pendentes</TextBlock>
         
-        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="#64748B" FontSize="14" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Center">Pesquisar:</TextBlock>
+                <material:MaterialIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,10,0"/>
+                <TextBox x:Name="txtSearch" Width="300" FontSize="16" Watermark="Buscar item, ambiente ou solicitante..." TextChanged="Search_TextChanged"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
             <Grid RowDefinitions="*,Auto">
-                <DataGrid Grid.Row="0" x:Name="dgAprovacoes" AutoGenerateColumns="False" IsReadOnly="False" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50" MinHeight="300">
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <DataGrid x:Name="dgAprovacoes" AutoGenerateColumns="False" IsReadOnly="False" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50" MinHeight="300">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Header="Sel." Binding="{Binding IsSelected, Mode=TwoWay}" Width="100"/>
+                        <DataGridTemplateColumn Width="80">
+                            <DataGridTemplateColumn.Header>
+                                <CheckBox x:Name="chkSelectAll" Content="Todos" Margin="10,0,0,0" VerticalAlignment="Center" Click="ChkSelectAll_Click"/>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Item" Binding="{Binding DescricaoItems}" Width="*" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Ambiente" Binding="{Binding Ambiente}" Width="*" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Solicitante" Binding="{Binding Solicitante}" Width="*" IsReadOnly="True"/>
@@ -26,7 +44,8 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
-                </DataGrid>
+                    </DataGrid>
+                </ScrollViewer>
                 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                     <Button Background="#16A34A" Foreground="White" Padding="20,10" Margin="0,0,10,0" Click="Aprovar_Click">

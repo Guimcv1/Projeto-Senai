@@ -1,4 +1,5 @@
 using SCA.Core.Data;
+using Microsoft.EntityFrameworkCore;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -15,6 +16,7 @@ public partial class ItensView : UserControl, IReloadableView
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
     private List<Sala> _salasDisponiveis = new();
+    private List<Item> _todosItens = new();
 
     public ItensView()
     {
@@ -43,31 +45,81 @@ public partial class ItensView : UserControl, IReloadableView
             cbEstado.ItemsSource = Estados.TodosEstados.Where(e => !string.IsNullOrEmpty(e)).ToList();
 
             // Load DataGrid using Service
-            var itens = AdminService.ListarIntens();
-
-            var listUI = new List<ItemAdminUI>();
-
-            foreach (var item in itens)
-            {
-                var sala = _salasDisponiveis.FirstOrDefault(s => s.Id == item.SalaId);
-                var salaNome = sala != null ? sala.Descricao : "Sem Sala";
-                
-                listUI.Add(new ItemAdminUI
-                {
-                    Id = item.Id,
-                    Descricao = item.Descricao?.ToUpper() ?? "",
-                    SalaNome = salaNome?.ToUpper() ?? "",
-                    Estado = item.Estado,
-                    BadgeColor = GetBadgeColor(item.Estado)
-                });
-            }
-
-            dgItens.ItemsSource = listUI;
+            _todosItens = AdminService.ListarIntens();
+            FilterData();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao carregar itens: {ex.Message}");
         }
+    }
+
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private void FilterData()
+    {
+        if (dgItens == null) return;
+        string searchText = NormalizeString(txtSearch?.Text ?? "");
+
+        var listUI = new List<ItemAdminUI>();
+
+        var filtrados = _todosItens.Where(i =>
+            string.IsNullOrEmpty(searchText) ||
+            NormalizeString(i.Descricao).Contains(searchText) ||
+            NormalizeString(_salasDisponiveis.FirstOrDefault(s => s.Id == i.SalaId)?.Descricao).Contains(searchText)
+        );
+
+        using var context = new BancoContext();
+        var activeLoans = context.Emprestimos
+            .Include(e => e.Usuario)
+            .Include(e => e.EmprestimoItem)
+            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise)
+            .ToList();
+
+        foreach (var item in filtrados)
+        {
+            var sala = _salasDisponiveis.FirstOrDefault(s => s.Id == item.SalaId);
+            var salaNome = sala != null ? sala.Descricao : "Sem Sala";
+
+            var activeLoan = activeLoans
+                .Where(e => e.EmprestimoItem != null && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
+                .OrderByDescending(e => e.DataEstado)
+                .FirstOrDefault();
+
+            string responsavel = activeLoan?.Usuario?.Nome ?? "-";
+            
+            listUI.Add(new ItemAdminUI
+            {
+                Id = item.Id,
+                Descricao = item.Descricao?.ToUpper() ?? "",
+                SalaNome = salaNome?.ToUpper() ?? "",
+                Estado = item.Estado,
+                BadgeColor = GetBadgeColor(item.Estado),
+                QuemPegou = responsavel
+            });
+        }
+
+        dgItens.ItemsSource = listUI;
+    }
+
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        FilterData();
     }
 
     private string GetBadgeColor(string estado)
@@ -173,4 +225,5 @@ public class ItemAdminUI
     public string SalaNome { get; set; } = "";
     public string Estado { get; set; } = "";
     public string BadgeColor { get; set; } = "";
+    public string QuemPegou { get; set; } = "-";
 }

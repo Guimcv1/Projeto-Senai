@@ -16,7 +16,7 @@
 						<TextBlock Foreground="#64748B" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8">Pesquisar Sala</TextBlock>
 						<StackPanel Orientation="Horizontal">
 							<material:MaterialIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,10,0"/>
-							<TextBox x:Name="txtSearch" Width="300" FontSize="16" Watermark="Ex: Sala 101" TextChanged="Search_TextChanged"/>
+							<AutoCompleteBox x:Name="txtSearch" Width="300" FontSize="16" Watermark="Ex: Sala 101" TextChanged="Search_TextChanged" FilterMode="Custom"/>
 						</StackPanel>
 					</StackPanel>
 				</StackPanel>
@@ -82,8 +82,18 @@
 					<Border Grid.Row="2" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" MaxHeight="300">
 						<DataGrid x:Name="dgItems" AutoGenerateColumns="False" IsReadOnly="False" Background="White" BorderThickness="0">
 							<DataGrid.Columns>
-								<DataGridCheckBoxColumn Header="Sel." Binding="{Binding IsSelected}" Width="50"/>
+								<DataGridTemplateColumn Width="80">
+									<DataGridTemplateColumn.Header>
+										<CheckBox x:Name="chkSelectAll" Content="Todos" Margin="10,0,0,0" VerticalAlignment="Center" Click="ChkSelectAll_Click"/>
+									</DataGridTemplateColumn.Header>
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding CanSelect}"/>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
 								<DataGridTextColumn Header="Ativo / Item" Binding="{Binding Descricao}" Width="*" IsReadOnly="True"/>
+								<DataGridTextColumn Header="Quem Pegou / Reservou" Binding="{Binding QuemPegou}" Width="*" IsReadOnly="True"/>
 								<DataGridTemplateColumn Header="Situação Atual" Width="150">
 									<DataGridTemplateColumn.CellTemplate>
 										<DataTemplate>
@@ -97,9 +107,12 @@
 						</DataGrid>
 					</Border>
 
-					<Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,20,0,0">
+					<Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" Margin="0,20,0,0">
 						<Button Grid.Column="0" Content="Cancelar Operação" Click="CloseDialog_Click"/>
-						<Button Grid.Column="1" HorizontalAlignment="Right" Background="#16A34A" Foreground="White" Content="Processar Selecionados" Click="ProcessSelectedItems_Click"/>
+						<StackPanel Grid.Column="2" Orientation="Horizontal">
+							<Button Background="#EA580C" Foreground="White" Content="Devolver Todos os Itens" Click="DevolverTodos_Click" Margin="0,0,10,0"/>
+							<Button x:Name="btnProcessSelected" Background="#16A34A" Foreground="White" Content="Processar Selecionados" Click="ProcessSelectedItems_Click"/>
+						</StackPanel>
 					</Grid>
 				</Grid>
 			</Border>
@@ -109,8 +122,8 @@
 		<Border x:Name="LoginDialogOverlay" IsVisible="False" Background="#80000000" ZIndex="110">
 			<Border Background="White" CornerRadius="12" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
 				<StackPanel>
-					<TextBlock Text="Identificação Necessária" FontSize="20" FontWeight="Bold" Foreground="#002776" Margin="0,0,0,10"/>
-					<TextBlock Text="Por favor, informe suas credenciais para solicitar os itens." Foreground="#64748B" FontSize="14" Margin="0,0,0,20" TextWrapping="Wrap"/>
+					<TextBlock x:Name="txtLoginDialogTitle" Text="Identificação Necessária" FontSize="20" FontWeight="Bold" Foreground="#002776" Margin="0,0,0,10"/>
+					<TextBlock x:Name="txtLoginDialogSubtitle" Text="Por favor, informe suas credenciais para solicitar os itens." Foreground="#64748B" FontSize="14" Margin="0,0,0,20" TextWrapping="Wrap"/>
 
 					<TextBlock Text="Login" Foreground="#64748B" FontSize="12" Margin="0,0,0,5"/>
 					<TextBox x:Name="txtRequestLogin" Margin="0,0,0,15" Watermark="Seu login"/>
@@ -126,7 +139,7 @@
 
 					<Grid ColumnDefinitions="*,*">
 						<Button Grid.Column="0" Content="Cancelar" HorizontalAlignment="Left" Click="CloseLoginDialog_Click"/>
-						<Button Grid.Column="1" Content="Confirmar" HorizontalAlignment="Right" Background="#16A34A" Foreground="White" Click="ConfirmLoanRequest_Click"/>
+						<Button x:Name="btnConfirmLoanRequest" Grid.Column="1" Content="Confirmar" HorizontalAlignment="Right" Background="#16A34A" Foreground="White" Click="ConfirmLoanRequest_Click"/>
 					</Grid>
 				</StackPanel>
 			</Border>

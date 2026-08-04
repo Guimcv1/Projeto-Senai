@@ -13,6 +13,7 @@ public partial class LocaisView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
+    private List<Sala> _todasSalas = new();
 
     public LocaisView()
     {
@@ -34,11 +35,45 @@ public partial class LocaisView : UserControl, IReloadableView
     {
         try
         {
-            var salas = SalaService.ListarSala();
-            
-            var listUI = new List<LocalUI>();
+            _todasSalas = SalaService.ListarSala();
+            FilterData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar locais: {ex.Message}");
+        }
+    }
 
-            foreach (var sala in salas)
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private void FilterData()
+    {
+        if (dgLocais == null) return;
+        string searchText = NormalizeString(txtSearch?.Text ?? "");
+
+        var listUI = new List<LocalUI>();
+
+        var filtrados = _todasSalas.Where(s =>
+            string.IsNullOrEmpty(searchText) ||
+            NormalizeString(s.Descricao).Contains(searchText)
+        );
+
+        foreach (var sala in filtrados)
             {
                 listUI.Add(new LocalUI
                 {
@@ -50,11 +85,11 @@ public partial class LocaisView : UserControl, IReloadableView
             }
 
             dgLocais.ItemsSource = listUI;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao carregar locais: {ex.Message}");
-        }
+    }
+
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        FilterData();
     }
 
     private void NovoLocal_Click(object sender, RoutedEventArgs e)

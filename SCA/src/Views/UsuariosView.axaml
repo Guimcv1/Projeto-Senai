@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
              x:Class="SCA.Views.UsuariosView">
     <Grid>
-        <Grid RowDefinitions="Auto,*">
+        <Grid RowDefinitions="Auto,Auto,*">
             <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
                 <TextBlock Grid.Column="0" FontSize="40" Foreground="#002776" VerticalAlignment="Center" FontWeight="Bold">Gerir Utilizadores</TextBlock>
                 <Button Grid.Column="1" Background="#EA580C" Foreground="White" Height="45" Padding="20,0" Click="NovoUsuario_Click">
@@ -16,10 +16,19 @@
                     </StackPanel>
                 </Button>
             </Grid>
+
+            <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="#64748B" FontSize="14" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Center">Pesquisar:</TextBlock>
+                    <material:MaterialIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,10,0"/>
+                    <AutoCompleteBox x:Name="txtSearch" Width="300" FontSize="16" Watermark="Buscar nome ou login..." TextChanged="Search_TextChanged" FilterMode="Custom"/>
+                </StackPanel>
+            </Border>
             
-            <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+            <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
                 <Grid>
-                    <DataGrid x:Name="dgUsuarios" AutoGenerateColumns="False" IsReadOnly="True" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <DataGrid x:Name="dgUsuarios" AutoGenerateColumns="False" IsReadOnly="True" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="50" MinHeight="400">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
                             <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*"/>
@@ -49,7 +58,8 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                    </DataGrid>
+                        </DataGrid>
+                    </ScrollViewer>
                 </Grid>
             </Border>
         </Grid>

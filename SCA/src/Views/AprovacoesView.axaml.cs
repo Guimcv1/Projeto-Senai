@@ -12,6 +12,7 @@ namespace SCA.Views;
 public partial class AprovacoesView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
+    private List<AprovacaoUI> _todasAprovacoes = new();
 
     public AprovacoesView()
     {
@@ -33,6 +34,9 @@ public partial class AprovacoesView : UserControl, IReloadableView
     {
         try
         {
+            var oldList = dgAprovacoes?.ItemsSource as List<AprovacaoUI>;
+            var selectedIds = oldList?.Where(x => x.IsSelected).Select(x => x.EmprestimoId).ToHashSet() ?? new HashSet<int>();
+
             var emprestimos = EmprestimoService.ListarEmprestimo();
             Console.WriteLine($"[Aprovações] Total de empréstimos no banco: {emprestimos.Count}");
 
@@ -56,6 +60,7 @@ public partial class AprovacoesView : UserControl, IReloadableView
                 listUI.Add(new AprovacaoUI
                 {
                     EmprestimoId = emp.Id,
+                    IsSelected = selectedIds.Contains(emp.Id),
                     DescricaoItems = string.Join(", ", emp.EmprestimoItem.Select(ei => ei.Item?.Descricao ?? "Item s/ Desc")),
                     Ambiente = emp.Sala?.Descricao ?? "Desconhecido",
                     Solicitante = emp.Usuario?.Nome ?? "Usuário Desconhecido",
@@ -65,12 +70,65 @@ public partial class AprovacoesView : UserControl, IReloadableView
                 });
             }
 
-            Console.WriteLine($"[Aprovações] Item para o DataGrid: {listUI.Count}");
-            dgAprovacoes.ItemsSource = listUI;
+            _todasAprovacoes = listUI;
+            FilterData();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao carregar pendências: {ex.Message}");
+        }
+    }
+
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private void FilterData()
+    {
+        if (dgAprovacoes == null) return;
+        string searchText = NormalizeString(txtSearch?.Text ?? "");
+
+        var filtrados = _todasAprovacoes.Where(a =>
+            string.IsNullOrEmpty(searchText) ||
+            NormalizeString(a.DescricaoItems).Contains(searchText) ||
+            NormalizeString(a.Ambiente).Contains(searchText) ||
+            NormalizeString(a.Solicitante).Contains(searchText)
+        ).ToList();
+
+        dgAprovacoes.ItemsSource = filtrados;
+    }
+
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        FilterData();
+    }
+
+    private void ChkSelectAll_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox chk && dgAprovacoes != null && dgAprovacoes.ItemsSource is List<AprovacaoUI> items)
+        {
+            bool isChecked = chk.IsChecked == true;
+            foreach (var item in items)
+            {
+                item.IsSelected = isChecked;
+            }
+            
+            // Reassign to force UI update
+            dgAprovacoes.ItemsSource = null;
+            dgAprovacoes.ItemsSource = items;
         }
     }
 

@@ -12,6 +12,7 @@ public partial class UsuariosView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
     private int _editingId = -1;
+    private List<SCA.Core.Models.Usuario> _todosUsuarios = new();
 
     public UsuariosView()
     {
@@ -33,10 +34,69 @@ public partial class UsuariosView : UserControl, IReloadableView
     {
         try
         {
-            var usuarios = UsuarioService.ListarUser();
-            var listUI = new List<UsuarioUI>();
+            _todosUsuarios = UsuarioService.ListarUser();
+            
+            if (txtSearch != null)
+            {
+                var nomesELogins = _todosUsuarios.Select(u => u.Nome)
+                                                 .Concat(_todosUsuarios.Select(u => u.Login))
+                                                 .Concat(new[] { "Ativo", "Inativo" })
+                                                 .Where(s => !string.IsNullOrWhiteSpace(s))
+                                                 .Distinct()
+                                                 .ToList();
+                txtSearch.ItemsSource = nomesELogins;
+                txtSearch.ItemFilter = SearchFilter;
+            }
 
-            foreach (var u in usuarios)
+            FilterData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar usuários: {ex.Message}");
+        }
+    }
+
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private bool SearchFilter(string searchText, object item)
+    {
+        if (item is string str)
+        {
+            return string.IsNullOrEmpty(searchText) || NormalizeString(str).Contains(NormalizeString(searchText));
+        }
+        return false;
+    }
+
+    private void FilterData()
+    {
+        if (dgUsuarios == null) return;
+        string searchText = NormalizeString(txtSearch?.Text ?? "");
+
+        var listUI = new List<UsuarioUI>();
+
+        var filtrados = _todosUsuarios.Where(u =>
+            string.IsNullOrEmpty(searchText) ||
+            NormalizeString(u.Nome).Contains(searchText) ||
+            NormalizeString(u.Login).Contains(searchText) ||
+            NormalizeString(u.IsAtivo ? "Ativo" : "Inativo").Contains(searchText)
+        );
+
+        foreach (var u in filtrados)
             {
                 listUI.Add(new UsuarioUI
                 {
@@ -50,11 +110,11 @@ public partial class UsuariosView : UserControl, IReloadableView
             }
 
             dgUsuarios.ItemsSource = listUI;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao carregar usuários: {ex.Message}");
-        }
+    }
+
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        FilterData();
     }
 
     private void NovoUsuario_Click(object sender, RoutedEventArgs e)
