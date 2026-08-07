@@ -122,6 +122,14 @@ public partial class ItensView : UserControl, IReloadableView
         FilterData();
     }
 
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
+        FilterData();
+    }
+
     private string GetBadgeColor(string estado)
     {
         if (estado == Estados.Livre) return "#16A34A";

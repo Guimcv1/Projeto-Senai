@@ -116,6 +116,14 @@ public partial class AprovacoesView : UserControl, IReloadableView
         FilterData();
     }
 
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
+        FilterData();
+    }
+
     private void ChkSelectAll_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is CheckBox chk && dgAprovacoes != null && dgAprovacoes.ItemsSource is List<AprovacaoUI> items)

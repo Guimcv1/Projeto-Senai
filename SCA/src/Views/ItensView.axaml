@@ -22,6 +22,9 @@
                     <TextBlock Foreground="#64748B" FontSize="14" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Center">Pesquisar:</TextBlock>
                     <material:MaterialIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,10,0"/>
                     <TextBox x:Name="txtSearch" Width="300" FontSize="16" Watermark="Buscar descrição ou sala..." TextChanged="Search_TextChanged"/>
+					<Button Margin="8,0,0,0" Width="32" Height="32" Padding="0" Background="Transparent" BorderThickness="0" Click="ClearSearch_Click" ToolTip.Tip="Limpar busca">
+						<material:MaterialIcon Kind="Close" Width="18" Height="18" Foreground="#64748B"/>
+					</Button>
                 </StackPanel>
             </Border>
             

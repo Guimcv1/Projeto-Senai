@@ -155,6 +155,14 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         FilterDashboard();
     }
 
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
+        FilterDashboard();
+    }
+
     private void RoomCard_Click(object sender, PointerPressedEventArgs e)
     {
         if (sender is Border border && border.DataContext is AmbienteTemp ambiente)

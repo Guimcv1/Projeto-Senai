@@ -117,6 +117,14 @@ public partial class UsuariosView : UserControl, IReloadableView
         FilterData();
     }
 
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
+        FilterData();
+    }
+
     private void NovoUsuario_Click(object sender, RoutedEventArgs e)
     {
         _editingId = -1;

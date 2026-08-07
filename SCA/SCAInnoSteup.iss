@@ -1,7 +1,7 @@
 [Setup]
 ; Nome do aplicativo que aparecerá no Painel de Controle e Menu Iniciar
 AppName=SCA
-AppVersion=1.0.0
+AppVersion=1.6.0
 AppPublisher=SENAI
 ; Pasta padrão de instalação (Arquivos de Programas)
 DefaultDirName={autopf}\SCA
@@ -11,18 +11,18 @@ UninstallDisplayIcon={app}\SCA.exe
 Compression=lzma2
 SolidCompression=yes
 ; Local onde o instalador final 
-OutputDir=C:\Users\USER\Desktop\Nova pasta
+OutputDir=C:\Users\Administrator\Desktop\bild_test
 OutputBaseFilename=Instalador_SCA
 ; Define compatibilidade mínima (6.1 é Windows 7)
 MinVersion=6.1 
 ; Abilita a opeção de "Altera" no painel de controle
 AppModifyPath="{app}\Alterar_Config_SCA.exe"
 ; Incone do Instaldor
-SetupIconFile=C:\Users\USER\Desktop\gereciador_chaves_senai\SCA\assets\icone.ico
+SetupIconFile=C:\Users\Administrator\Desktop\bild_test\icone.ico
 
 [Files]
 ; O executável principal gerado pelo seu Build do C#
-Source: "C:\Users\\Desktop\gereciador_chaves_senai\SCA\bin\BildInstaler\SCA.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Administrator\Desktop\bild_test\SCA.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Copia o instalador que está rodando agora para a pasta do app
 ; Nota deve se excutar primeiro com a linha abaixo cometendada depois descomenta para ele fucionar corretamente 
 Source: "{srcexe}"; DestDir: "{app}"; DestName: "Alterar_Config_SCA.exe"; Flags: external
