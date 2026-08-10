@@ -8,11 +8,12 @@ namespace SCA.Core.Models
     {
         public const string Livre = "Livre";
         public const string Analise = "Analise";
+        public const string AnaliseDevolucao = "AnaliseDevolucao";
         public const string Emprestado = "Emprestado";
 
         public const string Empty = "";
 
-        public static readonly string[] TodosEstados = { Livre, Analise, Emprestado, Empty };
+        public static readonly string[] TodosEstados = { Livre, Analise, AnaliseDevolucao, Emprestado, Empty };
     }
 
     public class AcaoTipo

@@ -140,7 +140,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         int total = itensDaSala.Count;
         int available = itensDaSala.Count(i => i.Estado == Estados.Livre);
         int borrowed = itensDaSala.Count(i => i.Estado == Estados.Emprestado);
-        int pending = itensDaSala.Count(i => i.Estado == Estados.Analise);
+        int pending = itensDaSala.Count(i => i.Estado == Estados.Analise || i.Estado == Estados.AnaliseDevolucao);
 
         if (pending > 0) return "#94a3b8";
         if (available == total) return "#16a34a";
@@ -192,7 +192,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         var activeLoans = context.Emprestimos
             .Include(e => e.Usuario)
             .Include(e => e.EmprestimoItem)
-            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise)
+            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao)
             .ToList();
 
         var dialogItems = new List<ItemUI>();
@@ -223,6 +223,12 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             else if (item.Estado == Estados.Analise)
             {
                 uiItem.BadgeText = responsavel == "-" ? "Em Análise" : $"Análise ({responsavel})";
+                uiItem.BadgeColor = "#94a3b8";
+                uiItem.CanSelect = true;
+            }
+            else if (item.Estado == Estados.AnaliseDevolucao)
+            {
+                uiItem.BadgeText = responsavel == "-" ? "Devolução em análise" : $"Devolução em análise ({responsavel})";
                 uiItem.BadgeColor = "#94a3b8";
                 uiItem.CanSelect = true;
             }
@@ -277,7 +283,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             return;
         }
 
-        var borrowedItems = dialogItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise).ToList();
+        var borrowedItems = dialogItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao).ToList();
         if (!borrowedItems.Any())
         {
             _parent?.ShowMessage("Não há nenhum item emprestado neste ambiente para devolver.");
@@ -326,7 +332,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         txtRequestPassword.Text = "";
 
         bool hasLoans = _pendingSelectedItems.Any(i => i.EstadoOrigem == Estados.Livre);
-        bool hasReturns = _pendingSelectedItems.Any(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise);
+        bool hasReturns = _pendingSelectedItems.Any(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao);
 
         if (hasReturns && !hasLoans)
         {
@@ -399,7 +405,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
         // Determine if we are requesting Loans or Returns
         var itemsToLoan = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Livre).Select(i => i.Id).ToList();
-        var itemsToReturn = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise).ToList();
+        var itemsToReturn = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao).ToList();
 
         if (itemsToLoan.Any())
         {
@@ -422,7 +428,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             {
                 var activeLoan = context.Emprestimos
                     .Include(e => e.EmprestimoItem)
-                    .Where(e => (e.Estado == Estados.Emprestado || e.Estado == Estados.Analise) && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
+                    .Where(e => (e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao) && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
                     .OrderByDescending(e => e.DataEstado)
                     .FirstOrDefault();
 

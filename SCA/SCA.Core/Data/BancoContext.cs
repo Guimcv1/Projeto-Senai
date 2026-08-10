@@ -35,6 +35,8 @@ namespace SCA.Core.Models
                     string? UserAdminLogin = Environment.GetEnvironmentVariable("USER_ADMIN_LOGIN");
                     string? UserAdminSenha = Environment.GetEnvironmentVariable("USER_ADMIN_SENHA");
 
+
+    
                     /*Verifica se as variáveis de ambiente estão definidas*/
                     if (string.IsNullOrEmpty(Host) || string.IsNullOrEmpty(Port) ||
                         string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Senha) ||

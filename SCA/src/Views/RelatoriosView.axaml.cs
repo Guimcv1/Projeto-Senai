@@ -47,7 +47,7 @@ public partial class RelatoriosView : UserControl, IReloadableView
             // Chart 1: Ocupação
             int disponiveis = itens.Count(i => i.Estado == Estados.Livre);
             int emprestados = itens.Count(i => i.Estado == Estados.Emprestado);
-            int pendentes = itens.Count(i => i.Estado == Estados.Analise);
+            int pendentes = itens.Count(i => i.Estado == Estados.Analise || i.Estado == Estados.AnaliseDevolucao);
 
             chartOcupacao.Series = new ISeries[]
             {
@@ -142,6 +142,7 @@ public partial class RelatoriosView : UserControl, IReloadableView
                 if (cbStatusFilter.SelectedIndex == 1) statusItem = Estados.Livre;
                 else if (cbStatusFilter.SelectedIndex == 2) statusItem = Estados.Emprestado;
                 else if (cbStatusFilter.SelectedIndex == 3) statusItem = Estados.Analise;
+                else if (cbStatusFilter.SelectedIndex == 4) statusItem = Estados.AnaliseDevolucao;
 
                 bool? isAdmin = null;
                 if (cbRoleFilter.SelectedIndex == 1) isAdmin = true;

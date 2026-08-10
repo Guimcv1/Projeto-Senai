@@ -40,8 +40,8 @@ public partial class AprovacoesView : UserControl, IReloadableView
             var emprestimos = EmprestimoService.ListarEmprestimo();
             Console.WriteLine($"[Aprovações] Total de empréstimos no banco: {emprestimos.Count}");
 
-            var pendentes = emprestimos.Where(e => e.Estado == Estados.Analise).ToList();
-            Console.WriteLine($"[Aprovações] Empréstimos em estado 'Analise': {pendentes.Count}");
+            var pendentes = emprestimos.Where(e => e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao).ToList();
+            Console.WriteLine($"[Aprovações] Empréstimos em estado 'Analise' ou 'AnaliseDevolucao': {pendentes.Count}");
 
             var listUI = new List<AprovacaoUI>();
 
@@ -53,9 +53,8 @@ public partial class AprovacoesView : UserControl, IReloadableView
                     continue;
                 }
 
-                // Verifica qual tipo de solicitação é baseado no estado dos itens
-                var primeiroItem = emp.EmprestimoItem.First().Item;
-                bool isDevolucao = primeiroItem != null && primeiroItem.Estado == Estados.Emprestado;
+                var tipoSolicitacao = EmprestimoService.ObterTipoSolicitacao(emp.Id);
+                bool isDevolucao = tipoSolicitacao == EmprestimoService.TipoSolicitacao.Devolucao;
 
                 listUI.Add(new AprovacaoUI
                 {
@@ -66,7 +65,7 @@ public partial class AprovacoesView : UserControl, IReloadableView
                     Solicitante = emp.Usuario?.Nome ?? "Usuário Desconhecido",
                     Acao = isDevolucao ? "Devolução" : "Empréstimo",
                     BadgeColor = isDevolucao ? "#EA580C" : "#002776",
-                    Tipo = isDevolucao ? EmprestimoService.TipoSolicitacao.Devolucao : EmprestimoService.TipoSolicitacao.Emprestimo
+                    Tipo = tipoSolicitacao
                 });
             }
 

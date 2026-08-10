@@ -88,7 +88,7 @@ public partial class ItensView : UserControl, IReloadableView
         var activeLoans = context.Emprestimos
             .Include(e => e.Usuario)
             .Include(e => e.EmprestimoItem)
-            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise)
+            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao)
             .ToList();
 
         foreach (var item in filtrados)
@@ -134,7 +134,7 @@ public partial class ItensView : UserControl, IReloadableView
     {
         if (estado == Estados.Livre) return "#16A34A";
         if (estado == Estados.Emprestado) return "#DC2626";
-        if (estado == Estados.Analise) return "#94A3B8";
+        if (estado == Estados.Analise || estado == Estados.AnaliseDevolucao) return "#94A3B8";
         return "#64748B";
     }
 
