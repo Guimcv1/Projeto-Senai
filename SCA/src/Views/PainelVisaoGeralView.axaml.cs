@@ -309,6 +309,9 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             btnConfirmLoanRequest.Background = Brush.Parse("#EA580C");
         }
 
+        using var context = new BancoContext();
+        txtRequestLogin.ItemsSource = context.Usuarios.Select(u => u.Login).ToList();
+
         LoginDialogOverlay.IsVisible = true;
     }
 
@@ -354,6 +357,9 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
                 btnConfirmLoanRequest.Background = Brush.Parse("#16A34A");
             }
         }
+        
+        using var context = new BancoContext();
+        txtRequestLogin.ItemsSource = context.Usuarios.Where(u => u.IsAtivo).Select(u => u.Login).ToList();
 
         LoginDialogOverlay.IsVisible = true;
     }

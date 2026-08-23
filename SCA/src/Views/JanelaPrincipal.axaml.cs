@@ -114,6 +114,10 @@ public partial class JanelaPrincipal : Window
                 txtAdminLogin.Text = "";
                 txtAdminPassword.Text = "";
                 AdminLoginOverlay.IsVisible = true;
+
+                using var context = new BancoContext();
+                txtAdminLogin.ItemsSource = context.Usuarios.Where(u => u.IsAtivo).Select(u => u.Login).ToList();
+                AdminLoginOverlay.IsVisible = true;
             }
         }
     }
