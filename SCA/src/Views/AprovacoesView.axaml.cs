@@ -12,6 +12,7 @@ namespace SCA.Views;
 public partial class AprovacoesView : UserControl, IReloadableView
 {
     private JanelaPrincipal? _parent;
+    private List<AprovacaoUI> _todasAprovacoes = new();
 
     public AprovacoesView()
     {
@@ -33,11 +34,14 @@ public partial class AprovacoesView : UserControl, IReloadableView
     {
         try
         {
+            var oldList = dgAprovacoes?.ItemsSource as List<AprovacaoUI>;
+            var selectedIds = oldList?.Where(x => x.IsSelected).Select(x => x.EmprestimoId).ToHashSet() ?? new HashSet<int>();
+
             var emprestimos = EmprestimoService.ListarEmprestimo();
             Console.WriteLine($"[Aprovações] Total de empréstimos no banco: {emprestimos.Count}");
 
-            var pendentes = emprestimos.Where(e => e.Estado == Estados.Analise).ToList();
-            Console.WriteLine($"[Aprovações] Empréstimos em estado 'Analise': {pendentes.Count}");
+            var pendentes = emprestimos.Where(e => e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao).ToList();
+            Console.WriteLine($"[Aprovações] Empréstimos em estado 'Analise' ou 'AnaliseDevolucao': {pendentes.Count}");
 
             var listUI = new List<AprovacaoUI>();
 
@@ -49,28 +53,89 @@ public partial class AprovacoesView : UserControl, IReloadableView
                     continue;
                 }
 
-                // Verifica qual tipo de solicitação é baseado no estado dos itens
-                var primeiroItem = emp.EmprestimoItem.First().Item;
-                bool isDevolucao = primeiroItem != null && primeiroItem.Estado == Estados.Emprestado;
+                var tipoSolicitacao = EmprestimoService.ObterTipoSolicitacao(emp.Id);
+                bool isDevolucao = tipoSolicitacao == EmprestimoService.TipoSolicitacao.Devolucao;
 
                 listUI.Add(new AprovacaoUI
                 {
                     EmprestimoId = emp.Id,
+                    IsSelected = selectedIds.Contains(emp.Id),
                     DescricaoItems = string.Join(", ", emp.EmprestimoItem.Select(ei => ei.Item?.Descricao ?? "Item s/ Desc")),
                     Ambiente = emp.Sala?.Descricao ?? "Desconhecido",
                     Solicitante = emp.Usuario?.Nome ?? "Usuário Desconhecido",
                     Acao = isDevolucao ? "Devolução" : "Empréstimo",
                     BadgeColor = isDevolucao ? "#EA580C" : "#002776",
-                    Tipo = isDevolucao ? EmprestimoService.TipoSolicitacao.Devolucao : EmprestimoService.TipoSolicitacao.Emprestimo
+                    Tipo = tipoSolicitacao
                 });
             }
 
-            Console.WriteLine($"[Aprovações] Item para o DataGrid: {listUI.Count}");
-            dgAprovacoes.ItemsSource = listUI;
+            _todasAprovacoes = listUI;
+            FilterData();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao carregar pendências: {ex.Message}");
+        }
+    }
+
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private void FilterData()
+    {
+        if (dgAprovacoes == null) return;
+        string searchText = NormalizeString(txtSearch?.Text ?? "");
+
+        var filtrados = _todasAprovacoes.Where(a =>
+            string.IsNullOrEmpty(searchText) ||
+            NormalizeString(a.DescricaoItems).Contains(searchText) ||
+            NormalizeString(a.Ambiente).Contains(searchText) ||
+            NormalizeString(a.Solicitante).Contains(searchText)
+        ).ToList();
+
+        dgAprovacoes.ItemsSource = filtrados;
+    }
+
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        FilterData();
+    }
+
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
+        FilterData();
+    }
+
+    private void ChkSelectAll_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox chk && dgAprovacoes != null && dgAprovacoes.ItemsSource is List<AprovacaoUI> items)
+        {
+            bool isChecked = chk.IsChecked == true;
+            foreach (var item in items)
+            {
+                item.IsSelected = isChecked;
+            }
+            
+            // Reassign to force UI update
+            dgAprovacoes.ItemsSource = null;
+            dgAprovacoes.ItemsSource = items;
         }
     }
 
@@ -108,6 +173,12 @@ public partial class AprovacoesView : UserControl, IReloadableView
             {
                 if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
                 {
+                    int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                    if (adminId > 0)
+                    {
+                        string acaoStr = isAprovado ? "Aprovou" : "Recusou";
+                        LogService.RegistrarLog($"{acaoStr} solicitação (ID: {item.EmprestimoId})",AcaoTipo.Emprestado, adminId);
+                    }
                     successCount++;
                 }
             }

@@ -47,7 +47,7 @@ public partial class RelatoriosView : UserControl, IReloadableView
             // Chart 1: Ocupação
             int disponiveis = itens.Count(i => i.Estado == Estados.Livre);
             int emprestados = itens.Count(i => i.Estado == Estados.Emprestado);
-            int pendentes = itens.Count(i => i.Estado == Estados.Analise);
+            int pendentes = itens.Count(i => i.Estado == Estados.Analise || i.Estado == Estados.AnaliseDevolucao);
 
             chartOcupacao.Series = new ISeries[]
             {
@@ -142,6 +142,7 @@ public partial class RelatoriosView : UserControl, IReloadableView
                 if (cbStatusFilter.SelectedIndex == 1) statusItem = Estados.Livre;
                 else if (cbStatusFilter.SelectedIndex == 2) statusItem = Estados.Emprestado;
                 else if (cbStatusFilter.SelectedIndex == 3) statusItem = Estados.Analise;
+                else if (cbStatusFilter.SelectedIndex == 4) statusItem = Estados.AnaliseDevolucao;
 
                 bool? isAdmin = null;
                 if (cbRoleFilter.SelectedIndex == 1) isAdmin = true;
@@ -159,6 +160,8 @@ public partial class RelatoriosView : UserControl, IReloadableView
                 }
 
                 ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo, inicio, fim, statusItem, isAdmin, expLogs, expUsers, expItems, expRooms);
+                int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                LogService.RegistrarLog($"Exportou relatório para Excel", "Sistema", adminId);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
                 Console.WriteLine($"Relatório geral exportado com sucesso para {filePath}.");
             }

@@ -40,19 +40,31 @@ namespace SCA.Core.Services
         //SolicitarEmprestimo - O usuário requisita os itens
         public static bool SolicitarEmprestimo(int usuarioId, int salaId, List<int> itensIds)
         {
+            var (success, _) = SolicitarEmprestimoComMensagem(usuarioId, salaId, itensIds);
+            return success;
+        }
+
+        public static (bool Success, string Message) SolicitarEmprestimoComMensagem(int usuarioId, int salaId, List<int> itensIds)
+        {
             try
             {
                 using var context = new BancoContext();
 
-                // Verify if any requested item is already loaned (Emprestado)
-                var alreadyLoaned = context.Itens
-                    .Where(i => itensIds.Contains(i.Id) && i.Estado == Estados.Emprestado)
-                    .Select(i => i.Descricao)
-                    .ToList();
-                if (alreadyLoaned.Any())
+                foreach (var itemId in itensIds)
                 {
-                    Console.WriteLine($"Erro ao solicitar empréstimo: itens já emprestados - {string.Join(", ", alreadyLoaned)}");
-                    return false;
+                    var item = context.Itens.Find(itemId);
+                    if (item != null && item.Estado != Estados.Livre)
+                    {
+                        var activeLoan = context.Emprestimos
+                            .Include(e => e.Usuario)
+                            .Where(e => (e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao) &&
+                                        e.EmprestimoItem.Any(ei => ei.ItemId == itemId))
+                            .OrderByDescending(e => e.DataEstado)
+                            .FirstOrDefault();
+
+                        string reservadoPor = activeLoan?.Usuario?.Nome ?? "outro usuário";
+                        return (false, $"O item '{item.Descricao}' já está reservado por {reservadoPor}.");
+                    }
                 }
 
                 // Cria o empréstimo com o status inicial 'Analise' (Aguardando aprovação)
@@ -83,8 +95,9 @@ namespace SCA.Core.Services
                 }
 
                 context.SaveChanges();
+                LogService.RegistrarLog($"EMPRESTIMO_REQUEST:{emprestimo.Id}", AcaoTipo.Item, usuarioId);
                 Console.WriteLine($"Empréstimo ID {emprestimo.Id} solicitado com sucesso!");
-                return true;
+                return (true, $"Solicitada reserva/empréstimo de {itensIds.Count} item(ns).");
             }
             catch (Exception ex)
             {
@@ -93,7 +106,28 @@ namespace SCA.Core.Services
                 {
                     Console.WriteLine($"Detalhe do Erro (Inner): {ex.InnerException.Message}");
                 }
-                return false;
+                return (false, $"Erro ao solicitar empréstimo: {ex.Message}");
+            }
+        }
+
+        public static string BuscarResponsavelDoItem(int itemId)
+        {
+            try
+            {
+                using var context = new BancoContext();
+                var activeLoan = context.Emprestimos
+                    .Include(e => e.Usuario)
+                    .Where(e => (e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao) &&
+                                e.EmprestimoItem.Any(ei => ei.ItemId == itemId))
+                    .OrderByDescending(e => e.DataEstado)
+                    .FirstOrDefault();
+
+                return activeLoan?.Usuario?.Nome ?? "-";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao buscar responsável do item: {ex.Message}");
+                return "-";
             }
         }
 
@@ -103,7 +137,10 @@ namespace SCA.Core.Services
             try
             {
                 using var context = new BancoContext();
-                var emprestimo = context.Emprestimos.Find(emprestimoId);
+                var emprestimo = context.Emprestimos
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
+                    .FirstOrDefault(e => e.Id == emprestimoId);
 
                 if (emprestimo == null)
                 {
@@ -111,11 +148,20 @@ namespace SCA.Core.Services
                     return false;
                 }
 
-                // Retorna o estado para Analise, indicando que deseja devolver
-                emprestimo.Estado = Estados.Analise;
+                // Mantem o emprestimo em análise de devolução para a devolucao ser aprovada depois
+                emprestimo.Estado = Estados.AnaliseDevolucao;
                 emprestimo.DataEstado = DateTime.UtcNow;
 
+                foreach (var ei in emprestimo.EmprestimoItem)
+                {
+                    if (ei.Item != null)
+                    {
+                        ei.Item.Estado = Estados.AnaliseDevolucao;
+                    }
+                }
+
                 context.SaveChanges();
+                LogService.RegistrarLog($"DEVOLUCAO_REQUEST:{emprestimo.Id}", AcaoTipo.Item, emprestimo.UsuarioId);
                 Console.WriteLine($"Devolução do Empréstimo ID {emprestimoId} solicitada com sucesso!");
                 return true;
             }
@@ -175,6 +221,57 @@ namespace SCA.Core.Services
             {
                 Console.WriteLine($"Erro ao processar solicitação: {ex.Message}");
                 return false;
+            }
+        }
+
+        public static TipoSolicitacao ObterTipoSolicitacao(int emprestimoId)
+        {
+            try
+            {
+                using var context = new BancoContext();
+                var emprestimo = context.Emprestimos
+                    .Include(e => e.EmprestimoItem)
+                    .ThenInclude(ei => ei.Item)
+                    .FirstOrDefault(e => e.Id == emprestimoId);
+
+                if (emprestimo == null)
+                    return TipoSolicitacao.Emprestimo;
+
+                var ultimaAcao = LogService.ListarLogs()
+                    .Where(l => l.TipoAcao == AcaoTipo.Item &&
+                                (l.Acao.StartsWith($"DEVOLUCAO_REQUEST:{emprestimoId}") ||
+                                 l.Acao.StartsWith($"EMPRESTIMO_REQUEST:{emprestimoId}")))
+                    .OrderByDescending(l => l.DataAcao)
+                    .FirstOrDefault();
+
+                if (ultimaAcao != null)
+                {
+                    if (ultimaAcao.Acao.StartsWith($"DEVOLUCAO_REQUEST:{emprestimoId}"))
+                        return TipoSolicitacao.Devolucao;
+
+                    if (ultimaAcao.Acao.StartsWith($"EMPRESTIMO_REQUEST:{emprestimoId}"))
+                        return TipoSolicitacao.Emprestimo;
+                }
+
+                bool temEstadoDevolucao = emprestimo.Estado == Estados.AnaliseDevolucao ||
+                    emprestimo.EmprestimoItem.Any(ei => ei.Item?.Estado == Estados.AnaliseDevolucao);
+
+                bool temEmprestimoAtivo = emprestimo.Estado == Estados.Emprestado ||
+                    emprestimo.Estado == Estados.Analise ||
+                    emprestimo.EmprestimoItem.Any(ei => ei.Item?.Estado == Estados.Emprestado || ei.Item?.Estado == Estados.Analise);
+
+                if (temEstadoDevolucao)
+                    return TipoSolicitacao.Devolucao;
+
+                if (temEmprestimoAtivo)
+                    return TipoSolicitacao.Emprestimo;
+
+                return TipoSolicitacao.Emprestimo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao identificar tipo de solicitação: {ex.Message}");
+                return TipoSolicitacao.Emprestimo;
             }
         }
 

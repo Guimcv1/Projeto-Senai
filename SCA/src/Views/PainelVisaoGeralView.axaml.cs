@@ -36,6 +36,9 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
     public void Reload()
     {
+        if (RoomDialogOverlay?.IsVisible == true || LoginDialogOverlay?.IsVisible == true)
+            return;
+        
         LoadSalas();
     }
 
@@ -44,6 +47,16 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         try
         {
             _todasSalas = SalaService.ListarSala();
+            if (txtSearch != null)
+            {
+                txtSearch.ItemsSource = _todasSalas.Select(s => s.Descricao).Where(d => d != null).ToList();
+                txtSearch.ItemFilter = (search, item) => 
+                {
+                    if (string.IsNullOrEmpty(search)) return true;
+                    if (item == null) return false;
+                    return NormalizeString(item.ToString()).Contains(NormalizeString(search));
+                };
+            }
             FilterDashboard();
         }
         catch (Exception ex)
@@ -52,16 +65,51 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         }
     }
 
+    private string NormalizeString(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+        var stringBuilder = new System.Text.StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark && c != '-')
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).ToUpper();
+    }
+
+    private (string Block, int Number) ParseRoomCode(string? roomName)
+    {
+        if (string.IsNullOrWhiteSpace(roomName)) return ("", 0);
+        
+        var match = System.Text.RegularExpressions.Regex.Match(roomName, @"^([A-Za-z]+)[-\s]*(\d+)");
+        if (match.Success)
+        {
+            string block = match.Groups[1].Value.ToUpper();
+            int number = int.Parse(match.Groups[2].Value);
+            return (block, number);
+        }
+        
+        return (roomName.ToUpper(), 0);
+    }
+
     private void FilterDashboard()
     {
         if (icAmbientes == null || txtSearch == null) return;
 
-        string searchText = txtSearch.Text?.ToUpper() ?? "";
+        string searchText = NormalizeString(txtSearch.Text);
 
         var salasFiltradas = _todasSalas.Where(s =>
             (string.IsNullOrEmpty(searchText) ||
-             (s.Descricao != null && s.Descricao.ToUpper().Contains(searchText)))
-        ).ToList();
+             (s.Descricao != null && NormalizeString(s.Descricao).Contains(searchText)))
+        )
+        .OrderBy(s => ParseRoomCode(s.Descricao).Block)
+        .ThenBy(s => ParseRoomCode(s.Descricao).Number)
+        .ToList();
 
         var ambientesUI = new List<AmbienteTemp>();
 
@@ -92,9 +140,9 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         int total = itensDaSala.Count;
         int available = itensDaSala.Count(i => i.Estado == Estados.Livre);
         int borrowed = itensDaSala.Count(i => i.Estado == Estados.Emprestado);
-        int pending = itensDaSala.Count(i => i.Estado == Estados.Analise);
+        int pending = itensDaSala.Count(i => i.Estado == Estados.Analise || i.Estado == Estados.AnaliseDevolucao);
 
-        if (pending == total) return "#94a3b8";
+        if (pending > 0) return "#94a3b8";
         if (available == total) return "#16a34a";
         if (borrowed == total) return "#dc2626";
         if (available > 0) return "#ea580c";
@@ -102,8 +150,16 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         return "#dc2626";
     }
 
-    private void Search_TextChanged(object sender, TextChangedEventArgs e)
+    private void Search_TextChanged(object? sender, TextChangedEventArgs e)
     {
+        FilterDashboard();
+    }
+
+    private void ClearSearch_Click(object sender, RoutedEventArgs e)
+    {
+        if (txtSearch == null) return;
+
+        txtSearch.Text = "";
         FilterDashboard();
     }
 
@@ -133,15 +189,29 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
         using var context = new BancoContext();
         var itensDaSala = context.Itens.Where(i => i.SalaId == salaId).ToList();
 
+        var activeLoans = context.Emprestimos
+            .Include(e => e.Usuario)
+            .Include(e => e.EmprestimoItem)
+            .Where(e => e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao)
+            .ToList();
+
         var dialogItems = new List<ItemUI>();
 
         foreach (var item in itensDaSala)
         {
+            var activeLoan = activeLoans
+                .Where(e => e.EmprestimoItem != null && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
+                .OrderByDescending(e => e.DataEstado)
+                .FirstOrDefault();
+
+            string responsavel = activeLoan?.Usuario?.Nome ?? "-";
+
             var uiItem = new ItemUI
             {
                 Id = item.Id,
                 Descricao = item.Descricao?.ToUpper() ?? "",
-                EstadoOrigem = item.Estado
+                EstadoOrigem = item.Estado,
+                QuemPegou = responsavel
             };
 
             if (item.Estado == Estados.Livre)
@@ -152,13 +222,19 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             }
             else if (item.Estado == Estados.Analise)
             {
-                uiItem.BadgeText = "Em Análise";
+                uiItem.BadgeText = responsavel == "-" ? "Em Análise" : $"Análise ({responsavel})";
                 uiItem.BadgeColor = "#94a3b8";
-                uiItem.CanSelect = false;
+                uiItem.CanSelect = true;
+            }
+            else if (item.Estado == Estados.AnaliseDevolucao)
+            {
+                uiItem.BadgeText = responsavel == "-" ? "Devolução em análise" : $"Devolução em análise ({responsavel})";
+                uiItem.BadgeColor = "#94a3b8";
+                uiItem.CanSelect = true;
             }
             else if (item.Estado == Estados.Emprestado)
             {
-                uiItem.BadgeText = "Emprestado";
+                uiItem.BadgeText = responsavel == "-" ? "Emprestado" : $"Emprestado ({responsavel})";
                 uiItem.BadgeColor = "#dc2626";
                 uiItem.CanSelect = true;
             }
@@ -176,6 +252,68 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
     }
 
     private List<ItemUI> _pendingSelectedItems = new();
+
+    private void ChkSelectAll_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox chk && dgItems != null && dgItems.ItemsSource is List<ItemUI> items)
+        {
+            bool isChecked = chk.IsChecked == true;
+            foreach (var item in items)
+            {
+                if (item.CanSelect)
+                {
+                    item.IsSelected = isChecked;
+                }
+            }
+            
+            // Reassign to force UI update
+            dgItems.ItemsSource = null;
+            dgItems.ItemsSource = items;
+        }
+    }
+
+    private void DevolverTodos_Click(object sender, RoutedEventArgs e)
+    {
+        if (dgItems == null || RoomDialogOverlay == null || LoginDialogOverlay == null) return;
+
+        var dialogItems = dgItems.ItemsSource as List<ItemUI>;
+        if (dialogItems == null || !dialogItems.Any())
+        {
+            _parent?.ShowMessage("Nenhum item disponível neste ambiente.");
+            return;
+        }
+
+        var borrowedItems = dialogItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao).ToList();
+        if (!borrowedItems.Any())
+        {
+            _parent?.ShowMessage("Não há nenhum item emprestado neste ambiente para devolver.");
+            return;
+        }
+
+        foreach (var item in borrowedItems)
+        {
+            item.IsSelected = true;
+        }
+
+        _pendingSelectedItems = borrowedItems;
+
+        RoomDialogOverlay.IsVisible = false;
+        txtRequestLogin.Text = "";
+        txtRequestPassword.Text = "";
+
+        if (txtLoginDialogTitle != null) txtLoginDialogTitle.Text = "Identificação para Devolução";
+        if (txtLoginDialogSubtitle != null) txtLoginDialogSubtitle.Text = "Por favor, informe suas credenciais para solicitar a devolução de todos os itens do ambiente.";
+        if (btnConfirmLoanRequest != null)
+        {
+            btnConfirmLoanRequest.Content = "Devolver Todos";
+            btnConfirmLoanRequest.Background = Brush.Parse("#EA580C");
+        }
+
+        using var context = new BancoContext();
+        txtRequestLogin.ItemsSource = context.Usuarios.Select(u => u.Login).ToList();
+
+        LoginDialogOverlay.IsVisible = true;
+    }
 
     private void ProcessSelectedItems_Click(object sender, RoutedEventArgs e)
     {
@@ -195,6 +333,34 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
         txtRequestLogin.Text = "";
         txtRequestPassword.Text = "";
+
+        bool hasLoans = _pendingSelectedItems.Any(i => i.EstadoOrigem == Estados.Livre);
+        bool hasReturns = _pendingSelectedItems.Any(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao);
+
+        if (hasReturns && !hasLoans)
+        {
+            if (txtLoginDialogTitle != null) txtLoginDialogTitle.Text = "Identificação para Devolução";
+            if (txtLoginDialogSubtitle != null) txtLoginDialogSubtitle.Text = "Por favor, informe suas credenciais para devolver os itens selecionados.";
+            if (btnConfirmLoanRequest != null)
+            {
+                btnConfirmLoanRequest.Content = "Devolver Selecionados";
+                btnConfirmLoanRequest.Background = Brush.Parse("#EA580C");
+            }
+        }
+        else
+        {
+            if (txtLoginDialogTitle != null) txtLoginDialogTitle.Text = "Identificação Necessária";
+            if (txtLoginDialogSubtitle != null) txtLoginDialogSubtitle.Text = "Por favor, informe suas credenciais para solicitar os itens.";
+            if (btnConfirmLoanRequest != null)
+            {
+                btnConfirmLoanRequest.Content = "Confirmar Solicitação";
+                btnConfirmLoanRequest.Background = Brush.Parse("#16A34A");
+            }
+        }
+        
+        using var context = new BancoContext();
+        txtRequestLogin.ItemsSource = context.Usuarios.Where(u => u.IsAtivo).Select(u => u.Login).ToList();
+
         LoginDialogOverlay.IsVisible = true;
     }
 
@@ -245,7 +411,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
         // Determine if we are requesting Loans or Returns
         var itemsToLoan = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Livre).Select(i => i.Id).ToList();
-        var itemsToReturn = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Emprestado).ToList();
+        var itemsToReturn = _pendingSelectedItems.Where(i => i.EstadoOrigem == Estados.Emprestado || i.EstadoOrigem == Estados.Analise || i.EstadoOrigem == Estados.AnaliseDevolucao).ToList();
 
         if (itemsToLoan.Any())
         {
@@ -255,10 +421,10 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
 
             if (salaId != 0)
             {
-                if (EmprestimoService.SolicitarEmprestimo(currentUserId, salaId, itemsToLoan))
-                {
-                    _parent?.ShowMessage($"Solicitado empréstimo de {itemsToLoan.Count} itens.", false);
-                }
+                var (success, message) = EmprestimoService.SolicitarEmprestimoComMensagem(currentUserId, salaId, itemsToLoan);
+                
+                _parent?.ShowMessage(message, !success);
+                LogService.RegistrarLog($"Solicitou empréstimo de {itemsToLoan.Count} item(ns)", "AcaoTipo.Emprestado", currentUserId);
             }
         }
 
@@ -270,7 +436,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             {
                 var activeLoan = context.Emprestimos
                     .Include(e => e.EmprestimoItem)
-                    .Where(e => e.Estado == Estados.Emprestado && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
+                    .Where(e => (e.Estado == Estados.Emprestado || e.Estado == Estados.Analise || e.Estado == Estados.AnaliseDevolucao) && e.EmprestimoItem.Any(ei => ei.ItemId == item.Id))
                     .OrderByDescending(e => e.DataEstado)
                     .FirstOrDefault();
 
@@ -284,7 +450,8 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             }
             if (returnCount > 0)
             {
-                _parent?.ShowMessage($"Solicitada devolução de {returnCount} itens.", false);
+                LogService.RegistrarLog($"Solicitou devolução de {returnCount} item(ns)", AcaoTipo.Emprestado, currentUserId);
+                _parent?.ShowMessage($"Solicitada devolução de {returnCount} item(ns).", false);
             }
         }
 
@@ -308,4 +475,5 @@ public class ItemUI
     public string BadgeText { get; set; } = "";
     public string BadgeColor { get; set; } = "";
     public string EstadoOrigem { get; set; } = "";
+    public string QuemPegou { get; set; } = "-";
 }

@@ -65,7 +65,7 @@ namespace SCA.Core.Services
                     Acao = acao,
                     TipoAcao = tipoAcao,
                     UsuarioId = usuarioId,
-                    DataAcao = DateTime.Now
+                    DataAcao = DateTime.UtcNow
                 };
 
                 context.Logs.Add(log);
@@ -75,7 +75,9 @@ namespace SCA.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao registrar log: {ex.Message}");
+                string erroDetalhado = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                Console.WriteLine($"[ERRO DB LOG] {erroDetalhado}");
+
                 return false;
             }
         }

@@ -74,6 +74,8 @@ class Program
             // Load environment variables
             Env.Load();
 
+            
+
             //Testa a conexão com o banco
             if (!Migration.TestarConexao())
             {

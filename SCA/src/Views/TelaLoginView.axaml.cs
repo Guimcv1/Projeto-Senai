@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Input;
 using SCA.Core.Services;
+using SCA.Core.Models;
 using System;
 
 namespace SCA.Views;
@@ -44,6 +45,10 @@ public partial class TelaLoginView : Window
                 _parent.IsAdminMode = true;
                 _parent.CurrentAdmin = usuario;
                 _parent.UpdateUIRole();
+                if (usuario.Id > 0)
+                {
+                    LogService.RegistrarLog("Login ao sistema", AcaoTipo.Usuario, usuario.Id);
+                }
                 this.Close();
             }
             else

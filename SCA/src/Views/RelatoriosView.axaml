@@ -65,6 +65,7 @@
 								<ComboBoxItem>Disponível</ComboBoxItem>
 								<ComboBoxItem>Emprestado</ComboBoxItem>
 								<ComboBoxItem>Pendente</ComboBoxItem>
+								<ComboBoxItem>Devolução em análise</ComboBoxItem>
 							</ComboBox>
 						</StackPanel>
 						<StackPanel Grid.Column="3">
