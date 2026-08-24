@@ -422,7 +422,9 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             if (salaId != 0)
             {
                 var (success, message) = EmprestimoService.SolicitarEmprestimoComMensagem(currentUserId, salaId, itemsToLoan);
+                
                 _parent?.ShowMessage(message, !success);
+                LogService.RegistrarLog($"Solicitou empréstimo de {itemsToLoan.Count} item(ns)", "AcaoTipo.Emprestado", currentUserId);
             }
         }
 
@@ -448,6 +450,7 @@ public partial class PainelVisaoGeralView : UserControl, IReloadableView
             }
             if (returnCount > 0)
             {
+                LogService.RegistrarLog($"Solicitou devolução de {returnCount} item(ns)", AcaoTipo.Emprestado, currentUserId);
                 _parent?.ShowMessage($"Solicitada devolução de {returnCount} item(ns).", false);
             }
         }

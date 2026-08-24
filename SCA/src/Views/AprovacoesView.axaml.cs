@@ -173,6 +173,12 @@ public partial class AprovacoesView : UserControl, IReloadableView
             {
                 if (EmprestimoService.AprovarSolicitacao(item.EmprestimoId, item.Tipo, isAprovado))
                 {
+                    int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                    if (adminId > 0)
+                    {
+                        string acaoStr = isAprovado ? "Aprovou" : "Recusou";
+                        LogService.RegistrarLog($"{acaoStr} solicitação (ID: {item.EmprestimoId})",AcaoTipo.Emprestado, adminId);
+                    }
                     successCount++;
                 }
             }

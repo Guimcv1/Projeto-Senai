@@ -21,10 +21,11 @@ namespace SCA.Core.Models
         public const string Usuario = "Usuario";
         public const string Item = "Item";
         public const string Sala = "Sala";
+        public const string Emprestado = "Emprestado";
 
         public const string Empty = "";
 
-        public static readonly string[] TodosTipoAcao = { Usuario, Item, Sala, Empty };
+        public static readonly string[] TodosTipoAcao = { Usuario, Item, Sala, Emprestado, Empty };
 
     }
 }

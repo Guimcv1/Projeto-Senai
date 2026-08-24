@@ -215,6 +215,12 @@ public partial class ItensView : UserControl, IReloadableView
 
         if (success)
         {
+            int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+            if (adminId > 0)
+            {
+                string acao = _editingId == -1 ? "Criou novo item" : "Editou item";
+                LogService.RegistrarLog($"{acao}: {descricao}", AcaoTipo.Item, adminId);
+            }
             ItemDialogOverlay.IsVisible = false;
             LoadData();
             _parent?.ShowMessage("Item salvo com sucesso!", false);

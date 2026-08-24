@@ -133,6 +133,11 @@ public partial class LocaisView : UserControl, IReloadableView
         {
             if (SalaService.InativaSala(local.Id))
             {
+                int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                if (adminId > 0)
+                {
+                    LogService.RegistrarLog($"Inativou o local ID {local.Id}", AcaoTipo.Sala, adminId);
+                }
                 LoadLocais();
             }
         }
@@ -155,6 +160,11 @@ public partial class LocaisView : UserControl, IReloadableView
 
         if (success)
         {
+            int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+            if (adminId > 0)
+            {
+                LogService.RegistrarLog($"Salvou o local: {nome}", AcaoTipo.Sala, adminId);
+            }
             LocalDialogOverlay.IsVisible = false;
             LoadLocais();
         }

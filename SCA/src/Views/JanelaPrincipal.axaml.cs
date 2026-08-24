@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using SCA.Core.Models;
+using SCA.Core.Services;
 using System;
 using System.Linq;
 
@@ -94,6 +95,11 @@ public partial class JanelaPrincipal : Window
     {
         if (IsAdminMode)
         {
+            if (CurrentAdmin != null && CurrentAdmin.Id > 0)
+            {
+                LogService.RegistrarLog("Saiu do modo administrativo", AcaoTipo.Usuario, CurrentAdmin.Id);
+            }
+
             IsAdminMode = false;
             CurrentAdmin = null;
             UpdateUIRole();
@@ -163,6 +169,10 @@ public partial class JanelaPrincipal : Window
         {
             IsAdminMode = true;
             CurrentAdmin = usuario;
+            if (usuario.Id > 0)
+            {
+                LogService.RegistrarLog("Entrou no modo administrativo", AcaoTipo.Usuario, usuario.Id);
+            }
             UpdateUIRole();
             if (AdminLoginOverlay != null) AdminLoginOverlay.IsVisible = false;
             ShowMessage($"Bem-vindo, {usuario.Nome}!", false);

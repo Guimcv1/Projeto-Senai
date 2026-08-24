@@ -160,6 +160,8 @@ public partial class RelatoriosView : UserControl, IReloadableView
                 }
 
                 ExportacaoExcel.ExportarParaExcel(filePath, ExportacaoExcel.TipoExportacao.Tudo, inicio, fim, statusItem, isAdmin, expLogs, expUsers, expItems, expRooms);
+                int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                LogService.RegistrarLog($"Exportou relatório para Excel", "Sistema", adminId);
                 _parent?.ShowMessage($"Relatório exportado com sucesso!", false);
                 Console.WriteLine($"Relatório geral exportado com sucesso para {filePath}.");
             }

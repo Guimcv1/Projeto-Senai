@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using SCA.Core.Services;
+using SCA.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -194,6 +195,12 @@ public partial class UsuariosView : UserControl, IReloadableView
 
         if (success)
         {
+            int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+            if (adminId > 0)
+            {
+                string acao = _editingId == -1 ? "Criou novo usuário" : "Editou usuário";
+                LogService.RegistrarLog($"{acao}: {login}", AcaoTipo.Usuario, adminId);
+            }
             UsuarioDialogOverlay.IsVisible = false;
             LoadData();
         }
@@ -210,6 +217,11 @@ public partial class UsuariosView : UserControl, IReloadableView
             bool novoStatus = userUI.StatusText == "Inativo";
             if (UsuarioService.InativarAtivarUser(userUI.Id, novoStatus))
             {
+                int adminId = _parent?.CurrentAdmin?.Id ?? 0;
+                if (adminId > 0)
+                {
+                    LogService.RegistrarLog($"Alterou status do usuário ID {userUI.Id}", AcaoTipo.Usuario, adminId);
+                }
                 LoadData();
             }
         }
