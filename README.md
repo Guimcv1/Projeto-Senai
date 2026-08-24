@@ -8,14 +8,14 @@
 #### — Solicitação/aprovação por parte de admin;
 #### — Persistência de dados em banco estruturado;
 #### — Exportação em formato .xml;
-#### — Integração com planilha corporativa online;
 #### — Interface amigável e fácil de aprender.<br><br>
 
 # Tecnologias Utilizadas:
-[![.net](https://img.shields.io/badge/.NET-8.0-blueviolet?logo=dotnet&style=plastic)](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
+[![.net](https://img.shields.io/badge/.NET-6.0-blueviolet?logo=dotnet&style=plastic)](https://dotnet.microsoft.com/pt-br/download/dotnet/6.0)
 [![postgres](https://img.shields.io/badge/PostgreSQL-18.3-4169e1?logo=postgresql&logoColor=white&style=plastic)](https://www.postgresql.org/)
-[![windows](https://img.shields.io/badge/Windows-10_|_11-blue?&style=plastic)](https://www.microsoft.com/pt-br/windows)
 [![visual studio](https://img.shields.io/badge/Visual_Studio-2022-darkorchid?&logo=vs&style=plastic)](https://visualstudio.microsoft.com/pt-br/vs/community/)
+[![windows](https://img.shields.io/badge/Windows-10_|_11-blue?&style=plastic)](https://www.microsoft.com/pt-br/windows)
+[![linux](https://img.shields.io/badge/Linux-black?&style=plastic)](https://kernel.org)
 [![senai](https://img.shields.io/badge/SENAI-orange?&logo=vs&style=plastic)](https://www.senai.portaldaindustria.com.br/)<br><br>
 
 # Equipe do sistema:
